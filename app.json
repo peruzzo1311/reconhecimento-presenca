@@ -3,15 +3,12 @@
     "name": "reconhecimento-presenca",
     "slug": "reconhecimento-presenca",
     "version": "1.0.0",
-
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "experiments": {
       "tsconfigPaths": true
     },
-
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
