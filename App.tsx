@@ -10,6 +10,7 @@ import { TamaguiProvider, View } from 'tamagui'
 
 import RootStack from './src/routes'
 import config from './tamagui.config'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Header } from '@/components/header'
 
