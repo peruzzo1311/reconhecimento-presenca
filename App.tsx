@@ -1,17 +1,18 @@
 import 'react-native-gesture-handler'
 
-import { NavigationContainer } from '@react-navigation/native'
+import { ToastViewport } from '@tamagui/toast'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { TamaguiProvider, View } from 'tamagui'
+import { View } from 'tamagui'
 
 import RootStack from './src/routes'
-import config from './tamagui.config'
 
 import { Header } from '@/components/header'
+import { Providers } from '@/components/providers'
+import { Toast } from '@/components/toast'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -32,21 +33,28 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <TamaguiProvider config={config}>
-        <StatusBar barStyle='light-content' />
+    <Providers>
+      <StatusBar barStyle='light-content' />
 
-        <View
-          flex={1}
-          backgroundColor='white'
-        >
-          <Header />
+      <View
+        flex={1}
+        backgroundColor='white'
+      >
+        <Header />
 
-          <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-            <RootStack />
-          </SafeAreaView>
-        </View>
-      </TamaguiProvider>
-    </NavigationContainer>
+        <ToastViewport
+          flexDirection='column-reverse'
+          top={40}
+          left={4}
+          right={4}
+        />
+
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+          <Toast />
+
+          <RootStack />
+        </SafeAreaView>
+      </View>
+    </Providers>
   )
 }
