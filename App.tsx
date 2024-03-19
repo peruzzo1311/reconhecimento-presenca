@@ -7,6 +7,7 @@ import { TamaguiProvider } from 'tamagui'
 
 import RootStack from './src/routes'
 import config from './tamagui.config'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 SplashScreen.preventAutoHideAsync()
 

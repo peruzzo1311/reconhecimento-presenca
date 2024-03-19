@@ -3,7 +3,14 @@ import { createInterFont } from '@tamagui/font-inter'
 import { createMedia } from '@tamagui/react-native-media-driver'
 import { shorthands } from '@tamagui/shorthands'
 import { themes, tokens } from '@tamagui/themes'
-import { H1, SizableText, YStack, createTamagui, styled } from 'tamagui'
+import {
+  H1,
+  SizableText,
+  YStack,
+  createTamagui,
+  createTokens,
+  styled,
+} from 'tamagui'
 
 const animations = createAnimations({
   bouncy: {
@@ -33,48 +40,26 @@ export const Container = styled(YStack, {
   flex: 1,
   padding: 24,
 })
-
-export const Main = styled(YStack, {
-  flex: 1,
-  justifyContent: 'space-between',
-  maxWidth: 960,
-})
-
-export const Title = styled(H1, {
-  color: '#000',
-  size: '$12',
-})
-
-export const Subtitle = styled(SizableText, {
-  color: '#38434D',
-  size: '$9',
-})
-
-export const Button = styled(YStack, {
-  alignItems: 'center',
-  backgroundColor: '#6366F1',
-  borderRadius: 28,
-  hoverStyle: {
-    backgroundColor: '#5a5fcf',
+const token = createTokens({
+  ...tokens,
+  color: {
+    ...tokens.color,
+    'primary50': '#f0f8ff',
+    'primary100': '#e0f0fe',
+    'primary200': '#bae2fd',
+    'primary300': '#7cccfd',
+    'primary400': '#37b2f9',
+    'primary500': '#0d98ea',
+    'primary600': '#0171bb',
+    'primary700': '#0260a2',
+    'primary800': '#065286',
+    'primary900': '#0c446e',
+    'primary950': '#082b49',
   },
-  justifyContent: 'center',
-  maxWidth: 500,
-  padding: 16,
-  shadowColor: '#000',
-  shadowOffset: {
-    height: 2,
-    width: 0,
-  },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
 })
 
-export const ButtonText = styled(SizableText, {
-  color: '#FFFFFF',
-  fontSize: 16,
-  fontWeight: '600',
-  textAlign: 'center',
-})
+
+
 
 const config = createTamagui({
   light: {
@@ -93,7 +78,7 @@ const config = createTamagui({
     heading: headingFont,
   },
   themes,
-  tokens,
+  tokens: token,
   media: createMedia({
     xs: { maxWidth: 660 },
     sm: { maxWidth: 800 },
