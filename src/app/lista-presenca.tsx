@@ -1,12 +1,12 @@
+import { PencilRuler, Trash2 } from 'lucide-react-native'
 import React from 'react'
 import { Dimensions } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { View, Text, XStack, Button, Stack } from 'tamagui'
-import { PencilRuler, Trash2 } from 'lucide-react-native'
+import { Button, Stack, Text, XStack } from 'tamagui'
 
 const Listapresenca = (props: any) => {
-  let listaPresencaArray = [
+  const listaPresencaArray = [
     {
       curso: 'Treinamento X',
       data: '01/01/2021',
@@ -69,14 +69,14 @@ const Listapresenca = (props: any) => {
         padding={8}
         borderWidth={1}
         marginVertical={4}
-        borderColor={'lightgray'}
+        borderColor='lightgray'
       >
         <Stack>
           <Text>{item.curso}</Text>
           <Text>{item.data}</Text>
         </Stack>
         <Text
-          width={'25%'}
+          width='25%'
           flexWrap='wrap'
         >
           {item.nome}
@@ -85,17 +85,17 @@ const Listapresenca = (props: any) => {
         <Stack space={4}>
           <Button
             elevation={4}
-            backgroundColor={'$primary50'}
+            backgroundColor='$primary50'
             circular
           >
-            <PencilRuler color={'#0171BB'} />
+            <PencilRuler color='#0171BB' />
           </Button>
           <Button
             elevation={4}
-            backgroundColor={'$red12'}
+            backgroundColor='$red12'
             circular
           >
-            <Trash2 color={'red'} />
+            <Trash2 color='red' />
           </Button>
         </Stack>
       </XStack>
@@ -113,11 +113,11 @@ const Listapresenca = (props: any) => {
       <XStack
         justifyContent='space-between'
         alignItems='center'
-        width={'100%'}
+        width='100%'
       >
-        <Button></Button>
+        <Button />
         <Text>Treinamento X</Text>
-        <Button></Button>
+        <Button />
       </XStack>
 
       <FlatList
