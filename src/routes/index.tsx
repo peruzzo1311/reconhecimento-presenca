@@ -3,6 +3,7 @@ import {
   createStackNavigator,
 } from '@react-navigation/stack'
 
+import Camera from '@/app/camera'
 import Home from '@/app/home'
 import ListaCurso from '@/app/lista-curso'
 import Listapresenca from '@/app/lista-presenca'
@@ -16,6 +17,7 @@ export type RootStackParamList = {
   ListaCurso: {
     type: 'listagem' | 'validacao'
   }
+  Camera: undefined
 }
 
 const Stack = createStackNavigator<RootStackParamList>()
@@ -46,6 +48,11 @@ export default function RootStack() {
           <Stack.Screen
             name='ListaCurso'
             component={ListaCurso}
+          />
+
+          <Stack.Screen
+            name='Camera'
+            component={Camera}
           />
         </>
       ) : (
