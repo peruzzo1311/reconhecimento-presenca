@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { ToastProvider } from '@tamagui/toast'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TamaguiProvider } from 'tamagui'
 import config from 'tamagui.config'
 
@@ -8,13 +9,17 @@ interface ProviderProps {
 }
 
 export function Providers({ children }: ProviderProps) {
+  const queryClient = new QueryClient()
+
   return (
     <NavigationContainer>
       <TamaguiProvider
         config={config}
         defaultTheme='light'
       >
-        <ToastProvider>{children}</ToastProvider>
+        <QueryClientProvider client={queryClient}>
+          <ToastProvider native={false}>{children}</ToastProvider>
+        </QueryClientProvider>
       </TamaguiProvider>
     </NavigationContainer>
   )

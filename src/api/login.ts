@@ -1,40 +1,52 @@
+interface getTokenParams {
+  username: string
+  password: string
+}
+
 export async function getToken({ username, password }: getTokenParams) {
-  const data = {
+  const body = {
     username: `${username.trim()}@prisma-demo.com.br.seniorx`,
     password,
   }
-  const res = await axios.post(
+
+  const res = await fetch(
     'https://platform.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/authentication/actions/login',
-    data,
     {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(body),
     }
   )
 
-  const token: string = JSON.parse(res.data.jsonToken).access_token
-
-  return token
+  return res
 }
 
-export async function getUser({
-  username,
-  token,
-}: getUserParams): Promise<User> {
-  const res = await axios.post(
+interface getUserParams {
+  username: string
+  token: string
+}
+
+export async function getUser({ username, token }: getUserParams) {
+  const body = {
+    username,
+    includePhoto: true,
+  }
+
+  const res = await fetch(
     'https://platform.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/user/queries/getUser',
     {
-      username,
-      includePhoto: true,
-    },
-    {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
+      body: JSON.stringify(body),
     }
   )
 
-  return res.data
+  const data = await res.json()
+
+  return data
 }

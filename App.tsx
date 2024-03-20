@@ -5,8 +5,6 @@ import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { View } from 'tamagui'
 
 import RootStack from './src/routes'
 
@@ -34,27 +32,24 @@ export default function App() {
 
   return (
     <Providers>
-      <StatusBar barStyle='light-content' />
+      <StatusBar
+        barStyle='light-content'
+        backgroundColor='#0171BB'
+        translucent
+      />
 
-      <View
-        flex={1}
-        backgroundColor='white'
-      >
-        <Header />
+      <Header />
 
-        <ToastViewport
-          flexDirection='column-reverse'
-          top={40}
-          left={4}
-          right={4}
-        />
+      <Toast />
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-          <Toast />
+      <RootStack />
 
-          <RootStack />
-        </SafeAreaView>
-      </View>
+      <ToastViewport
+        flexDirection='column-reverse'
+        top={40}
+        left={4}
+        right={4}
+      />
     </Providers>
   )
 }
