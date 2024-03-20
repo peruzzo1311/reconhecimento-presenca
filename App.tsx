@@ -28,7 +28,7 @@ export default function App() {
   }
 
   return (
-    <TamaguiProvider config={config}>
+    <TamaguiProvider defaultTheme='light' config={config}>
       <RootStack />
     </TamaguiProvider>
   )
