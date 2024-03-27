@@ -62,6 +62,8 @@ export default function Login({ navigation }: { navigation: any }) {
 
       if (!user) {
         toast.show('Usuário ou senha inválidos')
+
+        return
       }
 
       setUser(user)

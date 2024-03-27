@@ -20,7 +20,7 @@ export default function Home() {
               color='white'
             />
           }
-          route='ListaCurso'
+          route='ListaTreinamentos'
           type='listagem'
         />
 
@@ -33,7 +33,7 @@ export default function Home() {
               color='white'
             />
           }
-          route='ListaCurso'
+          route='ListaTreinamentos'
           type='validacao'
         />
       </View>

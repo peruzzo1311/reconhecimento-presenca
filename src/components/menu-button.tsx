@@ -1,7 +1,8 @@
 import { FontAwesome } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { ReactElement } from 'react'
-import { Button, Text, View } from 'tamagui'
+import { TouchableOpacity } from 'react-native'
+import { Button, Text } from 'tamagui'
 
 interface MenuButtonProps {
   label: string
@@ -24,11 +25,7 @@ export function MenuButton({ label, icon, route, type }: MenuButtonProps) {
   }
 
   return (
-    <View
-      flex={1}
-      justifyContent='center'
-      alignItems='center'
-    >
+    <TouchableOpacity>
       <Button
         flexDirection='column'
         justifyContent='center'
@@ -39,21 +36,18 @@ export function MenuButton({ label, icon, route, type }: MenuButtonProps) {
         borderRadius={15}
         borderWidth={2}
         borderColor='white'
-        elevationAndroid={8}
-        pressStyle={{
-          backgroundColor: '$primary700',
-          scale: 0.95,
-        }}
-        style={{
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 4,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 4,
-        }}
+        // elevationAndroid={8}
+        // style={{
+        //   shadowColor: '#000',
+        //   shadowOffset: {
+        //     width: 0,
+        //     height: 4,
+        //   },
+        //   shadowOpacity: 0.25,
+        //   shadowRadius: 4,
+        // }}
         onPress={handleNavigation}
+        pointerEvents='none'
       >
         {icon && icon}
 
@@ -64,6 +58,6 @@ export function MenuButton({ label, icon, route, type }: MenuButtonProps) {
           {label}
         </Text>
       </Button>
-    </View>
+    </TouchableOpacity>
   )
 }

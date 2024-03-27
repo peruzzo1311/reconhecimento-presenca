@@ -6,6 +6,8 @@ import { FlatList } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Avatar, Button, Stack, Text, XStack, YStack } from 'tamagui'
 
+import { HeaderNavigation } from '@/components/header-navigation'
+
 const Listapresenca = (props: any) => {
   const navigation: any = useNavigation()
   const listaPresencaArray = [
@@ -168,55 +170,10 @@ const Listapresenca = (props: any) => {
         alignItems: 'center',
       }}
     >
-      <XStack
-        justifyContent='space-between'
-        alignItems='center'
-        width='100%'
-      >
-        <Button
-          elevation={2}
-          mb={8}
-          animation='bouncy'
-          enterStyle={{
-            opacity: 0,
-            y: 1,
-            scale: 0.9,
-          }}
-          exitStyle={{
-            opacity: 0,
-            y: -10,
-            scale: 0.9,
-          }}
-          pressStyle={{
-            backgroundColor: '$primary600',
-            borderColor: '$primary600',
-            scale: 0.9,
-          }}
-          backgroundColor='$primary600'
-        />
-        <Text>Treinamento X</Text>
-        <Button
-          elevation={2}
-          mb={8}
-          animation='bouncy'
-          enterStyle={{
-            opacity: 0,
-            y: 1,
-            scale: 0.9,
-          }}
-          exitStyle={{
-            opacity: 0,
-            y: -10,
-            scale: 0.9,
-          }}
-          pressStyle={{
-            backgroundColor: '$primary600',
-            borderColor: '$primary600',
-            scale: 0.9,
-          }}
-          backgroundColor='$primary600'
-        />
-      </XStack>
+      <HeaderNavigation
+        navigation={navigation}
+        title='Lista de Presença'
+      />
 
       <FlatList
         style={{

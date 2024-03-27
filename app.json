@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "reconhecimento-presenca",
+    "name": "Reconhecimento de Presença",
     "slug": "reconhecimento-presenca",
     "version": "1.0.0",
     "web": {
@@ -21,7 +21,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.controledepresenca"
     },
     "android": {
       "adaptiveIcon": {
@@ -46,8 +47,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "0990d11c-84b3-4325-b2b1-05894dacc051"
+        "projectId": "72a64f56-05c3-46e1-86b0-02cd1c393888"
       }
-    }
+    },
+    "owner": "prisma-softwares"
   }
 }

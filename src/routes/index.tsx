@@ -5,8 +5,8 @@ import {
 
 import Camera from '@/app/camera'
 import Home from '@/app/home'
-import ListaCurso from '@/app/lista-curso'
 import Listapresenca from '@/app/lista-presenca'
+import ListaTreinamentos from '@/app/lista-treinamentos'
 import Login from '@/app/login'
 import { useUserStore } from '@/store/user-store'
 
@@ -14,7 +14,7 @@ export type RootStackParamList = {
   Login: undefined
   Home: undefined
   ListaPresenca: undefined
-  ListaCurso: {
+  ListaTreinamentos: {
     type: 'listagem' | 'validacao'
   }
   Camera: undefined
@@ -46,8 +46,8 @@ export default function RootStack() {
           />
 
           <Stack.Screen
-            name='ListaCurso'
-            component={ListaCurso}
+            name='ListaTreinamentos'
+            component={ListaTreinamentos}
           />
 
           <Stack.Screen

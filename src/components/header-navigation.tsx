@@ -13,6 +13,7 @@ export function HeaderNavigation({ navigation, title }: HeaderNavigationProps) {
       flexDirection='row'
       justifyContent='space-between'
       alignItems='center'
+      width='100%'
       paddingHorizontal={24}
       paddingVertical={8}
     >

@@ -6,7 +6,9 @@ import { Image, View } from 'tamagui'
 import { useUserStore } from '@/store/user-store'
 
 export function Header() {
-  const { user } = useUserStore()
+  const { user, clearUser } = useUserStore()
+
+  const handleLogout = () => clearUser()
 
   return (
     <View backgroundColor='#0171BB'>
@@ -32,9 +34,12 @@ export function Header() {
             />
           </View>
 
-          <TouchableOpacity style={{ padding: 8 }}>
+          <TouchableOpacity
+            onPress={handleLogout}
+            style={{ padding: 8 }}
+          >
             <Feather
-              name='menu'
+              name='log-out'
               size={30}
               color='white'
             />
