@@ -28,12 +28,18 @@ export function HeaderNavigation({ navigation, title }: HeaderNavigationProps) {
         />
       </TouchableOpacity>
 
-      <Text
-        fontWeight='600'
-        fontSize={20}
+      <View
+        flex={1}
+        paddingHorizontal={12}
       >
-        {title}
-      </Text>
+        <Text
+          fontWeight='700'
+          fontSize='$5'
+          textAlign='center'
+        >
+          {title}
+        </Text>
+      </View>
 
       <TouchableOpacity
         style={{ padding: 8, paddingRight: 0 }}

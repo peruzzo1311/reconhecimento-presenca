@@ -4,21 +4,22 @@ import axios from 'axios'
 import { FlatList } from 'react-native'
 import { Spinner, Text, View } from 'tamagui'
 
-import { ItemTreinamento } from './item-curso'
+import { TrainingItem } from './item'
 
-import { Treinamento } from '@/types'
+import { Training } from '@/types'
 
 interface Response {
   msgRet: string
-  treinamento: Treinamento[]
+  treinamento: Training[]
 }
 
-interface FlatListCursoProps {
+interface TrainingListProps {
   type: 'listagem' | 'validacao'
 }
 
-export function FlatlistCurso({ type }: FlatListCursoProps) {
+export function TrainingList({ type }: TrainingListProps) {
   const navigation: any = useNavigation()
+
   const { data, isPending, error } = useQuery({
     queryKey: ['cursos'],
     queryFn: async () => {
@@ -62,7 +63,7 @@ export function FlatlistCurso({ type }: FlatListCursoProps) {
       <FlatList
         data={data.treinamento}
         renderItem={({ item }) => (
-          <ItemTreinamento
+          <TrainingItem
             item={item}
             type={type}
             navigation={navigation}

@@ -2,22 +2,18 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native'
 import { View, Text } from 'tamagui'
 
-import { Treinamento } from '@/types'
+import { Training } from '@/types'
 
-interface ItemTreinamentoProps {
+interface TrainingItemProps {
   type: 'listagem' | 'validacao'
-  item: Treinamento
+  item: Training
   navigation: any
 }
 
-export function ItemTreinamento({
-  navigation,
-  type,
-  item,
-}: ItemTreinamentoProps) {
+export function TrainingItem({ navigation, type, item }: TrainingItemProps) {
   const handleNavigation = () => {
     navigation.push('ListaPresenca', {
-      training: 1,
+      training: item,
       type,
     })
   }

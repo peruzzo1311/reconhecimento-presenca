@@ -1,7 +1,7 @@
 import { View } from 'tamagui'
 
 import { HeaderNavigation } from '@/components/header-navigation'
-import { FlatlistCurso } from '@/components/lista-curso/flatlist'
+import { TrainingList } from '@/components/training/flatlist'
 
 interface ListaTreinamentosProps {
   route: {
@@ -16,7 +16,7 @@ export default function ListaTreinamentos({
   route,
   navigation,
 }: ListaTreinamentosProps) {
-  // const { type } = route.params
+  const { type } = route.params
 
   return (
     <View
@@ -29,7 +29,7 @@ export default function ListaTreinamentos({
       />
 
       <View padding={24}>
-        <FlatlistCurso />
+        <TrainingList type={type} />
       </View>
     </View>
   )

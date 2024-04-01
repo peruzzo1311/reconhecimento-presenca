@@ -10,7 +10,11 @@ export default function Home() {
       padding={24}
       backgroundColor='white'
     >
-      <View flexDirection='row'>
+      <View
+        flexDirection='row'
+        justifyContent='space-around'
+        alignItems='center'
+      >
         <MenuButton
           label='Lista de presença'
           icon={

@@ -1,4 +1,4 @@
-export interface Participantes {
+export interface Participants {
   numEmp: number
   tipCol: number
   numCad: number
@@ -7,11 +7,11 @@ export interface Participantes {
   fotCol: string
 }
 
-export interface Treinamento {
+export interface Training {
   codCua: number
   nomCua: string
   tmaCua: number
   datIni: string
   datFim: string
-  participantes: Participantes[]
+  participantes: Participants[]
 }

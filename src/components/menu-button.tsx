@@ -25,7 +25,7 @@ export function MenuButton({ label, icon, route, type }: MenuButtonProps) {
   }
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={handleNavigation}>
       <Button
         flexDirection='column'
         justifyContent='center'
@@ -36,17 +36,6 @@ export function MenuButton({ label, icon, route, type }: MenuButtonProps) {
         borderRadius={15}
         borderWidth={2}
         borderColor='white'
-        // elevationAndroid={8}
-        // style={{
-        //   shadowColor: '#000',
-        //   shadowOffset: {
-        //     width: 0,
-        //     height: 4,
-        //   },
-        //   shadowOpacity: 0.25,
-        //   shadowRadius: 4,
-        // }}
-        onPress={handleNavigation}
         pointerEvents='none'
       >
         {icon && icon}

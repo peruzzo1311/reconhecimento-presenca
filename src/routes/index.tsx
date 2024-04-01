@@ -9,11 +9,15 @@ import Listapresenca from '@/app/lista-presenca'
 import ListaTreinamentos from '@/app/lista-treinamentos'
 import Login from '@/app/login'
 import { useUserStore } from '@/store/user-store'
+import { Participants } from '@/types'
 
 export type RootStackParamList = {
   Login: undefined
   Home: undefined
-  ListaPresenca: undefined
+  ListaPresenca: {
+    type: 'listagem' | 'validacao'
+    participants: Participants[]
+  }
   ListaTreinamentos: {
     type: 'listagem' | 'validacao'
   }
