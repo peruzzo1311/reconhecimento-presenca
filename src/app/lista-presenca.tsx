@@ -5,7 +5,7 @@ import { HeaderNavigation } from '@/components/header-navigation'
 import PresenceFlatList from '@/components/presence/flatlist'
 import { Training } from '@/types'
 
-interface PresenceListProps {
+interface ListaPresencaProps {
   route: {
     params: {
       type: 'listagem' | 'validacao'
@@ -16,7 +16,10 @@ interface PresenceListProps {
   navigation: any
 }
 
-export default function PresenceList({ route, navigation }: PresenceListProps) {
+export default function ListaPresenca({
+  route,
+  navigation,
+}: ListaPresencaProps) {
   const { training } = route.params
 
   if (!Array.isArray(training.participantes)) {

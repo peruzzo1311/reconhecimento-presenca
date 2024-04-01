@@ -5,6 +5,7 @@ export interface Participants {
   nomFun: string
   numCpf: string
   fotCol: string
+  isPresent?: boolean
 }
 
 export interface Training {
