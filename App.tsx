@@ -6,9 +6,8 @@ import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
 
-import { Header } from '@/components/header'
 import { Providers } from '@/components/providers'
-import { Toast } from '@/components/toast'
+import { CurrentToast } from '@/components/toast'
 import RootStack from '@/routes'
 
 SplashScreen.preventAutoHideAsync()
@@ -38,18 +37,16 @@ export default function App() {
         translucent
       />
 
-      <Header />
-
-      <Toast />
-
       <RootStack />
 
       <ToastViewport
         flexDirection='column-reverse'
         top={40}
-        left={4}
-        right={4}
+        right={8}
+        left={8}
       />
+
+      <CurrentToast />
     </Providers>
   )
 }

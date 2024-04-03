@@ -16,3 +16,8 @@ export interface Training {
   datFim: string
   participantes: Participants[]
 }
+
+export interface ResponseDefault {
+  codRet: number
+  msgRet: string
+}

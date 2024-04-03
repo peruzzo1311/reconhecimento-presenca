@@ -20,7 +20,9 @@ export default function PresenceDialog({
     onClose(false)
 
     participant.isPresent = !participant.isPresent
-    navigation.navigate('Camera')
+    navigation.navigate('Camera', {
+      participants: [participant],
+    })
   }
 
   return (

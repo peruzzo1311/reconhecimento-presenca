@@ -1,16 +1,17 @@
 import React from 'react'
-import { View } from 'tamagui'
+import { TouchableOpacity } from 'react-native'
+import { Button, View } from 'tamagui'
 
+import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import PresenceFlatList from '@/components/presence/flatlist'
-import { Training } from '@/types'
+import { usePresenceListStore } from '@/store/presence-list'
 
 interface ListaPresencaProps {
   route: {
     params: {
       type: 'listagem' | 'validacao'
-
-      training: Training
+      title: string
     }
   }
   navigation: any
@@ -20,10 +21,13 @@ export default function ListaPresenca({
   route,
   navigation,
 }: ListaPresencaProps) {
-  const { training } = route.params
+  const { participants } = usePresenceListStore()
+  const { title } = route.params
 
-  if (!Array.isArray(training.participantes)) {
-    training.participantes = [training.participantes]
+  const handleValidatePresence = () => {
+    navigation.navigate('Camera', {
+      participants,
+    })
   }
 
   return (
@@ -31,17 +35,33 @@ export default function ListaPresenca({
       flex={1}
       backgroundColor='white'
     >
+      <Header />
+
       <HeaderNavigation
         navigation={navigation}
-        title={training.nomCua}
+        title={title}
       />
 
       <View
         flex={1}
         padding={24}
       >
-        <PresenceFlatList participants={training.participantes} />
+        <PresenceFlatList participants={participants} />
       </View>
+
+      <TouchableOpacity onPress={handleValidatePresence}>
+        <Button
+          backgroundColor='$primary600'
+          color='white'
+          margin={20}
+          width='100%'
+          maxWidth={300}
+          marginHorizontal='auto'
+          pointerEvents='none'
+        >
+          Validar presença
+        </Button>
+      </TouchableOpacity>
     </View>
   )
 }

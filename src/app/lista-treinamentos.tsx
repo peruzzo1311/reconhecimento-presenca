@@ -1,5 +1,6 @@
 import { View } from 'tamagui'
 
+import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import { TrainingList } from '@/components/training/flatlist'
 
@@ -23,6 +24,8 @@ export default function ListaTreinamentos({
       flex={1}
       backgroundColor='white'
     >
+      <Header />
+
       <HeaderNavigation
         navigation={navigation}
         title='Lista de Treinamentos'

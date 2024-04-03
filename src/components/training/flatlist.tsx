@@ -59,19 +59,17 @@ export function TrainingList({ type }: TrainingListProps) {
   }
 
   return (
-    <View>
-      <FlatList
-        data={data.treinamento}
-        renderItem={({ item }) => (
-          <TrainingItem
-            item={item}
-            type={type}
-            navigation={navigation}
-          />
-        )}
-        ItemSeparatorComponent={() => <View marginVertical={12} />}
-        keyExtractor={(item) => item.codCua.toString() + item.tmaCua.toString()}
-      />
-    </View>
+    <FlatList
+      data={data.treinamento}
+      renderItem={({ item }) => (
+        <TrainingItem
+          item={item}
+          type={type}
+          navigation={navigation}
+        />
+      )}
+      ItemSeparatorComponent={() => <View marginVertical={12} />}
+      keyExtractor={(item) => item.codCua.toString() + item.tmaCua.toString()}
+    />
   )
 }

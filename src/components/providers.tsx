@@ -18,7 +18,7 @@ export function Providers({ children }: ProviderProps) {
         defaultTheme='light'
       >
         <QueryClientProvider client={queryClient}>
-          <ToastProvider native={false}>{children}</ToastProvider>
+          <ToastProvider>{children}</ToastProvider>
         </QueryClientProvider>
       </TamaguiProvider>
     </NavigationContainer>

@@ -2,6 +2,7 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native'
 import { View, Text } from 'tamagui'
 
+import { usePresenceListStore } from '@/store/presence-list'
 import { Training } from '@/types'
 
 interface TrainingItemProps {
@@ -11,9 +12,17 @@ interface TrainingItemProps {
 }
 
 export function TrainingItem({ navigation, type, item }: TrainingItemProps) {
+  const { setParticipants } = usePresenceListStore()
+
   const handleNavigation = () => {
+    if (!Array.isArray(item.participantes)) {
+      item.participantes = [item.participantes]
+    }
+
+    setParticipants(item.participantes)
+
     navigation.push('ListaPresenca', {
-      training: item,
+      title: item.nomCua,
       type,
     })
   }

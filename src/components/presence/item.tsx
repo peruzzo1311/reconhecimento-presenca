@@ -20,35 +20,32 @@ export default function PresenceItem({
   }
 
   return (
-    <TouchableOpacity onLongPress={handlePress}>
+    <TouchableOpacity onPress={handlePress}>
       <View
         backgroundColor='white'
         flexDirection='row'
         alignItems='center'
         justifyContent='space-between'
+        gap={12}
         paddingVertical={12}
       >
-        <View
-          flexDirection='row'
-          alignItems='center'
-          gap={12}
+        <Avatar
+          size='$5'
+          circular
         >
-          <Avatar
-            size='$5'
-            circular
-          >
-            <Avatar.Image
-              source={{
-                uri: `data:image/jpeg;base64,${participant.fotCol}`,
-              }}
-            />
+          <Avatar.Image
+            source={{
+              uri: `data:image/jpeg;base64,${participant.fotCol}`,
+            }}
+          />
 
-            <Avatar.Fallback
-              delayMs={600}
-              backgroundColor='gray4'
-            />
-          </Avatar>
+          <Avatar.Fallback
+            delayMs={600}
+            backgroundColor='gray4'
+          />
+        </Avatar>
 
+        <View flex={1}>
           <Text
             fontWeight='bold'
             fontSize='$4'

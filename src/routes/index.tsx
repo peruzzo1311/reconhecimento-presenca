@@ -4,24 +4,27 @@ import {
 } from '@react-navigation/stack'
 
 import Camera from '@/app/camera'
-import Home from '@/app/home'
+import Foto from '@/app/foto'
+import Inicio from '@/app/inicio'
 import ListaPresenca from '@/app/lista-presenca'
 import ListaTreinamentos from '@/app/lista-treinamentos'
 import Login from '@/app/login'
 import { useUserStore } from '@/store/user-store'
-import { Participants } from '@/types'
 
 export type RootStackParamList = {
   Login: undefined
-  Home: undefined
-  ListaPresenca: {
-    type: 'listagem' | 'validacao'
-    training: Participants
-  }
+  Inicio: undefined
   ListaTreinamentos: {
     type: 'listagem' | 'validacao'
   }
+  ListaPresenca: {
+    type: 'listagem' | 'validacao'
+    title: string
+  }
   Camera: undefined
+  Foto: {
+    photo: string
+  }
 }
 
 const Stack = createStackNavigator<RootStackParamList>()
@@ -35,18 +38,15 @@ export default function RootStack() {
       screenOptions={{
         headerShown: false,
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
       }}
     >
       {user ? (
         <>
           <Stack.Screen
-            name='Home'
-            component={Home}
-          />
-
-          <Stack.Screen
-            name='ListaPresenca'
-            component={ListaPresenca}
+            name='Inicio'
+            component={Inicio}
           />
 
           <Stack.Screen
@@ -55,8 +55,23 @@ export default function RootStack() {
           />
 
           <Stack.Screen
+            name='ListaPresenca'
+            component={ListaPresenca}
+          />
+
+          <Stack.Screen
             name='Camera'
+            // @ts-ignore
             component={Camera}
+          />
+
+          <Stack.Screen
+            name='Foto'
+            options={{
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+            }}
+            // @ts-ignore
+            component={Foto}
           />
         </>
       ) : (

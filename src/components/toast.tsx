@@ -1,6 +1,6 @@
-import { Toast as TamaguiToast, useToastState } from '@tamagui/toast'
+import { Toast, useToastState } from '@tamagui/toast'
 
-export function Toast() {
+export function CurrentToast() {
   const currentToast = useToastState()
 
   if (!currentToast || currentToast.isHandledNatively) {
@@ -8,26 +8,29 @@ export function Toast() {
   }
 
   return (
-    <TamaguiToast
+    <Toast
       key={currentToast.id}
-      duration={2500}
+      duration={currentToast.duration}
+      viewportName={currentToast.viewportName}
+      width='100%'
+      maxWidth={400}
+      marginHorizontal='auto'
+      backgroundColor='$red10'
       enterStyle={{ opacity: 0, scale: 0.5, y: -25 }}
-      exitStyle={{ opacity: 0, scale: 0.5, y: -25 }}
+      exitStyle={{ opacity: 0, scale: 1, y: -20 }}
       y={0}
       opacity={1}
       scale={1}
       animation='quick'
-      viewportName={currentToast.viewportName}
-      backgroundColor='$red10'
     >
-      <TamaguiToast.Title
-        color='#fff'
-        fontWeight='bold'
+      <Toast.Title
+        fontWeight='700'
+        color='white'
         fontSize='$5'
         textAlign='center'
       >
         {currentToast.title}
-      </TamaguiToast.Title>
-    </TamaguiToast>
+      </Toast.Title>
+    </Toast>
   )
 }
