@@ -18,7 +18,7 @@ export function HeaderNavigation({ navigation, title }: HeaderNavigationProps) {
       paddingVertical={8}
     >
       <TouchableOpacity
-        style={{ padding: 8, paddingLeft: 0 }}
+        style={{ paddingVertical: 8, paddingHorizontal: 12, paddingLeft: 0 }}
         onPress={() => navigation.goBack()}
       >
         <FontAwesome5
@@ -42,7 +42,7 @@ export function HeaderNavigation({ navigation, title }: HeaderNavigationProps) {
       </View>
 
       <TouchableOpacity
-        style={{ padding: 8, paddingRight: 0 }}
+        style={{ paddingVertical: 8, paddingHorizontal: 12, paddingRight: 0 }}
         onPress={() => console.log('filtro')}
       >
         <FontAwesome5

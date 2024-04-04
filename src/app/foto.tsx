@@ -33,8 +33,8 @@ export default function Foto({ route, navigation }: FotoProps) {
       photo,
     })
 
-    if (codRet !== 0) {
-      toast.show(msgRet)
+    if (codRet && codRet !== 0) {
+      toast.show(msgRet.length > 0 ? msgRet : 'Erro ao validar presença')
       setIsLoading(false)
 
       navigation.navigate('Camera')
@@ -42,11 +42,12 @@ export default function Foto({ route, navigation }: FotoProps) {
       return
     }
 
+    setIsLoading(false)
     confirmPresence(participante.numCpf)
     navigation.navigate('ListaPresenca', {
-      participants,
+      type: 'validacao',
+      title: 'Lista de presença',
     })
-    setIsLoading(false)
   }
 
   return (

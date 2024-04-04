@@ -1,35 +1,34 @@
+import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native'
 import { Button, Dialog, View } from 'tamagui'
 
+import { useDialogStore } from '@/store/dialog'
 import { Participants } from '@/types'
 
-interface PresenceDialogProps {
-  open: boolean
-  onClose: (open: boolean) => void
-  participant: Participants
-  navigation: any
-}
+export default function ConfirmPresenceDialog() {
+  const { isOpen, onClose, type, data } = useDialogStore()
+  const navigation: any = useNavigation()
 
-export default function PresenceDialog({
-  open,
-  onClose,
-  participant,
-  navigation,
-}: PresenceDialogProps) {
+  const isModalOpen = isOpen && type === 'presence'
+  const { participant } = data as { participant: Participants }
+
   const handleConfirm = () => {
-    onClose(false)
+    onClose()
 
-    participant.isPresent = !participant.isPresent
     navigation.navigate('Camera', {
-      participants: [participant],
+      participants: [data.participant],
     })
+  }
+
+  if (!isModalOpen) {
+    return null
   }
 
   return (
     <Dialog
       modal
       disableRemoveScroll
-      open={open}
+      open={isModalOpen}
       onOpenChange={onClose}
     >
       <Dialog.Portal>
@@ -39,7 +38,7 @@ export default function PresenceDialog({
           opacity={0.5}
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
-          onPress={() => onClose(false)}
+          onPress={onClose}
         />
 
         <Dialog.Content
@@ -71,7 +70,7 @@ export default function PresenceDialog({
             justifyContent='flex-end'
             gap={12}
           >
-            <TouchableOpacity onPress={() => onClose(false)}>
+            <TouchableOpacity onPress={onClose}>
               <Button pointerEvents='none'>Cancelar</Button>
             </TouchableOpacity>
 

@@ -1,22 +1,22 @@
 import { TouchableOpacity } from 'react-native'
 import { Avatar, Text, View } from 'tamagui'
 
+import { useDialogStore } from '@/store/dialog'
 import { Participants } from '@/types'
 
 interface PresenceItemProps {
   participant: Participants
-  setOpenPresenceDialog: (open: boolean) => void
-  setParticipant: (participant: Participants) => void
 }
 
-export default function PresenceItem({
-  participant,
-  setOpenPresenceDialog,
-  setParticipant,
-}: PresenceItemProps) {
+export default function PresenceItem({ participant }: PresenceItemProps) {
+  const { onOpen } = useDialogStore()
+
   const handlePress = () => {
-    setParticipant(participant)
-    setOpenPresenceDialog(true)
+    onOpen('presence', { participant })
+  }
+
+  const handleAvatarPress = () => {
+    onOpen('avatar', { participant })
   }
 
   return (
@@ -29,21 +29,23 @@ export default function PresenceItem({
         gap={12}
         paddingVertical={12}
       >
-        <Avatar
-          size='$5'
-          circular
-        >
-          <Avatar.Image
-            source={{
-              uri: `data:image/jpeg;base64,${participant.fotCol}`,
-            }}
-          />
+        <TouchableOpacity onPress={handleAvatarPress}>
+          <Avatar
+            size='$5'
+            circular
+          >
+            <Avatar.Image
+              source={{
+                uri: `data:image/jpeg;base64,${participant.fotCol}`,
+              }}
+            />
 
-          <Avatar.Fallback
-            delayMs={600}
-            backgroundColor='gray4'
-          />
-        </Avatar>
+            <Avatar.Fallback
+              delayMs={600}
+              backgroundColor='gray4'
+            />
+          </Avatar>
+        </TouchableOpacity>
 
         <View flex={1}>
           <Text

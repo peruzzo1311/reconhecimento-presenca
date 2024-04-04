@@ -12,6 +12,7 @@ interface CameraProps {
 }
 
 export default function Camera({ navigation }: CameraProps) {
+  const [focus, setFocus] = useState(false)
   const [cameraType, setCameraType] = useState<CameraType>(CameraType.back)
   const [permission, requestPermission] = ExpoCamera.useCameraPermissions()
   const { participants } = usePresenceListStore()
@@ -106,6 +107,9 @@ export default function Camera({ navigation }: CameraProps) {
         ref={cameraRef}
         style={{ flex: 1 }}
         type={cameraType}
+        autoFocus={focus}
+        focusDepth={focus ? 0 : 1}
+        onTouchStart={() => setFocus(!focus)}
       />
 
       <View

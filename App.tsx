@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
 
+import DialogProviders from '@/components/dialog-providers'
 import { Providers } from '@/components/providers'
 import { CurrentToast } from '@/components/toast'
 import RootStack from '@/routes'
@@ -36,6 +37,8 @@ export default function App() {
         backgroundColor='#0171BB'
         translucent
       />
+
+      <DialogProviders />
 
       <RootStack />
 
