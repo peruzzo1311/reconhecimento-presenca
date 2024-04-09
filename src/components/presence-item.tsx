@@ -2,10 +2,10 @@ import { TouchableOpacity } from 'react-native'
 import { Avatar, Text, View } from 'tamagui'
 
 import { useDialogStore } from '@/store/dialog'
-import { Participants } from '@/types'
+import { Participant } from '@/types'
 
 interface PresenceItemProps {
-  participant: Participants
+  participant: Participant
 }
 
 export default function PresenceItem({ participant }: PresenceItemProps) {

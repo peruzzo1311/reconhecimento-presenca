@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Button, Image, Text, View } from 'tamagui'
 
 import { validatePresence } from '@/api/validate-presence'
-import { usePresenceListStore } from '@/store/presence-list'
+import { useTrainingStore } from '@/store/treinamento-store'
 
 interface FotoProps {
   route: {
@@ -20,7 +20,7 @@ interface FotoProps {
 
 export default function Foto({ route, navigation }: FotoProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { participants, confirmPresence } = usePresenceListStore()
+  const { training, setParticipantPresence } = useTrainingStore()
   const { photo } = route.params
 
   const toast = useToastController()
@@ -30,7 +30,7 @@ export default function Foto({ route, navigation }: FotoProps) {
       setIsLoading(true)
 
       const { codRet, msgRet, participante } = await validatePresence({
-        participants,
+        participants: training?.participantes || [],
         photo,
       })
 
@@ -42,11 +42,9 @@ export default function Foto({ route, navigation }: FotoProps) {
         return
       }
 
-      confirmPresence(participante.numCpf)
-      navigation.navigate('ListaPresenca', {
-        type: 'validacao',
-        title: 'Lista de presença',
-      })
+      setParticipantPresence(participante)
+
+      navigation.push('ListaPresenca')
     } catch (error) {
       console.log(error)
       toast.show('Erro ao validar presença')

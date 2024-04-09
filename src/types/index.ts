@@ -1,4 +1,4 @@
-export interface Participants {
+export interface Participant {
   numEmp: number
   tipCol: number
   numCad: number
@@ -14,7 +14,7 @@ export interface Training {
   tmaCua: number
   datIni: string
   datFim: string
-  participantes: Participants[]
+  participantes: Participant[]
 }
 
 export interface ResponseDefault {

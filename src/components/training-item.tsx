@@ -2,7 +2,7 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native'
 import { View, Text } from 'tamagui'
 
-import { usePresenceListStore } from '@/store/presence-list'
+import { useTrainingStore } from '@/store/treinamento-store'
 import { Training } from '@/types'
 
 interface TrainingItemProps {
@@ -11,24 +11,21 @@ interface TrainingItemProps {
 }
 
 export function TrainingItem({ navigation, item }: TrainingItemProps) {
-  const { setParticipants } = usePresenceListStore()
+  const { setTraining } = useTrainingStore()
 
-  const handleNavigation = () => {
+  const handleSelectTraining = () => {
     if (!Array.isArray(item.participantes)) {
       item.participantes = [item.participantes]
     }
 
-    setParticipants(item.participantes)
-
-    navigation.push('ListaPresenca', {
-      title: item.nomCua,
-    })
+    setTraining(item)
+    navigation.push('ListaPresenca')
   }
 
   return (
     <TouchableOpacity
       style={{ overflow: 'hidden', borderRadius: 15 }}
-      onPress={handleNavigation}
+      onPress={handleSelectTraining}
     >
       <View
         borderWidth={2}

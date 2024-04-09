@@ -4,27 +4,22 @@ import { Button, View } from 'tamagui'
 
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
-import PresenceItem from '@/components/presence/item'
-import { usePresenceListStore } from '@/store/presence-list'
+import PresenceItem from '@/components/presence-item'
+import { useTrainingStore } from '@/store/treinamento-store'
 
 interface ListaPresencaProps {
-  route: {
-    params: {
-      title: string
-    }
-  }
   navigation: any
 }
 
-export default function ListaPresenca({
-  route,
-  navigation,
-}: ListaPresencaProps) {
-  const { participants } = usePresenceListStore()
-  const { title } = route.params
+export default function ListaPresenca({ navigation }: ListaPresencaProps) {
+  const { training } = useTrainingStore()
 
   const handleValidatePresence = () => {
     navigation.navigate('Camera')
+  }
+
+  if (!training) {
+    return null
   }
 
   return (
@@ -36,7 +31,7 @@ export default function ListaPresenca({
 
       <HeaderNavigation
         navigation={navigation}
-        title={title}
+        title={training.nomCua}
       />
 
       <View
@@ -44,7 +39,7 @@ export default function ListaPresenca({
         padding={24}
       >
         <FlatList
-          data={participants}
+          data={training.participantes}
           keyExtractor={(item) => item.numCpf.toString()}
           renderItem={({ item }) => <PresenceItem participant={item} />}
         />
