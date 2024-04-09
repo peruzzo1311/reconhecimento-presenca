@@ -16,7 +16,7 @@ export async function validatePresence({
   photo,
 }: validatePresenceProps): Promise<validatePresenceResponse> {
   const res = await fetch(
-    'https://7ec0-187-72-163-1.ngrok-free.app/verifica-presenca',
+    'https://prismaappfr.azurewebsites.net/verifica-presenca',
     {
       method: 'POST',
       headers: {

@@ -5,20 +5,12 @@ import { HeaderNavigation } from '@/components/header-navigation'
 import { TrainingList } from '@/components/training/flatlist'
 
 interface ListaTreinamentosProps {
-  route: {
-    params: {
-      type: 'listagem' | 'validacao'
-    }
-  }
   navigation: any
 }
 
 export default function ListaTreinamentos({
-  route,
   navigation,
 }: ListaTreinamentosProps) {
-  const { type } = route.params
-
   return (
     <View
       flex={1}
@@ -32,7 +24,7 @@ export default function ListaTreinamentos({
       />
 
       <View padding={24}>
-        <TrainingList type={type} />
+        <TrainingList />
       </View>
     </View>
   )

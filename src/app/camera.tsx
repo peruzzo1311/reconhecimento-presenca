@@ -5,17 +5,14 @@ import { useRef, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
-import { usePresenceListStore } from '@/store/presence-list'
-
 interface CameraProps {
   navigation: any
 }
 
 export default function Camera({ navigation }: CameraProps) {
   const [focus, setFocus] = useState(false)
-  const [cameraType, setCameraType] = useState<CameraType>(CameraType.back)
+  const [cameraType, setCameraType] = useState<CameraType>(CameraType.front)
   const [permission, requestPermission] = ExpoCamera.useCameraPermissions()
-  const { participants } = usePresenceListStore()
 
   const cameraRef = useRef<ExpoCamera>(null)
 
@@ -31,7 +28,6 @@ export default function Camera({ navigation }: CameraProps) {
 
     navigation.navigate('Foto', {
       photo,
-      participants,
     })
   }
 
@@ -44,7 +40,9 @@ export default function Camera({ navigation }: CameraProps) {
         alignContent='center'
         gap={12}
       >
-        <Text textAlign='center'>Requesting camera permission...</Text>
+        <Text textAlign='center'>
+          Conceda a permissão para poder realizar captura de fotos
+        </Text>
 
         <TouchableOpacity onPress={requestPermission}>
           <Button
@@ -55,7 +53,7 @@ export default function Camera({ navigation }: CameraProps) {
             marginHorizontal='auto'
             pointerEvents='none'
           >
-            Request permission
+            Conceder permissão
           </Button>
         </TouchableOpacity>
       </View>

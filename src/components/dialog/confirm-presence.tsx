@@ -15,9 +15,7 @@ export default function ConfirmPresenceDialog() {
   const handleConfirm = () => {
     onClose()
 
-    navigation.navigate('Camera', {
-      participants: [data.participant],
-    })
+    navigation.navigate('Camera')
   }
 
   if (!isModalOpen) {

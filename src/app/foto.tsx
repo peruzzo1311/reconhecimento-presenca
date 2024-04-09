@@ -26,28 +26,33 @@ export default function Foto({ route, navigation }: FotoProps) {
   const toast = useToastController()
 
   const handleValidate = async () => {
-    setIsLoading(true)
+    try {
+      setIsLoading(true)
 
-    const { codRet, msgRet, participante } = await validatePresence({
-      participants,
-      photo,
-    })
+      const { codRet, msgRet, participante } = await validatePresence({
+        participants,
+        photo,
+      })
 
-    if (codRet && codRet !== 0) {
-      toast.show(msgRet.length > 0 ? msgRet : 'Erro ao validar presença')
+      if (codRet && codRet !== 0) {
+        toast.show(msgRet.length > 0 ? msgRet : 'Erro ao validar presença')
+
+        navigation.navigate('Camera')
+
+        return
+      }
+
+      confirmPresence(participante.numCpf)
+      navigation.navigate('ListaPresenca', {
+        type: 'validacao',
+        title: 'Lista de presença',
+      })
+    } catch (error) {
+      console.log(error)
+      toast.show('Erro ao validar presença')
+    } finally {
       setIsLoading(false)
-
-      navigation.navigate('Camera')
-
-      return
     }
-
-    setIsLoading(false)
-    confirmPresence(participante.numCpf)
-    navigation.navigate('ListaPresenca', {
-      type: 'validacao',
-      title: 'Lista de presença',
-    })
   }
 
   return (

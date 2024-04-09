@@ -1,16 +1,15 @@
 import React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { FlatList, TouchableOpacity } from 'react-native'
 import { Button, View } from 'tamagui'
 
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
-import PresenceFlatList from '@/components/presence/flatlist'
+import PresenceItem from '@/components/presence/item'
 import { usePresenceListStore } from '@/store/presence-list'
 
 interface ListaPresencaProps {
   route: {
     params: {
-      type: 'listagem' | 'validacao'
       title: string
     }
   }
@@ -25,9 +24,7 @@ export default function ListaPresenca({
   const { title } = route.params
 
   const handleValidatePresence = () => {
-    navigation.navigate('Camera', {
-      participants,
-    })
+    navigation.navigate('Camera')
   }
 
   return (
@@ -46,7 +43,11 @@ export default function ListaPresenca({
         flex={1}
         padding={24}
       >
-        <PresenceFlatList participants={participants} />
+        <FlatList
+          data={participants}
+          keyExtractor={(item) => item.numCpf.toString()}
+          renderItem={({ item }) => <PresenceItem participant={item} />}
+        />
       </View>
 
       <TouchableOpacity onPress={handleValidatePresence}>

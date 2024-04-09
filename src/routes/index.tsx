@@ -10,6 +10,7 @@ import ListaPresenca from '@/app/lista-presenca'
 import ListaTreinamentos from '@/app/lista-treinamentos'
 import Login from '@/app/login'
 import { useUserStore } from '@/store/user-store'
+import { Participants } from '@/types'
 
 export type RootStackParamList = {
   Login: undefined
@@ -21,7 +22,9 @@ export type RootStackParamList = {
     type: 'listagem' | 'validacao'
     title: string
   }
-  Camera: undefined
+  Camera: {
+    participant?: Participants
+  }
   Foto: {
     photo: string
   }

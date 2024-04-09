@@ -6,12 +6,11 @@ import { usePresenceListStore } from '@/store/presence-list'
 import { Training } from '@/types'
 
 interface TrainingItemProps {
-  type: 'listagem' | 'validacao'
   item: Training
   navigation: any
 }
 
-export function TrainingItem({ navigation, type, item }: TrainingItemProps) {
+export function TrainingItem({ navigation, item }: TrainingItemProps) {
   const { setParticipants } = usePresenceListStore()
 
   const handleNavigation = () => {
@@ -23,7 +22,6 @@ export function TrainingItem({ navigation, type, item }: TrainingItemProps) {
 
     navigation.push('ListaPresenca', {
       title: item.nomCua,
-      type,
     })
   }
 

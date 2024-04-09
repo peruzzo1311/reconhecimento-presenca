@@ -29,7 +29,6 @@ export default function Inicio() {
               />
             }
             route='ListaTreinamentos'
-            type='listagem'
           />
 
           <MenuButton
@@ -42,7 +41,6 @@ export default function Inicio() {
               />
             }
             route='ListaTreinamentos'
-            type='validacao'
           />
         </View>
       </View>

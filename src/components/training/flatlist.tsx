@@ -13,11 +13,7 @@ interface Response {
   treinamento: Training[]
 }
 
-interface TrainingListProps {
-  type: 'listagem' | 'validacao'
-}
-
-export function TrainingList({ type }: TrainingListProps) {
+export function TrainingList() {
   const navigation: any = useNavigation()
 
   const { data, isPending, error } = useQuery({
@@ -64,7 +60,6 @@ export function TrainingList({ type }: TrainingListProps) {
       renderItem={({ item }) => (
         <TrainingItem
           item={item}
-          type={type}
           navigation={navigation}
         />
       )}

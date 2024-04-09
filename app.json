@@ -39,8 +39,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Conceda a permissão para $(PRODUCT_NAME) para poder realizar caprura de fotos",
-          "microphonePermission": "Conceda a permissão para $(PRODUCT_NAME) para poder realizar caprura de fotos",
+          "cameraPermission": "Conceda a permissão para $(PRODUCT_NAME) para poder realizar captura de fotos",
+          "microphonePermission": "Conceda a permissão para $(PRODUCT_NAME) para poder realizar captura de fotos",
           "recordAudioAndroid": true
         }
       ]

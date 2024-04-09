@@ -8,24 +8,13 @@ interface MenuButtonProps {
   label: string
   icon: ReactElement<typeof FontAwesome>
   route: string
-  type?: 'listagem' | 'validacao'
 }
 
-export function MenuButton({ label, icon, route, type }: MenuButtonProps) {
+export function MenuButton({ label, icon, route }: MenuButtonProps) {
   const navigation: any = useNavigation()
 
-  function handleNavigation() {
-    if (!type) {
-      return navigation.push(route)
-    }
-
-    navigation.push(route, {
-      type,
-    })
-  }
-
   return (
-    <TouchableOpacity onPress={handleNavigation}>
+    <TouchableOpacity onPress={() => navigation.push(route)}>
       <Button
         flexDirection='column'
         justifyContent='center'
