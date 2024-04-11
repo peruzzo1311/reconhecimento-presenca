@@ -10,7 +10,7 @@ import ListaPresenca from '@/app/lista-presenca'
 import ListaTreinamentos from '@/app/lista-treinamentos'
 import Login from '@/app/login'
 import { useUserStore } from '@/store/user-store'
-import { Participants } from '@/types'
+import { Participant } from '@/types'
 
 export type RootStackParamList = {
   Login: undefined
@@ -23,7 +23,7 @@ export type RootStackParamList = {
     title: string
   }
   Camera: {
-    participant?: Participants
+    participant?: Participant
   }
   Foto: {
     photo: string
@@ -70,9 +70,6 @@ export default function RootStack() {
 
           <Stack.Screen
             name='Foto'
-            options={{
-              cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
-            }}
             // @ts-ignore
             component={Foto}
           />

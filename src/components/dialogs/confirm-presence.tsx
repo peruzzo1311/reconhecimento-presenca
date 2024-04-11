@@ -3,14 +3,14 @@ import { TouchableOpacity } from 'react-native'
 import { Button, Dialog, View } from 'tamagui'
 
 import { useDialogStore } from '@/store/dialog'
-import { Participants } from '@/types'
+import { Participant } from '@/types'
 
 export default function ConfirmPresenceDialog() {
   const { isOpen, onClose, type, data } = useDialogStore()
   const navigation: any = useNavigation()
 
   const isModalOpen = isOpen && type === 'presence'
-  const { participant } = data as { participant: Participants }
+  const { participant } = data as { participant: Participant }
 
   const handleConfirm = () => {
     onClose()

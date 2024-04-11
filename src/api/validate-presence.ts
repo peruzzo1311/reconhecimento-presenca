@@ -1,14 +1,14 @@
 import { CameraCapturedPicture } from 'expo-camera'
 
-import { Participants, ResponseDefault } from '@/types'
+import { Participant, ResponseDefault } from '@/types'
 
 interface validatePresenceProps {
-  participants: Participants[]
+  participants: Participant[]
   photo: CameraCapturedPicture
 }
 
 interface validatePresenceResponse extends ResponseDefault {
-  participante: Participants
+  participante: Participant
 }
 
 export async function validatePresence({
