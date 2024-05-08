@@ -23,11 +23,13 @@ export default function Camera({ navigation }: CameraProps) {
 
     const photo = await cameraRef.current.takePictureAsync({
       base64: true,
-      isImageMirror: false,
     })
 
     navigation.navigate('Foto', {
-      photo,
+      photo: {
+        base64: photo.base64,
+        uri: photo.uri,
+      },
     })
   }
 

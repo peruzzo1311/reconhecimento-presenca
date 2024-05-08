@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 
-import { Participants } from '@/types'
+import { Participant } from '@/types'
 
 export type DialogType = 'presence' | 'avatar'
 
 export interface DialogData {
-  participant?: Participants
+  participant?: Participant
 }
 
 interface DialogStore {

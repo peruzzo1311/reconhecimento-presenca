@@ -1,18 +1,21 @@
 import { Entypo } from '@expo/vector-icons'
 import { useToastController } from '@tamagui/toast'
-import { CameraCapturedPicture } from 'expo-camera'
 import Constants from 'expo-constants'
 import { useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Button, Image, Text, View } from 'tamagui'
 
 import { validatePresence } from '@/api/validate-presence'
+import { useDialogStore } from '@/store/dialog'
 import { useTrainingStore } from '@/store/treinamento-store'
 
 interface FotoProps {
   route: {
     params: {
-      photo: CameraCapturedPicture
+      photo: {
+        base64: string
+        uri: string
+      }
     }
   }
   navigation: any
@@ -20,34 +23,33 @@ interface FotoProps {
 
 export default function Foto({ route, navigation }: FotoProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { training, setParticipantPresence } = useTrainingStore()
   const { photo } = route.params
 
+  const { setParticipantPresence } = useTrainingStore()
+  const { data } = useDialogStore()
   const toast = useToastController()
 
   const handleValidate = async () => {
     try {
       setIsLoading(true)
 
-      const { codRet, msgRet, participante } = await validatePresence({
-        participants: training?.participantes || [],
-        photo,
+      const { codRet, msgRet, detail } = await validatePresence({
+        participants: data.participant?.fotCol ?? '',
+        base64: photo.base64,
       })
 
-      if (codRet && codRet !== 0) {
-        toast.show(msgRet.length > 0 ? msgRet : 'Erro ao validar presença')
-
+      if (codRet !== 0 || (detail?.codRet && detail?.codRet !== 0)) {
+        toast.show(msgRet.length > 0 ? msgRet : 'Erro ao verificar presença')
         navigation.navigate('Camera')
 
         return
       }
 
-      setParticipantPresence(participante)
-
+      setParticipantPresence(data.participant?.numCpf ?? '')
       navigation.push('ListaPresenca')
     } catch (error) {
       console.log(error)
-      toast.show('Erro ao validar presença')
+      toast.show('Não foi possível verificar presença')
     } finally {
       setIsLoading(false)
     }

@@ -1,19 +1,22 @@
-import { CameraCapturedPicture } from 'expo-camera'
+import { Platform } from 'react-native'
 
 import { Participant, ResponseDefault } from '@/types'
 
 interface validatePresenceProps {
-  participants: Participant[]
-  photo: CameraCapturedPicture
+  participants: Participant[] | string
+  base64: string
 }
 
 interface validatePresenceResponse extends ResponseDefault {
-  participante: Participant
+  detail?: {
+    codRet: number
+    msgRet: string
+  }
 }
 
 export async function validatePresence({
   participants,
-  photo,
+  base64,
 }: validatePresenceProps): Promise<validatePresenceResponse> {
   const res = await fetch(
     'https://prismaappfr.azurewebsites.net/verifica-presenca',
@@ -23,8 +26,9 @@ export async function validatePresence({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        fotPar: photo.base64,
+        fotPar: base64,
         participantes: participants,
+        platform: Platform.OS,
       }),
     }
   )

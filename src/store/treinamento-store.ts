@@ -1,33 +1,33 @@
 import { create } from 'zustand'
 
-import { Participant, Training } from '@/types'
+import { Training } from '@/types'
 
 interface TrainingStoreProps {
   training: Training | null
   setTraining: (training: Training) => void
-  setParticipantPresence: (participant: Participant) => void
+  setParticipantPresence: (cpf: string) => void
   clearTraining: () => void
 }
 
 export const useTrainingStore = create<TrainingStoreProps>((set) => ({
   training: null,
   setTraining: (training) => set({ training }),
-  setParticipantPresence: (participant) => {
+  setParticipantPresence: (cpf: string) => {
     set((state) => {
       if (!state.training) {
         return state
       }
 
-      const training = { ...state.training }
-      const participants = training.participantes.map((p) => {
-        if (p.numCpf === participant.numCpf) {
-          return { ...p, present: !p.isPresent }
-        }
+      const newTraining = { ...state.training }
+      const participant = newTraining.participantes.find(
+        (p) => p.numCpf === cpf
+      )
 
-        return p
-      })
+      if (participant) {
+        participant.isPresent = true
+      }
 
-      return { training: { ...training, participants } }
+      return { training: newTraining }
     })
   },
   clearTraining: () => set({ training: null }),

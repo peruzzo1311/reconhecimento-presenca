@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import { FlatList } from 'react-native'
-import { Spinner, View, Text } from 'tamagui'
+import { Spinner, Text, View } from 'tamagui'
 
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
@@ -17,12 +16,10 @@ export default function ListaTreinamentos({ navigation }: any) {
   const { data, isPending, error } = useQuery({
     queryKey: ['treinamentos'],
     queryFn: async () => {
-      const res = await axios.post<Response>(
+      const res = await fetch(
         'https://dc.prismainformatica.com.br:8188/SXI-API/G5Rest?server=https://dc.prismainformatica.com.br:8188&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
-        JSON.stringify({
-          numEmp: 1,
-        }),
         {
+          method: 'POST',
           headers: {
             user: 'prisma.integracao',
             pass: '@98fm',
@@ -30,10 +27,15 @@ export default function ListaTreinamentos({ navigation }: any) {
             Authorization: '',
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            numEmp: 1,
+          }),
         }
       )
 
-      return res.data
+      const data = (await res.json()) as Response
+
+      return data
     },
   })
 
