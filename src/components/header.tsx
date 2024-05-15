@@ -27,7 +27,7 @@ export function Header() {
             maxWidth={150}
           >
             <Image
-              source={require('@/assets/logo.png')}
+              source={require('@/assets/images/logo.png')}
               width='100%'
               height='100%'
               resizeMode='contain'

@@ -36,6 +36,7 @@ export function TrainingItem({ navigation, item }: TrainingItemProps) {
           backgroundColor='$primary600'
           alignItems='center'
           paddingVertical={4}
+          gap={8}
         >
           <Text
             color='white'
@@ -43,6 +44,7 @@ export function TrainingItem({ navigation, item }: TrainingItemProps) {
           >
             {item.nomCua}
           </Text>
+          <Text color='white'>Turma: {item.tmaCua}</Text>
         </View>
 
         <View

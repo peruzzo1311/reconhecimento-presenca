@@ -1,6 +1,6 @@
 import React from 'react'
-import { FlatList } from 'react-native'
-import { View } from 'tamagui'
+import { FlatList, TouchableOpacity } from 'react-native'
+import { Button, View } from 'tamagui'
 
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
@@ -14,9 +14,9 @@ interface ListaPresencaProps {
 export default function ListaPresenca({ navigation }: ListaPresencaProps) {
   const { training } = useTrainingStore()
 
-  // const handleValidatePresence = () => {
-  //   navigation.navigate('Camera')
-  // }
+  const handleValidatePresence = () => {
+    navigation.navigate('QRCode')
+  }
 
   if (!training) {
     return null
@@ -45,7 +45,7 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
         />
       </View>
 
-      {/* <TouchableOpacity onPress={handleValidatePresence}>
+      <TouchableOpacity onPress={handleValidatePresence}>
         <Button
           backgroundColor='$primary600'
           color='white'
@@ -55,9 +55,9 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
           marginHorizontal='auto'
           pointerEvents='none'
         >
-          Validar presença
+          Ler QRCode
         </Button>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   )
 }

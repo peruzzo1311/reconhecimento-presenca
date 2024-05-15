@@ -19,7 +19,7 @@ export async function validatePresence({
   base64,
 }: validatePresenceProps): Promise<validatePresenceResponse> {
   const res = await fetch(
-    'https://prismaappfr.azurewebsites.net/verifica-presenca',
+    'https://api-presenca-iqqsmwkmla-uc.a.run.app/verifica-presenca',
     {
       method: 'POST',
       headers: {

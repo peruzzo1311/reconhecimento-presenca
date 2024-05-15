@@ -98,7 +98,7 @@ export default function Camera({ navigation }: CameraProps) {
             fontSize='$5'
             textAlign='center'
           >
-            Camera
+            Reconhecimento facial
           </Text>
         </View>
       </View>

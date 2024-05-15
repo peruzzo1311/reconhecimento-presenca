@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { FlatList } from 'react-native'
-import { Spinner, Text, View } from 'tamagui'
+import { FlatList, TouchableOpacity } from 'react-native'
+import { Button, Spinner, Text, View } from 'tamagui'
 
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
@@ -13,7 +13,7 @@ interface Response {
 }
 
 export default function ListaTreinamentos({ navigation }: any) {
-  const { data, isPending, error } = useQuery({
+  const { data, isPending, error, refetch } = useQuery({
     queryKey: ['treinamentos'],
     queryFn: async () => {
       const res = await fetch(
@@ -39,6 +39,41 @@ export default function ListaTreinamentos({ navigation }: any) {
     },
   })
 
+  const refreshScreenOnError = () => {
+    refetch()
+  }
+
+  if (error) {
+    return (
+      <View
+        flex={1}
+        justifyContent='center'
+        alignItems='center'
+      >
+        <Text
+          fontSize='$5'
+          fontWeight='bold'
+        >
+          Erro ao carregar treinamentos
+        </Text>
+
+        <TouchableOpacity onPress={refreshScreenOnError}>
+          <Button
+            backgroundColor='$primary600'
+            color='white'
+            margin={20}
+            width='100%'
+            maxWidth={300}
+            marginHorizontal='auto'
+            pointerEvents='none'
+          >
+            Tentar novamente
+          </Button>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   return (
     <View
       flex={1}
@@ -53,15 +88,16 @@ export default function ListaTreinamentos({ navigation }: any) {
 
       <View padding={24}>
         {isPending && (
-          <View justifyContent='center'>
+          <View
+            flex={1}
+            justifyContent='center'
+          >
             <Spinner
               size='large'
               color='$primary600'
             />
           </View>
         )}
-
-        {error && <Text>{error.message}</Text>}
 
         {data && !error && !isPending && (
           <FlatList
