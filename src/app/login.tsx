@@ -31,7 +31,13 @@ export default function Login({ navigation }: { navigation: any }) {
       setIsLoading(true)
 
       if (!username || !password) {
-        toast.show('Preencha corretamente todos os campos')
+        toast.show('Preencha corretamente todos os campos', {
+          native: true,
+          burntOptions: {
+            haptic: 'error',
+            preset: 'error',
+          },
+        })
 
         return
       }
@@ -39,7 +45,13 @@ export default function Login({ navigation }: { navigation: any }) {
       const responseGetToken = await getToken({ username, password })
 
       if (responseGetToken.status === 401) {
-        toast.show('Usuário ou senha inválidos')
+        toast.show('Usuário ou senha inválidos', {
+          native: true,
+          burntOptions: {
+            haptic: 'error',
+            preset: 'error',
+          },
+        })
 
         return
       }
@@ -47,12 +59,24 @@ export default function Login({ navigation }: { navigation: any }) {
       if (responseGetToken.status === 429) {
         const data = await responseGetToken.json()
 
-        toast.show(data.message)
+        toast.show(data.message, {
+          native: true,
+          burntOptions: {
+            haptic: 'error',
+            preset: 'error',
+          },
+        })
         return
       }
 
       if (responseGetToken.status !== 200) {
-        toast.show('Erro ao tentar fazer o login')
+        toast.show('Erro ao tentar fazer o login', {
+          native: true,
+          burntOptions: {
+            haptic: 'error',
+            preset: 'error',
+          },
+        })
       }
 
       const data = await responseGetToken.json()
@@ -61,7 +85,9 @@ export default function Login({ navigation }: { navigation: any }) {
       const user = await getUser({ username, token })
 
       if (!user) {
-        toast.show('Usuário ou senha inválidos')
+        toast.show('Usuário ou senha inválidos', {
+          native: true,
+        })
 
         return
       }

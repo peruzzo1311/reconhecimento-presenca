@@ -1,4 +1,5 @@
-import React from 'react'
+import * as Network from 'expo-network'
+import React, { useEffect } from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import { Button, View } from 'tamagui'
 
@@ -13,6 +14,17 @@ interface ListaPresencaProps {
 
 export default function ListaPresenca({ navigation }: ListaPresencaProps) {
   const { training } = useTrainingStore()
+
+  useEffect(() => {
+    async function checkConnection() {
+      const connection = await Network.getNetworkStateAsync()
+      if (!connection.isConnected) {
+        navigation.navigate('Offline')
+      }
+    }
+
+    checkConnection()
+  }, [])
 
   const handleValidatePresence = () => {
     navigation.navigate('QRCode')

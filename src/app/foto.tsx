@@ -39,7 +39,13 @@ export default function Foto({ route, navigation }: FotoProps) {
       })
 
       if (codRet !== 0 || (detail?.codRet && detail?.codRet !== 0)) {
-        toast.show(msgRet.length > 0 ? msgRet : 'Erro ao verificar presença')
+        toast.show(msgRet.length > 0 ? msgRet : 'Erro ao verificar presença', {
+          native: true,
+          burntOptions: {
+            haptic: 'error',
+            preset: 'error',
+          },
+        })
         navigation.navigate('Camera')
 
         return
@@ -53,7 +59,13 @@ export default function Foto({ route, navigation }: FotoProps) {
       navigation.push('ListaPresenca')
     } catch (error) {
       console.log(error)
-      toast.show('Não foi possível verificar presença')
+      toast.show('Não foi possível verificar presença', {
+        native: true,
+        burntOptions: {
+          haptic: 'error',
+          preset: 'error',
+        },
+      })
     } finally {
       setIsLoading(false)
     }

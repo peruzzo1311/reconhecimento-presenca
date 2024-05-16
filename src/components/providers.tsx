@@ -18,7 +18,11 @@ export function Providers({ children }: ProviderProps) {
         defaultTheme='light'
       >
         <QueryClientProvider client={queryClient}>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider
+            burntOptions={{ from: 'bottom', shouldDismissByDrag: true }}
+          >
+            {children}
+          </ToastProvider>
         </QueryClientProvider>
       </TamaguiProvider>
     </NavigationContainer>

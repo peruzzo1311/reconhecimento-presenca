@@ -39,7 +39,8 @@
     "react-native-url-polyfill": "^2.0.0",
     "tamagui": "1.74.8",
     "zustand": "^4.5.2",
-    "expo-barcode-scanner": "~12.9.3"
+    "expo-barcode-scanner": "~12.9.3",
+    "expo-network": "~5.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
