@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { Alert, TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
+import { useTrainingStore } from '@/store/treinamento-store'
+
 interface QRCodeProps {
   navigation: any
 }
@@ -14,16 +16,27 @@ export default function QRCode({ navigation }: QRCodeProps) {
   const [barCodeScanned, setBarCodeScanned] = useState(false)
   const [hasPermission, setHasPermission] = useState(false)
 
+  const { setParticipantPresence, training } = useTrainingStore()
+
   const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
     setBarCodeScanned(true)
-    Alert.alert('QR Code escaneado', data, [
-      {
-        text: 'OK',
-        onPress: () => {
-          setBarCodeScanned(false)
-        },
-      },
-    ])
+
+    if (!training) {
+      return
+    }
+
+    training.participantes.forEach((participant) => {
+      if (participant.numCad === Number(data)) {
+        setParticipantPresence(participant.numCad)
+
+        Alert.alert('Sucesso', 'Presença registrada com sucesso!', [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('ListaPresenca'),
+          },
+        ])
+      }
+    })
   }
 
   useEffect(() => {

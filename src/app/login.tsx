@@ -17,7 +17,7 @@ import { useUserStore } from '@/store/user-store'
 export default function Login({ navigation }: { navigation: any }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
 
   const toast = useToastController()
@@ -67,7 +67,7 @@ export default function Login({ navigation }: { navigation: any }) {
       }
 
       setUser(user)
-      navigation.navigate('Home')
+      navigation.navigate('Inicio')
     } catch (error) {
       console.log(error)
     } finally {
@@ -105,8 +105,14 @@ export default function Login({ navigation }: { navigation: any }) {
           paddingTop={40}
           gap={20}
         >
-          <View gap={4}>
-            <Text fontWeight='600'>Usuário</Text>
+          <View gap={8}>
+            <Text
+              fontWeight='700'
+              fontSize='$3'
+              textTransform='uppercase'
+            >
+              Usuário
+            </Text>
 
             <Input
               placeholder='nome.sobrenome'
@@ -118,11 +124,18 @@ export default function Login({ navigation }: { navigation: any }) {
               onSubmitEditing={() => passwordInputRef.current?.focus()}
               backgroundColor={isLoading ? '$gray2' : 'white'}
               pointerEvents={isLoading ? 'none' : 'auto'}
+              focusStyle={{ borderColor: '$primary600', borderWidth: 1 }}
             />
           </View>
 
-          <View gap={4}>
-            <Text fontWeight='600'>Senha</Text>
+          <View gap={8}>
+            <Text
+              fontWeight='700'
+              fontSize='$3'
+              textTransform='uppercase'
+            >
+              Senha
+            </Text>
 
             <Input
               placeholder='Digite sua senha'
@@ -134,6 +147,7 @@ export default function Login({ navigation }: { navigation: any }) {
               onSubmitEditing={handleSubmit}
               backgroundColor={isLoading ? '$gray2' : 'white'}
               pointerEvents={isLoading ? 'none' : 'auto'}
+              focusStyle={{ borderColor: '$primary600', borderWidth: 1 }}
             />
           </View>
 
@@ -164,15 +178,15 @@ export default function Login({ navigation }: { navigation: any }) {
             <Text>Mostrar senha</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleSubmit}>
+          <TouchableOpacity onPress={isLoading ? undefined : handleSubmit}>
             <Button
               pointerEvents='none'
               backgroundColor='$primary600'
-              disabled={isLoading}
+              opacity={isLoading ? 0.5 : 1}
             >
               <Text
                 color='white'
-                fontWeight='600'
+                fontWeight='700'
               >
                 {isLoading ? 'Carregando...' : 'Entrar'}
               </Text>

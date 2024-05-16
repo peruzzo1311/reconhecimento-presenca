@@ -45,7 +45,11 @@ export default function Foto({ route, navigation }: FotoProps) {
         return
       }
 
-      setParticipantPresence(data.participant?.numCpf ?? '')
+      if (!data.participant) {
+        return
+      }
+
+      setParticipantPresence(data.participant.numCad)
       navigation.push('ListaPresenca')
     } catch (error) {
       console.log(error)
