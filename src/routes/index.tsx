@@ -9,6 +9,7 @@ import Inicio from '@/app/inicio'
 import ListaPresenca from '@/app/lista-presenca'
 import ListaTreinamentos from '@/app/lista-treinamentos'
 import Login from '@/app/login'
+import Offline from '@/app/offline'
 import QRCode from '@/app/qrcode'
 import { useUserStore } from '@/store/user-store'
 
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   Inicio: undefined
   Camera: undefined
   QRCode: undefined
+  Offline: undefined
   ListaTreinamentos: {
     type: 'listagem' | 'validacao'
   }
@@ -75,6 +77,11 @@ export default function RootStack() {
           <Stack.Screen
             name='QRCode'
             component={QRCode}
+          />
+
+          <Stack.Screen
+            name='Offline'
+            component={Offline}
           />
         </>
       ) : (

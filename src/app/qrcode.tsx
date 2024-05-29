@@ -16,18 +16,22 @@ export default function QRCode({ navigation }: QRCodeProps) {
   const [barCodeScanned, setBarCodeScanned] = useState(false)
   const [hasPermission, setHasPermission] = useState(false)
 
-  const { setParticipantPresence, training } = useTrainingStore()
+  const { setParticipantPresence, selectedTraining } = useTrainingStore()
 
   const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
     setBarCodeScanned(true)
 
-    if (!training) {
+    if (!selectedTraining) {
       return
     }
 
-    training.participantes.forEach((participant) => {
+    selectedTraining.participantes.forEach((participant) => {
       if (participant.numCad === Number(data)) {
-        setParticipantPresence(participant.numCad)
+        setParticipantPresence(
+          selectedTraining.codCua,
+          participant.numCad,
+          true
+        )
 
         Alert.alert('Sucesso', 'Presença registrada com sucesso!', [
           {

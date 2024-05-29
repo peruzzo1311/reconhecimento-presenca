@@ -1,5 +1,4 @@
-import * as Network from 'expo-network'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import { Button, View } from 'tamagui'
 
@@ -13,24 +12,13 @@ interface ListaPresencaProps {
 }
 
 export default function ListaPresenca({ navigation }: ListaPresencaProps) {
-  const { training } = useTrainingStore()
-
-  useEffect(() => {
-    async function checkConnection() {
-      const connection = await Network.getNetworkStateAsync()
-      if (!connection.isConnected) {
-        navigation.navigate('Offline')
-      }
-    }
-
-    checkConnection()
-  }, [])
+  const { selectedTraining } = useTrainingStore()
 
   const handleValidatePresence = () => {
     navigation.navigate('QRCode')
   }
 
-  if (!training) {
+  if (!selectedTraining) {
     return null
   }
 
@@ -43,7 +31,7 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
 
       <HeaderNavigation
         navigation={navigation}
-        title={training.nomCua}
+        title={selectedTraining.nomCua}
       />
 
       <View
@@ -51,7 +39,7 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
         padding={24}
       >
         <FlatList
-          data={training.participantes}
+          data={selectedTraining.participantes}
           keyExtractor={(item) => item.numCpf.toString()}
           renderItem={({ item }) => <PresenceItem participant={item} />}
         />

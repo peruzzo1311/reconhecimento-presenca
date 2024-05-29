@@ -11,14 +11,14 @@ interface TrainingItemProps {
 }
 
 export function TrainingItem({ navigation, item }: TrainingItemProps) {
-  const { setTraining } = useTrainingStore()
+  const { setSelectedTraining } = useTrainingStore()
 
   const handleSelectTraining = () => {
     if (!Array.isArray(item.participantes)) {
       item.participantes = [item.participantes]
     }
 
-    setTraining(item)
+    setSelectedTraining(item)
     navigation.push('ListaPresenca')
   }
 

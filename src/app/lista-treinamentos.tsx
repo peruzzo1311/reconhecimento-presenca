@@ -1,10 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
-import { FlatList, TouchableOpacity } from 'react-native'
-import { Button, Spinner, Text, View } from 'tamagui'
+import * as Network from 'expo-network'
+import { useEffect } from 'react'
+import { FlatList } from 'react-native'
+import { Spinner, View } from 'tamagui'
 
+import ErrorListaTreinamentos from '@/components/error-lista-treinamentos'
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import { TrainingItem } from '@/components/training-item'
+import { useTrainingStore } from '@/store/treinamento-store'
 import { Training } from '@/types'
 
 interface Response {
@@ -13,7 +17,10 @@ interface Response {
 }
 
 export default function ListaTreinamentos({ navigation }: any) {
-  const { data, isPending, error, refetch } = useQuery({
+  const { trainingList, setTrainingList } = useTrainingStore()
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data, isPending, refetch, isError } = useQuery({
     queryKey: ['treinamentos'],
     queryFn: async () => {
       const res = await fetch(
@@ -35,44 +42,29 @@ export default function ListaTreinamentos({ navigation }: any) {
 
       const data = (await res.json()) as Response
 
-      return data
+      setTrainingList(data.treinamento)
+
+      return data.treinamento
     },
   })
 
-  const refreshScreenOnError = () => {
-    refetch()
-  }
+  useEffect(() => {
+    const getNetwork = async () => {
+      const network = await Network.getNetworkStateAsync()
 
-  if (error) {
-    return (
-      <View
-        flex={1}
-        justifyContent='center'
-        alignItems='center'
-      >
-        <Text
-          fontSize='$5'
-          fontWeight='bold'
-        >
-          Erro ao carregar treinamentos
-        </Text>
+      if (!network.isConnected) {
+        if (!trainingList || trainingList.length === 0) {
+          return <ErrorListaTreinamentos refetch={refetch} />
+        }
 
-        <TouchableOpacity onPress={refreshScreenOnError}>
-          <Button
-            backgroundColor='$primary600'
-            color='white'
-            margin={20}
-            width='100%'
-            maxWidth={300}
-            marginHorizontal='auto'
-            pointerEvents='none'
-          >
-            Tentar novamente
-          </Button>
-        </TouchableOpacity>
-      </View>
-    )
-  }
+        return
+      }
+
+      refetch()
+    }
+
+    getNetwork()
+  }, [])
 
   return (
     <View
@@ -99,9 +91,9 @@ export default function ListaTreinamentos({ navigation }: any) {
           </View>
         )}
 
-        {data && !error && !isPending && (
+        {trainingList && !isPending && (
           <FlatList
-            data={data.treinamento}
+            data={trainingList}
             renderItem={({ item }) => (
               <TrainingItem
                 item={item}

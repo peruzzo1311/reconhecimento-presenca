@@ -5,36 +5,46 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import { Training } from '@/types'
 
 interface TrainingStoreProps {
-  training: Training | null
-  setTraining: (training: Training) => void
-  setParticipantPresence: (id: number) => void
-  clearTraining: () => void
+  trainingList: Training[]
+  setTrainingList: (trainings: Training[]) => void
+
+  selectedTraining: Training | null
+  setSelectedTraining: (training: Training | null) => void
+
+  setParticipantPresence: (
+    trainingId: number,
+    participantId: number,
+    presence: boolean
+  ) => void
 }
 
 export const useTrainingStore = create(
   persist<TrainingStoreProps>(
     (set) => ({
-      training: null,
-      setTraining: (training) => set({ training }),
-      setParticipantPresence: (id: number) => {
-        set((state) => {
-          if (!state.training) {
-            return state
-          }
+      trainingList: [],
+      setTrainingList: (trainings) => set({ trainingList: trainings }),
 
-          const newTraining = { ...state.training }
-          const participant = newTraining.participantes.find(
-            (p) => p.numCad === id
+      selectedTraining: null,
+      setSelectedTraining: (selectedTraining) => set({ selectedTraining }),
+
+      setParticipantPresence: (trainingId, participantId, presence) => {
+        set((state) => {
+          const trainingIndex = state.trainingList.findIndex(
+            (training) => training.codCua === trainingId
+          )
+          const participantIndex = state.trainingList[
+            trainingIndex
+          ].participantes.findIndex(
+            (participant) => participant.numCad === participantId
           )
 
-          if (participant) {
-            participant.isPresent = true
-          }
+          state.trainingList[trainingIndex].participantes[
+            participantIndex
+          ].isPresent = presence
 
-          return { training: newTraining }
+          return { trainingList: state.trainingList }
         })
       },
-      clearTraining: () => set({ training: null }),
     }),
     {
       name: 'reconhecimento-presenca-user-store',
