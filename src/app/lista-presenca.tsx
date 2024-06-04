@@ -1,4 +1,5 @@
-import React from 'react'
+import { useToastController } from '@tamagui/toast'
+import * as Network from 'expo-network'
 import { FlatList, TouchableOpacity } from 'react-native'
 import { Button, View } from 'tamagui'
 
@@ -13,9 +14,27 @@ interface ListaPresencaProps {
 
 export default function ListaPresenca({ navigation }: ListaPresencaProps) {
   const { selectedTraining } = useTrainingStore()
+  const toast = useToastController()
 
-  const handleValidatePresence = () => {
-    navigation.navigate('QRCode')
+  const handleFaceRecognition = async () => {
+    const network = await Network.getNetworkStateAsync()
+
+    if (!network.isConnected) {
+      toast.show(
+        'Você está offline, não é possível realizar a leitura facial',
+        {
+          native: true,
+          burntOptions: {
+            haptic: 'error',
+            preset: 'error',
+          },
+        }
+      )
+
+      return
+    }
+
+    navigation.navigate('Camera')
   }
 
   if (!selectedTraining) {
@@ -41,11 +60,15 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
         <FlatList
           data={selectedTraining.participantes}
           keyExtractor={(item) => item.numCpf.toString()}
-          renderItem={({ item }) => <PresenceItem participant={item} />}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={handleFaceRecognition}>
+              <PresenceItem participant={item} />
+            </TouchableOpacity>
+          )}
         />
       </View>
 
-      <TouchableOpacity onPress={handleValidatePresence}>
+      <TouchableOpacity onPress={() => navigation.navigate('QRCode')}>
         <Button
           backgroundColor='$primary600'
           color='white'

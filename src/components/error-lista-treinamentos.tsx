@@ -2,11 +2,11 @@ import { TouchableOpacity } from 'react-native'
 import { View, Text, Button } from 'tamagui'
 
 interface ErrorListaTreinamentosProps {
-  refetch: () => void
+  navigation: any
 }
 
 export default function ErrorListaTreinamentos({
-  refetch,
+  navigation,
 }: ErrorListaTreinamentosProps) {
   return (
     <View
@@ -21,7 +21,14 @@ export default function ErrorListaTreinamentos({
         Erro ao carregar treinamentos
       </Text>
 
-      <TouchableOpacity onPress={() => refetch()}>
+      <Text
+        fontSize='$3'
+        marginVertical={8}
+      >
+        Verifique sua conexão com a internet
+      </Text>
+
+      <TouchableOpacity onPress={() => navigation.replace('ListaTreinamentos')}>
         <Button
           backgroundColor='$primary600'
           color='white'

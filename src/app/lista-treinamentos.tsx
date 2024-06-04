@@ -1,52 +1,35 @@
-import { useQuery } from '@tanstack/react-query'
 import * as Network from 'expo-network'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 import { Spinner, View } from 'tamagui'
 
+import getTreinamentos from '@/api/get-treinamentos'
 import ErrorListaTreinamentos from '@/components/error-lista-treinamentos'
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import { TrainingItem } from '@/components/training-item'
 import { useTrainingStore } from '@/store/treinamento-store'
-import { Training } from '@/types'
-
-interface Response {
-  msgRet: string
-  treinamento: Training[]
-}
 
 export default function ListaTreinamentos({ navigation }: any) {
   const { trainingList, setTrainingList } = useTrainingStore()
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, isPending, refetch, isError } = useQuery({
-    queryKey: ['treinamentos'],
-    queryFn: async () => {
-      const res = await fetch(
-        'https://dc.prismainformatica.com.br:8188/SXI-API/G5Rest?server=https://dc.prismainformatica.com.br:8188&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
-        {
-          method: 'POST',
-          headers: {
-            user: 'prisma.integracao',
-            pass: '@98fm',
-            encryptionType: '0',
-            Authorization: '',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            numEmp: 1,
-          }),
-        }
-      )
+  const getTreinamentosList = async () => {
+    try {
+      setIsLoading(true)
 
-      const data = (await res.json()) as Response
+      const treinamentos = await getTreinamentos()
 
-      setTrainingList(data.treinamento)
+      setTrainingList(treinamentos)
+    } catch (error) {
+      console.error(error)
 
-      return data.treinamento
-    },
-  })
+      setIsError(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
     const getNetwork = async () => {
@@ -54,17 +37,21 @@ export default function ListaTreinamentos({ navigation }: any) {
 
       if (!network.isConnected) {
         if (!trainingList || trainingList.length === 0) {
-          return <ErrorListaTreinamentos refetch={refetch} />
+          return <ErrorListaTreinamentos navigation={navigation} />
         }
 
         return
       }
 
-      refetch()
+      getTreinamentosList()
     }
 
     getNetwork()
   }, [])
+
+  if (isError) {
+    return <ErrorListaTreinamentos navigation={navigation} />
+  }
 
   return (
     <View
@@ -79,7 +66,7 @@ export default function ListaTreinamentos({ navigation }: any) {
       />
 
       <View padding={24}>
-        {isPending && (
+        {isLoading && (
           <View
             flex={1}
             justifyContent='center'
@@ -91,7 +78,7 @@ export default function ListaTreinamentos({ navigation }: any) {
           </View>
         )}
 
-        {trainingList && !isPending && (
+        {trainingList && !isLoading && (
           <FlatList
             data={trainingList}
             renderItem={({ item }) => (

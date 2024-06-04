@@ -17,7 +17,7 @@ import { useUserStore } from '@/store/user-store'
 export default function Login({ navigation }: { navigation: any }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
   const toast = useToastController()
@@ -96,6 +96,14 @@ export default function Login({ navigation }: { navigation: any }) {
       navigation.navigate('Inicio')
     } catch (error) {
       console.log(error)
+
+      toast.show('Erro ao tentar fazer o login, verifique sua conexão', {
+        native: true,
+        burntOptions: {
+          haptic: 'error',
+          preset: 'error',
+        },
+      })
     } finally {
       setIsLoading(false)
     }

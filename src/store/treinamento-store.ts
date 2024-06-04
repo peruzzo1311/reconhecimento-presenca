@@ -47,7 +47,7 @@ export const useTrainingStore = create(
       },
     }),
     {
-      name: 'reconhecimento-presenca-user-store',
+      name: 'reconhecimento-presenca-training-store',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

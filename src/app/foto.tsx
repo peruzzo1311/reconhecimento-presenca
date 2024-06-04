@@ -25,7 +25,7 @@ export default function Foto({ route, navigation }: FotoProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { photo } = route.params
 
-  const { setParticipantPresence } = useTrainingStore()
+  const { setParticipantPresence, selectedTraining } = useTrainingStore()
   const { data } = useDialogStore()
   const toast = useToastController()
 
@@ -55,7 +55,11 @@ export default function Foto({ route, navigation }: FotoProps) {
         return
       }
 
-      setParticipantPresence(data.participant.numCad)
+      setParticipantPresence(
+        selectedTraining!.codCua,
+        data.participant.numCad,
+        true
+      )
       navigation.push('ListaPresenca')
     } catch (error) {
       console.log(error)

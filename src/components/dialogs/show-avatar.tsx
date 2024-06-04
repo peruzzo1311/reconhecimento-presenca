@@ -1,13 +1,13 @@
 import { Avatar, Dialog } from 'tamagui'
 
 import { useDialogStore } from '@/store/dialog'
-import { Participants } from '@/types'
+import { Participant } from '@/types'
 
 export default function ShowAvatarDialog() {
   const { isOpen, onClose, type, data } = useDialogStore()
 
   const isModalOpen = isOpen && type === 'avatar'
-  const { participant } = data as { participant: Participants }
+  const { participant } = data as { participant: Participant }
 
   if (!isModalOpen) {
     return null
