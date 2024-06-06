@@ -18,7 +18,7 @@ export function HeaderNavigation({ navigation, title }: HeaderNavigationProps) {
       paddingVertical={8}
     >
       <TouchableOpacity
-        style={{ paddingVertical: 8, paddingHorizontal: 12, paddingLeft: 0 }}
+        style={{ padding: 12 }}
         onPress={() => navigation.goBack()}
       >
         <FontAwesome5

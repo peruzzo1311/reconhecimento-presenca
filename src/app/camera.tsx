@@ -1,5 +1,5 @@
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons'
-import { CameraType, Camera as ExpoCamera } from 'expo-camera'
+import { CameraType, CameraView, useCameraPermissions } from 'expo-camera'
 import Constants from 'expo-constants'
 import { useRef, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
@@ -10,11 +10,10 @@ interface CameraProps {
 }
 
 export default function Camera({ navigation }: CameraProps) {
-  const [focus, setFocus] = useState(false)
-  const [cameraType, setCameraType] = useState<CameraType>(CameraType.front)
-  const [permission, requestPermission] = ExpoCamera.useCameraPermissions()
+  const [facing, setFacing] = useState<CameraType>('front')
+  const [permission, requestPermission] = useCameraPermissions()
 
-  const cameraRef = useRef<ExpoCamera>(null)
+  const cameraRef = useRef<CameraView>(null)
 
   const handleTakePicture = async () => {
     if (!cameraRef.current) {
@@ -24,6 +23,10 @@ export default function Camera({ navigation }: CameraProps) {
     const photo = await cameraRef.current.takePictureAsync({
       base64: true,
     })
+
+    if (!photo) {
+      return
+    }
 
     navigation.navigate('Foto', {
       photo: {
@@ -81,7 +84,7 @@ export default function Camera({ navigation }: CameraProps) {
         paddingVertical={8}
       >
         <TouchableOpacity
-          style={{ padding: 8, paddingLeft: 0 }}
+          style={{ padding: 12 }}
           onPress={() => navigation.goBack()}
         >
           <FontAwesome5
@@ -103,13 +106,10 @@ export default function Camera({ navigation }: CameraProps) {
         </View>
       </View>
 
-      <ExpoCamera
+      <CameraView
         ref={cameraRef}
         style={{ flex: 1 }}
-        type={cameraType}
-        autoFocus={focus}
-        focusDepth={focus ? 0 : 1}
-        onTouchStart={() => setFocus(!focus)}
+        facing={facing}
       />
 
       <View
@@ -136,13 +136,7 @@ export default function Camera({ navigation }: CameraProps) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() =>
-            setCameraType(
-              cameraType === CameraType.back
-                ? CameraType.front
-                : CameraType.back
-            )
-          }
+          onPress={() => setFacing(facing === 'back' ? 'front' : 'back')}
         >
           <MaterialIcons
             name='flip-camera-android'

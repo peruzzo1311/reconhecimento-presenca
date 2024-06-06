@@ -8,10 +8,8 @@ interface validatePresenceProps {
 }
 
 interface validatePresenceResponse extends ResponseDefault {
-  detail?: {
-    codRet: number
-    msgRet: string
-  }
+  codRet: number
+  msgRet: string
 }
 
 export async function validatePresence({
@@ -19,7 +17,7 @@ export async function validatePresence({
   base64,
 }: validatePresenceProps): Promise<validatePresenceResponse> {
   const res = await fetch(
-    'https://api-presenca-iqqsmwkmla-uc.a.run.app/verifica-presenca',
+    'https://02b4-187-72-163-1.ngrok-free.app/verifica-presenca',
     {
       method: 'POST',
       headers: {
@@ -35,5 +33,5 @@ export async function validatePresence({
 
   const data = await res.json()
 
-  return data
+  return data.detail
 }

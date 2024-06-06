@@ -7,16 +7,17 @@ import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import PresenceItem from '@/components/presence-item'
 import { useTrainingStore } from '@/store/treinamento-store'
+import { Participant } from '@/types'
 
 interface ListaPresencaProps {
   navigation: any
 }
 
 export default function ListaPresenca({ navigation }: ListaPresencaProps) {
-  const { selectedTraining } = useTrainingStore()
+  const { selectedTraining, setSelectedParticipant } = useTrainingStore()
   const toast = useToastController()
 
-  const handleFaceRecognition = async () => {
+  const handleFaceRecognition = async (participant: Participant) => {
     const network = await Network.getNetworkStateAsync()
 
     if (!network.isConnected) {
@@ -34,6 +35,7 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
       return
     }
 
+    setSelectedParticipant(participant)
     navigation.navigate('Camera')
   }
 
@@ -61,7 +63,11 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
           data={selectedTraining.participantes}
           keyExtractor={(item) => item.numCpf.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={handleFaceRecognition}>
+            <TouchableOpacity
+              onPress={
+                item.isPresent ? undefined : () => handleFaceRecognition(item)
+              }
+            >
               <PresenceItem participant={item} />
             </TouchableOpacity>
           )}

@@ -1,8 +1,11 @@
 import { FontAwesome5 } from '@expo/vector-icons'
-import { BarCodeScanner } from 'expo-barcode-scanner'
-import { BarCodeScanningResult, CameraType } from 'expo-camera'
+import {
+  BarcodeScanningResult,
+  CameraView,
+  useCameraPermissions,
+} from 'expo-camera'
 import Constants from 'expo-constants'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Alert, TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
@@ -13,46 +16,70 @@ interface QRCodeProps {
 }
 
 export default function QRCode({ navigation }: QRCodeProps) {
-  const [barCodeScanned, setBarCodeScanned] = useState(false)
-  const [hasPermission, setHasPermission] = useState(false)
+  const [barcodeScanned, setBarcodeScanned] = useState(false)
+  const [permission, requestPermission] = useCameraPermissions()
 
   const { setParticipantPresence, selectedTraining } = useTrainingStore()
 
-  const handleBarCodeScanned = ({ data }: BarCodeScanningResult) => {
-    setBarCodeScanned(true)
+  const handleBarCodeScanned = ({ data }: BarcodeScanningResult) => {
+    try {
+      setBarcodeScanned(true)
 
-    if (!selectedTraining) {
-      return
-    }
+      if (!selectedTraining) {
+        return
+      }
 
-    selectedTraining.participantes.forEach((participant) => {
-      if (participant.numCad === Number(data)) {
-        setParticipantPresence(
-          selectedTraining.codCua,
-          participant.numCad,
-          true
-        )
+      const user = selectedTraining.participantes.find(
+        (participant) => participant.numCad === Number(data)
+      )
 
-        Alert.alert('Sucesso', 'Presença registrada com sucesso!', [
+      if (!user) {
+        Alert.alert('Erro', 'Participante não encontrado.', [
           {
             text: 'OK',
-            onPress: () => navigation.navigate('ListaPresenca'),
+            onPress: () => setBarcodeScanned(false),
           },
         ])
+
+        return
       }
-    })
+
+      if (user.isPresent) {
+        Alert.alert('Erro', 'Presença já registrada.', [
+          {
+            text: 'OK',
+            onPress: () => setBarcodeScanned(false),
+          },
+        ])
+
+        return
+      }
+
+      setParticipantPresence(
+        selectedTraining.codCua,
+        selectedTraining.tmaCua,
+        user.numCad
+      )
+
+      Alert.alert('Sucesso', 'Presença registrada com sucesso!', [
+        {
+          text: 'OK',
+          onPress: () => setBarcodeScanned(false),
+        },
+      ])
+    } catch (error) {
+      console.log(error)
+
+      Alert.alert('Erro', 'Ocorreu um erro ao registrar a presença.', [
+        {
+          text: 'OK',
+          onPress: () => setBarcodeScanned(false),
+        },
+      ])
+    }
   }
 
-  useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync()
-      setHasPermission(status === 'granted')
-    }
-
-    getBarCodeScannerPermissions()
-  }, [])
-
-  if (!hasPermission) {
+  if (!permission) {
     return (
       <View
         flex={1}
@@ -69,11 +96,7 @@ export default function QRCode({ navigation }: QRCodeProps) {
         </Text>
 
         <Button
-          onPress={() => {
-            BarCodeScanner.requestPermissionsAsync().then(({ status }) =>
-              setHasPermission(status === 'granted')
-            )
-          }}
+          onPress={requestPermission}
           marginTop={16}
           backgroundColor='$primary600'
           color='white'
@@ -125,10 +148,14 @@ export default function QRCode({ navigation }: QRCodeProps) {
         </View>
       </View>
 
-      <BarCodeScanner
+      <CameraView
         style={{ flex: 1 }}
-        type={CameraType.back}
-        onBarCodeScanned={barCodeScanned ? undefined : handleBarCodeScanned}
+        facing='back'
+        autofocus='on'
+        barcodeScannerSettings={{
+          barcodeTypes: ['qr'],
+        }}
+        onBarcodeScanned={barcodeScanned ? undefined : handleBarCodeScanned}
       />
     </View>
   )

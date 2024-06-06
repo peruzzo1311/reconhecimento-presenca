@@ -6,7 +6,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Button, Image, Text, View } from 'tamagui'
 
 import { validatePresence } from '@/api/validate-presence'
-import { useDialogStore } from '@/store/dialog'
 import { useTrainingStore } from '@/store/treinamento-store'
 
 interface FotoProps {
@@ -25,44 +24,55 @@ export default function Foto({ route, navigation }: FotoProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { photo } = route.params
 
-  const { setParticipantPresence, selectedTraining } = useTrainingStore()
-  const { data } = useDialogStore()
+  const { setParticipantPresence, selectedTraining, selectedParticipant } =
+    useTrainingStore()
+
   const toast = useToastController()
 
   const handleValidate = async () => {
     try {
       setIsLoading(true)
 
-      const { codRet, msgRet, detail } = await validatePresence({
-        participants: data.participant?.fotCol ?? '',
-        base64: photo.base64,
-      })
-
-      if (codRet !== 0 || (detail?.codRet && detail?.codRet !== 0)) {
-        toast.show(msgRet.length > 0 ? msgRet : 'Erro ao verificar presença', {
+      if (!selectedParticipant) {
+        toast.show('Participante não selecionado', {
           native: true,
           burntOptions: {
             haptic: 'error',
             preset: 'error',
           },
         })
-        navigation.navigate('Camera')
+        navigation.push('ListaPresenca')
 
         return
       }
 
-      if (!data.participant) {
+      const { codRet, msgRet } = await validatePresence({
+        participants: selectedParticipant.fotCol ?? '',
+        base64: photo.base64,
+      })
+
+      if (codRet !== 0) {
+        toast.show(msgRet ?? 'Erro ao verificar presença', {
+          native: true,
+          burntOptions: {
+            haptic: 'error',
+            preset: 'error',
+          },
+        })
+        navigation.push('ListaPresenca')
+
         return
       }
 
       setParticipantPresence(
         selectedTraining!.codCua,
-        data.participant.numCad,
-        true
+        selectedTraining!.tmaCua,
+        selectedParticipant.numCad
       )
       navigation.push('ListaPresenca')
     } catch (error) {
-      console.log(error)
+      console.error(error)
+
       toast.show('Não foi possível verificar presença', {
         native: true,
         burntOptions: {
@@ -70,6 +80,7 @@ export default function Foto({ route, navigation }: FotoProps) {
           preset: 'error',
         },
       })
+      navigation.push('ListaPresenca')
     } finally {
       setIsLoading(false)
     }
@@ -94,12 +105,12 @@ export default function Foto({ route, navigation }: FotoProps) {
       >
         <TouchableOpacity
           style={{
-            padding: 10,
-            borderRadius: 10,
+            padding: 12,
+            borderRadius: 12,
             backgroundColor: '#0171bb',
           }}
           disabled={isLoading}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.push('ListaPresenca')}
         >
           <Entypo
             name='chevron-left'
