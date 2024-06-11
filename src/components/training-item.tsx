@@ -19,7 +19,7 @@ export function TrainingItem({ navigation, item }: TrainingItemProps) {
     }
 
     setSelectedTraining(item)
-    navigation.push('ListaPresenca')
+    navigation.navigate('ListaPresenca')
   }
 
   return (

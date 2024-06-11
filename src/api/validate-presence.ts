@@ -17,7 +17,7 @@ export async function validatePresence({
   base64,
 }: validatePresenceProps): Promise<validatePresenceResponse> {
   const res = await fetch(
-    'https://02b4-187-72-163-1.ngrok-free.app/verifica-presenca',
+    'https://api-presenca-iqqsmwkmla-rj.a.run.app/verifica-presenca',
     {
       method: 'POST',
       headers: {

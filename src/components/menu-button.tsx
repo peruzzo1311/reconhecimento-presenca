@@ -14,7 +14,7 @@ export function MenuButton({ label, icon, route }: MenuButtonProps) {
   const navigation: any = useNavigation()
 
   return (
-    <TouchableOpacity onPress={() => navigation.push(route)}>
+    <TouchableOpacity onPress={() => navigation.navigate(route)}>
       <Button
         flexDirection='column'
         justifyContent='center'

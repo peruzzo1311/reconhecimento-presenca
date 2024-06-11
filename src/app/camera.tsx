@@ -22,6 +22,8 @@ export default function Camera({ navigation }: CameraProps) {
 
     const photo = await cameraRef.current.takePictureAsync({
       base64: true,
+      isImageMirror: facing === 'front',
+      quality: 0.5,
     })
 
     if (!photo) {
@@ -85,7 +87,7 @@ export default function Camera({ navigation }: CameraProps) {
       >
         <TouchableOpacity
           style={{ padding: 12 }}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('ListaPresenca')}
         >
           <FontAwesome5
             name='chevron-left'

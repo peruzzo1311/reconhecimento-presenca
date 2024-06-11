@@ -41,7 +41,7 @@ export default function Foto({ route, navigation }: FotoProps) {
             preset: 'error',
           },
         })
-        navigation.push('ListaPresenca')
+        navigation.navigate('ListaPresenca')
 
         return
       }
@@ -59,7 +59,7 @@ export default function Foto({ route, navigation }: FotoProps) {
             preset: 'error',
           },
         })
-        navigation.push('ListaPresenca')
+        navigation.navigate('ListaPresenca')
 
         return
       }
@@ -69,7 +69,7 @@ export default function Foto({ route, navigation }: FotoProps) {
         selectedTraining!.tmaCua,
         selectedParticipant.numCad
       )
-      navigation.push('ListaPresenca')
+      navigation.navigate('ListaPresenca')
     } catch (error) {
       console.error(error)
 
@@ -80,7 +80,7 @@ export default function Foto({ route, navigation }: FotoProps) {
           preset: 'error',
         },
       })
-      navigation.push('ListaPresenca')
+      navigation.navigate('ListaPresenca')
     } finally {
       setIsLoading(false)
     }
@@ -110,7 +110,7 @@ export default function Foto({ route, navigation }: FotoProps) {
             backgroundColor: '#0171bb',
           }}
           disabled={isLoading}
-          onPress={() => navigation.push('ListaPresenca')}
+          onPress={() => navigation.navigate('Camera')}
         >
           <Entypo
             name='chevron-left'

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Reconhecimento de Presença",
     "slug": "reconhecimento-presenca",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "web": {
       "favicon": "./src/assets/icons/favicon.png"
     },
@@ -23,7 +23,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.controledepresenca",
-      "buildNumber": "4"
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
