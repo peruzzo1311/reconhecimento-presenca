@@ -21,6 +21,10 @@ export default function ListaTreinamentos({ navigation }: any) {
 
       const treinamentos = await getTreinamentos()
 
+      if (!Array.isArray(treinamentos)) {
+        setTrainingList([treinamentos])
+      }
+
       setTrainingList(treinamentos)
     } catch (error) {
       console.error(error)

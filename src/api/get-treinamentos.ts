@@ -25,5 +25,9 @@ export default async function getTreinamentos() {
 
   const data = (await res.json()) as Response
 
+  if (!Array.isArray(data.treinamento)) {
+    return [data.treinamento]
+  }
+
   return data.treinamento
 }
