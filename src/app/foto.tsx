@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Button, Image, Text, View } from 'tamagui'
 
-import { validatePresence } from '@/api/validate-presence'
+import { RecognitionValidate } from '@/api/validate-presence'
 import { useTrainingStore } from '@/store/treinamento-store'
 
 interface FotoProps {
@@ -46,7 +46,7 @@ export default function Foto({ route, navigation }: FotoProps) {
         return
       }
 
-      const { codRet, msgRet } = await validatePresence({
+      const { codRet, msgRet } = await RecognitionValidate({
         participants: selectedParticipant.fotCol ?? '',
         base64: photo.base64,
       })
@@ -87,14 +87,8 @@ export default function Foto({ route, navigation }: FotoProps) {
   }
 
   return (
-    <View
-      flex={1}
-      backgroundColor='white'
-    >
-      <View
-        height={Constants.statusBarHeight}
-        backgroundColor='$primary600'
-      />
+    <View flex={1} backgroundColor='white'>
+      <View height={Constants.statusBarHeight} backgroundColor='$primary600' />
 
       <View
         position='absolute'
@@ -112,11 +106,7 @@ export default function Foto({ route, navigation }: FotoProps) {
           disabled={isLoading}
           onPress={() => navigation.navigate('Camera')}
         >
-          <Entypo
-            name='chevron-left'
-            size={28}
-            color='white'
-          />
+          <Entypo name='chevron-left' size={28} color='white' />
         </TouchableOpacity>
       </View>
 
@@ -127,12 +117,7 @@ export default function Foto({ route, navigation }: FotoProps) {
         flex={1}
       />
 
-      <View
-        position='absolute'
-        bottom={20}
-        right={20}
-        left={20}
-      >
+      <View position='absolute' bottom={20} right={20} left={20}>
         <TouchableOpacity onPress={handleValidate}>
           <Button
             backgroundColor='$primary600'
@@ -140,11 +125,7 @@ export default function Foto({ route, navigation }: FotoProps) {
             disabled={isLoading}
             opacity={isLoading ? 0.5 : 1}
           >
-            <Text
-              fontWeight='700'
-              fontSize='$5'
-              color='white'
-            >
+            <Text fontWeight='700' fontSize='$5' color='white'>
               {isLoading ? 'Validando...' : 'Validar presença'}
             </Text>
           </Button>

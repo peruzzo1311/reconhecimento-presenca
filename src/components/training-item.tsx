@@ -27,21 +27,14 @@ export function TrainingItem({ navigation, item }: TrainingItemProps) {
       style={{ overflow: 'hidden', borderRadius: 15 }}
       onPress={handleSelectTraining}
     >
-      <View
-        borderWidth={2}
-        borderColor='$primary600'
-        borderRadius={15}
-      >
+      <View borderWidth={2} borderColor='$primary600' borderRadius={15}>
         <View
           backgroundColor='$primary600'
           alignItems='center'
           paddingVertical={4}
           gap={8}
         >
-          <Text
-            color='white'
-            fontWeight='700'
-          >
+          <Text color='white' fontWeight='700'>
             {item.nomCua}
           </Text>
           <Text color='white'>Turma: {item.tmaCua}</Text>
@@ -53,30 +46,13 @@ export function TrainingItem({ navigation, item }: TrainingItemProps) {
           justifyContent='space-between'
           padding={16}
         >
-          <FontAwesome5
-            name='user-graduate'
-            size={32}
-            color='#0171BB'
-          />
+          <FontAwesome5 name='user-graduate' size={32} color='#0171BB' />
 
-          <View
-            flexDirection='column'
-            gap={8}
-          >
-            <View
-              alignItems='center'
-              flexDirection='row'
-            >
-              <FontAwesome5
-                name='calendar-alt'
-                size={16}
-                color='#0171BB'
-              />
+          <View flexDirection='column' gap={8}>
+            <View alignItems='center' flexDirection='row'>
+              <FontAwesome5 name='calendar-alt' size={16} color='#0171BB' />
 
-              <Text
-                marginLeft={4}
-                width={45}
-              >
+              <Text marginLeft={4} width={45}>
                 Início:
               </Text>
 
@@ -88,16 +64,9 @@ export function TrainingItem({ navigation, item }: TrainingItemProps) {
               justifyContent='center'
               flexDirection='row'
             >
-              <FontAwesome5
-                name='calendar-alt'
-                size={16}
-                color='#0171BB'
-              />
+              <FontAwesome5 name='calendar-alt' size={16} color='#0171BB' />
 
-              <Text
-                marginLeft={4}
-                width={45}
-              >
+              <Text marginLeft={4} width={45}>
                 Fim:
               </Text>
 
@@ -105,11 +74,7 @@ export function TrainingItem({ navigation, item }: TrainingItemProps) {
             </View>
           </View>
 
-          <FontAwesome5
-            name='chevron-right'
-            size={20}
-            color='#0171BB'
-          />
+          <FontAwesome5 name='chevron-right' size={20} color='#0171BB' />
         </View>
       </View>
     </TouchableOpacity>

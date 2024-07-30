@@ -3,9 +3,9 @@ export interface Participant {
   tipCol: number
   numCad: number
   nomFun: string
-  numCpf: string
+  numCpf: string | number
   fotCol: string
-  isPresent?: boolean
+  staFre: 'Ausente' | 'Presente'
 }
 
 export interface Training {

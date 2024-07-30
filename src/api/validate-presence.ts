@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { Platform } from 'react-native'
 
 import { Participant, ResponseDefault } from '@/types'
@@ -12,26 +13,60 @@ interface validatePresenceResponse extends ResponseDefault {
   msgRet: string
 }
 
-export async function validatePresence({
+export async function RecognitionValidate({
   participants,
   base64,
 }: validatePresenceProps): Promise<validatePresenceResponse> {
-  const res = await fetch(
+  const res = await axios.post(
     'https://api-presenca-iqqsmwkmla-rj.a.run.app/verifica-presenca',
     {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        fotPar: base64,
-        participantes: participants,
-        platform: Platform.OS,
-      }),
+      fotPar: base64,
+      participantes: participants,
+      platform: Platform.OS,
     }
   )
 
-  const data = await res.json()
+  const data = await res.data
 
   return data.detail
+}
+
+interface QrCodeProps {
+  codCua: number
+  tmaCua: number
+  participantes: {
+    numEmp: number
+    tipCol: number
+    numCad: number
+    datFre: string
+    horFre: string
+  }
+}
+
+export async function QrCodeValidate({
+  codCua,
+  tmaCua,
+  participantes,
+}: QrCodeProps) {
+  const res = await axios.post(
+    'https://dc.prismainformatica.com.br:8188/SXI-API/G5Rest?server=https://dc.prismainformatica.com.br:8188&module=tr&service=com_prisma_treinamentos&port=postFrequencia',
+    {
+      codCua,
+      tmaCua,
+      participantes,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: '',
+        encryptionType: 0,
+        user: 'prisma.integracao',
+        pass: '@98fm',
+      },
+    }
+  )
+
+  const data = await res.data
+
+  return data
 }

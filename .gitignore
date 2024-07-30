@@ -1,6 +1,7 @@
 node_modules/
 .expo/
-dist/
+dist/.
+/%ProgramData%/
 npm-debug.*
 *.jks
 *.p8
@@ -9,11 +10,10 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+.env
 
 # tamagui
 .tamagui/
-# firebase/supabase
-.env
 
 ios
 android

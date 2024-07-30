@@ -14,12 +14,7 @@ export default function ShowAvatarDialog() {
   }
 
   return (
-    <Dialog
-      modal
-      disableRemoveScroll
-      open={isModalOpen}
-      onOpenChange={onClose}
-    >
+    <Dialog modal disableRemoveScroll open={isModalOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay
           key='overlay'
@@ -49,20 +44,14 @@ export default function ShowAvatarDialog() {
           size='$20'
           circular
         >
-          <Avatar
-            size='$20'
-            circular
-          >
+          <Avatar size='$20' circular>
             <Avatar.Image
               source={{
                 uri: `data:image/jpeg;base64,${participant.fotCol}`,
               }}
             />
 
-            <Avatar.Fallback
-              delayMs={600}
-              backgroundColor='gray4'
-            />
+            <Avatar.Fallback delayMs={600} backgroundColor='gray4' />
           </Avatar>
         </Dialog.Content>
       </Dialog.Portal>

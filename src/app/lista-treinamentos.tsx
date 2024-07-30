@@ -1,7 +1,8 @@
 import * as Network from 'expo-network'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
-import { Spinner, View } from 'tamagui'
+import { RefreshControl } from 'react-native-gesture-handler'
+import { Text, View } from 'tamagui'
 
 import getTreinamentos from '@/api/get-treinamentos'
 import ErrorListaTreinamentos from '@/components/error-lista-treinamentos'
@@ -15,7 +16,7 @@ export default function ListaTreinamentos({ navigation }: any) {
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  const getTreinamentosList = async () => {
+  const getTreinamentosList = useCallback(async () => {
     try {
       setIsLoading(true)
 
@@ -33,7 +34,7 @@ export default function ListaTreinamentos({ navigation }: any) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     const getNetwork = async () => {
@@ -58,45 +59,37 @@ export default function ListaTreinamentos({ navigation }: any) {
   }
 
   return (
-    <View
-      flex={1}
-      backgroundColor='white'
-    >
+    <View flex={1} backgroundColor='white'>
       <Header />
 
-      <HeaderNavigation
-        navigation={navigation}
-        title='Lista de Treinamentos'
-      />
+      <HeaderNavigation navigation={navigation} title='Lista de Treinamentos' />
 
-      <View padding={24}>
-        {isLoading && (
-          <View
-            flex={1}
-            justifyContent='center'
-          >
-            <Spinner
-              size='large'
-              color='$primary600'
+      <View flex={1} paddingHorizontal={24} paddingBottom={12}>
+        <FlatList
+          data={trainingList}
+          renderItem={({ item }) => (
+            <TrainingItem item={item} navigation={navigation} />
+          )}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View marginVertical={12} />}
+          keyExtractor={(item) =>
+            item.codCua.toString() + item.tmaCua.toString()
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={getTreinamentosList}
             />
-          </View>
-        )}
-
-        {trainingList && !isLoading && (
-          <FlatList
-            data={trainingList}
-            renderItem={({ item }) => (
-              <TrainingItem
-                item={item}
-                navigation={navigation}
-              />
-            )}
-            ItemSeparatorComponent={() => <View marginVertical={12} />}
-            keyExtractor={(item) =>
-              item.codCua.toString() + item.tmaCua.toString()
-            }
-          />
-        )}
+          }
+          ListEmptyComponent={
+            !isLoading &&
+            ((
+              <Text textAlign='center' fontSize='$3' fontWeight='bold'>
+                Nenhum treinamento encontrado
+              </Text>
+            ) as any)
+          }
+        />
       </View>
     </View>
   )

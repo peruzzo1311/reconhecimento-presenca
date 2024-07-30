@@ -43,7 +43,7 @@ export const useTrainingStore = create(
 
           state.trainingList[trainingIndex].participantes[
             participantIndex
-          ].isPresent = true
+          ].staFre = 'Presente'
 
           return { trainingList: state.trainingList }
         })

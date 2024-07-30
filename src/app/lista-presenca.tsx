@@ -1,7 +1,7 @@
 import { useToastController } from '@tamagui/toast'
 import * as Network from 'expo-network'
 import { FlatList, TouchableOpacity } from 'react-native'
-import { Button, View } from 'tamagui'
+import { Button, View, Text } from 'tamagui'
 
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
@@ -44,10 +44,7 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
   }
 
   return (
-    <View
-      flex={1}
-      backgroundColor='white'
-    >
+    <View flex={1} backgroundColor='white'>
       <Header />
 
       <HeaderNavigation
@@ -55,17 +52,17 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
         title={selectedTraining.nomCua}
       />
 
-      <View
-        flex={1}
-        padding={24}
-      >
+      <View flex={1} paddingHorizontal={24}>
         <FlatList
           data={selectedTraining.participantes}
           keyExtractor={(item) => item.numCpf.toString()}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={
-                item.isPresent ? undefined : () => handleFaceRecognition(item)
+                item.staFre === 'Presente'
+                  ? undefined
+                  : () => handleFaceRecognition(item)
               }
             >
               <PresenceItem participant={item} />
@@ -82,9 +79,11 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
           width='100%'
           maxWidth={300}
           marginHorizontal='auto'
-          pointerEvents='none'
+          disabled
         >
-          Ler QRCode
+          <Text fontWeight='bold' color='white'>
+            Ler QRCode
+          </Text>
         </Button>
       </TouchableOpacity>
     </View>

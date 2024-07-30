@@ -22,10 +22,7 @@ export function Header() {
           paddingHorizontal={20}
           height={60}
         >
-          <View
-            width='100%'
-            maxWidth={150}
-          >
+          <View width='100%' maxWidth={150}>
             <Image
               source={require('@/assets/images/logo.png')}
               width='100%'
@@ -34,15 +31,8 @@ export function Header() {
             />
           </View>
 
-          <TouchableOpacity
-            onPress={handleLogout}
-            style={{ padding: 8 }}
-          >
-            <Feather
-              name='log-out'
-              size={30}
-              color='white'
-            />
+          <TouchableOpacity onPress={handleLogout} style={{ padding: 8 }}>
+            <Feather name='log-out' size={30} color='white' />
           </TouchableOpacity>
         </View>
       )}

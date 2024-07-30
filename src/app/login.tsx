@@ -110,18 +110,12 @@ export default function Login({ navigation }: { navigation: any }) {
   }
 
   return (
-    <TouchableWithoutFeedback
-      onPress={Keyboard.dismiss}
-      style={{ flex: 1 }}
-    >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1, backgroundColor: '#0171BB' }}
       >
-        <View
-          height='30%'
-          paddingHorizontal={20}
-        >
+        <View height='30%' paddingHorizontal={20}>
           <Image
             source={require('@/assets/images/logo.png')}
             width='100%'
@@ -140,11 +134,7 @@ export default function Login({ navigation }: { navigation: any }) {
           gap={20}
         >
           <View gap={8}>
-            <Text
-              fontWeight='700'
-              fontSize='$3'
-              textTransform='uppercase'
-            >
+            <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
               Usuário
             </Text>
 
@@ -163,11 +153,7 @@ export default function Login({ navigation }: { navigation: any }) {
           </View>
 
           <View gap={8}>
-            <Text
-              fontWeight='700'
-              fontSize='$3'
-              textTransform='uppercase'
-            >
+            <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
               Senha
             </Text>
 
@@ -218,10 +204,7 @@ export default function Login({ navigation }: { navigation: any }) {
               backgroundColor='$primary600'
               opacity={isLoading ? 0.5 : 1}
             >
-              <Text
-                color='white'
-                fontWeight='700'
-              >
+              <Text color='white' fontWeight='700'>
                 {isLoading ? 'Carregando...' : 'Entrar'}
               </Text>
             </Button>

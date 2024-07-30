@@ -5,6 +5,5 @@
   "jsxSingleQuote": true,
   "quoteProps": "as-needed",
   "bracketSpacing": true,
-  "singleAttributePerLine": true,
-  "endOfLine": "crlf"
+  "endOfLine": "lf"
 }

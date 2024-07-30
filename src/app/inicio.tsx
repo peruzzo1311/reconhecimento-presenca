@@ -9,39 +9,23 @@ export default function Inicio() {
     <View flex={1}>
       <Header />
 
-      <View
-        flex={1}
-        padding={24}
-        backgroundColor='white'
-      >
+      <View flex={1} padding={24} backgroundColor='white'>
         <View
           flexDirection='row'
           justifyContent='space-around'
           alignItems='center'
         >
           <MenuButton
-            label='Lista de presença'
-            icon={
-              <FontAwesome
-                name='graduation-cap'
-                size={40}
-                color='white'
-              />
-            }
+            label='Lista de cursos'
+            icon={<FontAwesome name='graduation-cap' size={40} color='white' />}
             route='ListaTreinamentos'
           />
 
-          <MenuButton
+          {/* <MenuButton
             label='Consultar presença'
-            icon={
-              <FontAwesome
-                name='users'
-                size={40}
-                color='white'
-              />
-            }
+            icon={<FontAwesome name='users' size={40} color='white' />}
             route='ListaTreinamentos'
-          />
+          /> */}
         </View>
       </View>
     </View>

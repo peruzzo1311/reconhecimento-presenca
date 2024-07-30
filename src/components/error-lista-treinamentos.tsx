@@ -9,22 +9,12 @@ export default function ErrorListaTreinamentos({
   navigation,
 }: ErrorListaTreinamentosProps) {
   return (
-    <View
-      flex={1}
-      justifyContent='center'
-      alignItems='center'
-    >
-      <Text
-        fontSize='$5'
-        fontWeight='bold'
-      >
+    <View flex={1} justifyContent='center' alignItems='center'>
+      <Text fontSize='$5' fontWeight='bold'>
         Erro ao carregar treinamentos
       </Text>
 
-      <Text
-        fontSize='$3'
-        marginVertical={8}
-      >
+      <Text fontSize='$3' marginVertical={8}>
         Verifique sua conexão com a internet
       </Text>
 

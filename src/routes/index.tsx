@@ -46,25 +46,16 @@ export default function RootStack() {
     >
       {user ? (
         <>
-          <Stack.Screen
-            name='Inicio'
-            component={Inicio}
-          />
+          <Stack.Screen name='Inicio' component={Inicio} />
 
           <Stack.Screen
             name='ListaTreinamentos'
             component={ListaTreinamentos}
           />
 
-          <Stack.Screen
-            name='ListaPresenca'
-            component={ListaPresenca}
-          />
+          <Stack.Screen name='ListaPresenca' component={ListaPresenca} />
 
-          <Stack.Screen
-            name='Camera'
-            component={Camera}
-          />
+          <Stack.Screen name='Camera' component={Camera} />
 
           <Stack.Screen
             name='Foto'
@@ -72,17 +63,11 @@ export default function RootStack() {
             component={Foto}
           />
 
-          <Stack.Screen
-            name='QRCode'
-            component={QRCode}
-          />
+          <Stack.Screen name='QRCode' component={QRCode} />
         </>
       ) : (
         <>
-          <Stack.Screen
-            name='Login'
-            component={Login}
-          />
+          <Stack.Screen name='Login' component={Login} />
         </>
       )}
     </Stack.Navigator>

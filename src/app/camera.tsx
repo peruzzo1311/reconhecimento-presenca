@@ -68,14 +68,8 @@ export default function Camera({ navigation }: CameraProps) {
   }
 
   return (
-    <View
-      flex={1}
-      backgroundColor='white'
-    >
-      <View
-        height={Constants.statusBarHeight}
-        backgroundColor='$primary600'
-      />
+    <View flex={1} backgroundColor='white'>
+      <View height={Constants.statusBarHeight} backgroundColor='$primary600' />
 
       <View
         flexDirection='row'
@@ -89,11 +83,7 @@ export default function Camera({ navigation }: CameraProps) {
           style={{ padding: 12 }}
           onPress={() => navigation.navigate('ListaPresenca')}
         >
-          <FontAwesome5
-            name='chevron-left'
-            size={24}
-            color='#0171BB'
-          />
+          <FontAwesome5 name='chevron-left' size={24} color='#0171BB' />
         </TouchableOpacity>
 
         <View flex={1}>
@@ -108,11 +98,7 @@ export default function Camera({ navigation }: CameraProps) {
         </View>
       </View>
 
-      <CameraView
-        ref={cameraRef}
-        style={{ flex: 1 }}
-        facing={facing}
-      />
+      <CameraView ref={cameraRef} style={{ flex: 1 }} facing={facing} />
 
       <View
         height={100}
@@ -130,21 +116,13 @@ export default function Camera({ navigation }: CameraProps) {
           }}
           onPress={handleTakePicture}
         >
-          <FontAwesome5
-            name='camera'
-            size={28}
-            color='white'
-          />
+          <FontAwesome5 name='camera' size={28} color='white' />
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => setFacing(facing === 'back' ? 'front' : 'back')}
         >
-          <MaterialIcons
-            name='flip-camera-android'
-            size={28}
-            color='#0171BB'
-          />
+          <MaterialIcons name='flip-camera-android' size={28} color='#0171BB' />
         </TouchableOpacity>
       </View>
     </View>

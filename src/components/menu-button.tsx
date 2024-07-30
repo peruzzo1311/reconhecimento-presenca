@@ -29,10 +29,7 @@ export function MenuButton({ label, icon, route }: MenuButtonProps) {
       >
         {icon && icon}
 
-        <Text
-          color='white'
-          fontWeight='700'
-        >
+        <Text color='white' fontWeight='700' textAlign='center'>
           {label}
         </Text>
       </Button>

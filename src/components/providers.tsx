@@ -10,10 +10,7 @@ interface ProviderProps {
 export function Providers({ children }: ProviderProps) {
   return (
     <NavigationContainer>
-      <TamaguiProvider
-        config={config}
-        defaultTheme='light'
-      >
+      <TamaguiProvider config={config} defaultTheme='light'>
         <ToastProvider
           burntOptions={{ from: 'bottom', shouldDismissByDrag: true }}
         >

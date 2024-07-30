@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 interface getTokenParams {
   username: string
   password: string
@@ -29,24 +31,21 @@ interface getUserParams {
 }
 
 export async function getUser({ username, token }: getUserParams) {
-  const body = {
-    username,
-    includePhoto: true,
-  }
-
-  const res = await fetch(
+  const res = await axios.post(
     'https://platform.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/user/queries/getUser',
     {
-      method: 'POST',
+      username,
+      includePhoto: true,
+    },
+    {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
-      body: JSON.stringify(body),
     }
   )
 
-  const data = await res.json()
+  const data = await res.data
 
   return data
 }

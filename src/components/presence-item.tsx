@@ -25,34 +25,25 @@ export default function PresenceItem({ participant }: PresenceItemProps) {
       paddingVertical={12}
     >
       <TouchableOpacity onPress={handleAvatarPress}>
-        <Avatar
-          size='$5'
-          circular
-        >
+        <Avatar size='$5' circular>
           <Avatar.Image
             source={{
               uri: `data:image/jpeg;base64,${participant.fotCol}`,
             }}
           />
 
-          <Avatar.Fallback
-            delayMs={600}
-            backgroundColor='gray4'
-          />
+          <Avatar.Fallback delayMs={600} backgroundColor='gray4' />
         </Avatar>
       </TouchableOpacity>
 
       <View flex={1}>
-        <Text
-          fontWeight='bold'
-          fontSize='$4'
-        >
+        <Text fontWeight='bold' fontSize='$4'>
           {participant.nomFun}
         </Text>
       </View>
 
       <View alignItems='center'>
-        {participant.isPresent && (
+        {participant.staFre === 'Presente' && (
           <View
             borderWidth={1}
             borderColor='$green6'
@@ -61,17 +52,13 @@ export default function PresenceItem({ participant }: PresenceItemProps) {
             paddingHorizontal={8}
             paddingVertical={4}
           >
-            <Text
-              color='$green11'
-              fontWeight='700'
-              fontSize='$2'
-            >
+            <Text color='$green11' fontWeight='700' fontSize='$2'>
               Presente
             </Text>
           </View>
         )}
 
-        {!participant.isPresent && (
+        {participant.staFre === 'Ausente' && (
           <View
             borderWidth={1}
             borderColor='$red6'
@@ -80,11 +67,7 @@ export default function PresenceItem({ participant }: PresenceItemProps) {
             paddingHorizontal={8}
             paddingVertical={4}
           >
-            <Text
-              color='$red11'
-              fontWeight='700'
-              fontSize='$2'
-            >
+            <Text color='$red11' fontWeight='700' fontSize='$2'>
               Não confirmado
             </Text>
           </View>
