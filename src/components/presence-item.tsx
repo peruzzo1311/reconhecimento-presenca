@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Avatar, Text, View } from 'tamagui'
 
@@ -8,7 +9,7 @@ interface PresenceItemProps {
   participant: Participant
 }
 
-export default function PresenceItem({ participant }: PresenceItemProps) {
+function PresenceItem({ participant }: PresenceItemProps) {
   const { onOpen } = useDialogStore()
 
   const handleAvatarPress = () => {
@@ -76,3 +77,5 @@ export default function PresenceItem({ participant }: PresenceItemProps) {
     </View>
   )
 }
+
+export default memo(PresenceItem)

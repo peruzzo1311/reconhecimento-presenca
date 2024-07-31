@@ -1,4 +1,5 @@
 import { FontAwesome5 } from '@expo/vector-icons'
+import { memo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { View, Text } from 'tamagui'
 
@@ -10,7 +11,7 @@ interface TrainingItemProps {
   navigation: any
 }
 
-export function TrainingItem({ navigation, item }: TrainingItemProps) {
+function TrainingItem({ navigation, item }: TrainingItemProps) {
   const { setSelectedTraining } = useTrainingStore()
 
   const handleSelectTraining = () => {
@@ -80,3 +81,5 @@ export function TrainingItem({ navigation, item }: TrainingItemProps) {
     </TouchableOpacity>
   )
 }
+
+export default memo(TrainingItem)

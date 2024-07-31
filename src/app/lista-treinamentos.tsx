@@ -8,7 +8,7 @@ import getTreinamentos from '@/api/get-treinamentos'
 import ErrorListaTreinamentos from '@/components/error-lista-treinamentos'
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
-import { TrainingItem } from '@/components/training-item'
+import TrainingItem from '@/components/training-item'
 import { useTrainingStore } from '@/store/treinamento-store'
 
 export default function ListaTreinamentos({ navigation }: any) {

@@ -34,7 +34,7 @@ export function HeaderNavigation({ navigation, title }: HeaderNavigationProps) {
         style={{ paddingVertical: 8, paddingHorizontal: 12, paddingRight: 0 }}
         onPress={() => console.log('filtro')}
       >
-        <FontAwesome5 name='filter' size={20} color='#0171BB' />
+        {/* <FontAwesome5 name='filter' size={20} color='#0171BB' /> */}
       </TouchableOpacity>
     </View>
   )

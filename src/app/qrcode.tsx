@@ -6,12 +6,15 @@ import {
   useCameraPermissions,
 } from 'expo-camera'
 import Constants from 'expo-constants'
+import * as Network from 'expo-network'
 import { useState } from 'react'
 import { ActivityIndicator, Alert, TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
 import { QrCodeValidate } from '@/api/validate-presence'
+import { useOfflineStore } from '@/store/offline-store'
 import { useTrainingStore } from '@/store/treinamento-store'
+import { Participant } from '@/types'
 
 interface QRCodeProps {
   navigation: any
@@ -23,6 +26,7 @@ export default function QRCode({ navigation }: QRCodeProps) {
   const [permission, requestPermission] = useCameraPermissions()
 
   const { setParticipantPresence, selectedTraining } = useTrainingStore()
+  const { presences, addPresence } = useOfflineStore()
 
   const handleQrCodeScanned = async ({ data }: BarcodeScanningResult) => {
     try {
@@ -43,46 +47,25 @@ export default function QRCode({ navigation }: QRCodeProps) {
         return
       }
 
-      if (user.staFre === 'Presente') {
+      if (
+        user.staFre === 'Presente' ||
+        presences.some((p) => p.participante.numCad === user.numCad)
+      ) {
         errorAlert(`Presença de ${user.nomFun} já registrada.`)
 
         return
       }
 
-      const res = await QrCodeValidate({
-        codCua: selectedTraining.codCua,
-        tmaCua: selectedTraining.tmaCua,
-        participantes: {
-          numEmp: user.numEmp,
-          tipCol: user.tipCol,
-          numCad: user.numCad,
-          datFre: format(new Date(), 'dd/MM/yyyy'),
-          horFre: format(new Date(), 'HH:mm:ss'),
-        },
-      })
+      const network = await Network.getNetworkStateAsync()
 
-      if (res.msgRet !== 'ok') {
-        errorAlert(res.msgRet)
+      if (!network.isConnected) {
+        console.log('Offline presence')
+        await handleOfflinePresence(user)
 
         return
       }
 
-      setParticipantPresence(
-        selectedTraining.codCua,
-        selectedTraining.tmaCua,
-        user.numCad
-      )
-
-      Alert.alert('Sucesso', 'Presença registrada com sucesso!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            setQrCodeScanned(false)
-          },
-        },
-      ])
-
-      navigation.goBack()
+      await handleOnlinePresence(user)
     } catch (error) {
       console.log(error)
 
@@ -90,6 +73,77 @@ export default function QRCode({ navigation }: QRCodeProps) {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleOnlinePresence = async (user: Participant) => {
+    const res = await QrCodeValidate({
+      codCua: selectedTraining!.codCua,
+      tmaCua: selectedTraining!.tmaCua,
+      participantes: [
+        {
+          numEmp: user.numEmp,
+          tipCol: user.tipCol,
+          numCad: user.numCad,
+          datFre: format(new Date(), 'dd/MM/yyyy'),
+          horFre: format(new Date(), 'HH:mm:ss'),
+        },
+      ],
+    })
+
+    if (res.msgRet !== 'ok') {
+      errorAlert(res.msgRet)
+
+      return
+    }
+
+    setParticipantPresence(
+      selectedTraining!.codCua,
+      selectedTraining!.tmaCua,
+      user.numCad
+    )
+
+    Alert.alert(
+      'Sucesso',
+      `Presença de ${user.nomFun} registrada com sucesso!`,
+      [
+        {
+          text: 'OK',
+          onPress: () => setQrCodeScanned(false),
+        },
+      ]
+    )
+  }
+
+  const handleOfflinePresence = async (user: Participant) => {
+    addPresence({
+      codCua: selectedTraining!.codCua,
+      tmaCua: selectedTraining!.tmaCua,
+      participante: {
+        numEmp: user.numEmp,
+        tipCol: user.tipCol,
+        numCad: user.numCad,
+        nomFun: user.nomFun,
+        datFre: format(new Date(), 'dd/MM/yyyy'),
+        horFre: format(new Date(), 'HH:mm:ss'),
+      },
+    })
+
+    setParticipantPresence(
+      selectedTraining!.codCua,
+      selectedTraining!.tmaCua,
+      user.numCad
+    )
+
+    Alert.alert(
+      'Sucesso',
+      `Presença de ${user.nomFun} registrada com sucesso!`,
+      [
+        {
+          text: 'OK',
+          onPress: () => setQrCodeScanned(false),
+        },
+      ]
+    )
   }
 
   const errorAlert = (title: string) => {
@@ -139,7 +193,7 @@ export default function QRCode({ navigation }: QRCodeProps) {
       >
         <TouchableOpacity
           style={{ padding: 8, paddingLeft: 0 }}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('ListaPresenca')}
         >
           <FontAwesome5 name='chevron-left' size={24} color='#0171BB' />
         </TouchableOpacity>

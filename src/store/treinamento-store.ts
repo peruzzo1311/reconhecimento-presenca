@@ -45,7 +45,15 @@ export const useTrainingStore = create(
             participantIndex
           ].staFre = 'Presente'
 
-          return { trainingList: state.trainingList }
+          if (state.selectedTraining) {
+            state.selectedTraining.participantes[participantIndex].staFre =
+              'Presente'
+          }
+
+          return {
+            trainingList: state.trainingList,
+            selectedTraining: state.selectedTraining,
+          }
         })
       },
     }),

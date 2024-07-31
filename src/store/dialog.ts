@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 import { Participant } from '@/types'
 
-export type DialogType = 'presence' | 'avatar'
+export type DialogType = 'menu-options' | 'avatar'
 
 export interface DialogData {
   participant?: Participant

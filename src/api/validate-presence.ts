@@ -40,7 +40,7 @@ interface QrCodeProps {
     numCad: number
     datFre: string
     horFre: string
-  }
+  }[]
 }
 
 export async function QrCodeValidate({
