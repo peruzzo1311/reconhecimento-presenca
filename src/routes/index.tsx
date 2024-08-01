@@ -7,7 +7,8 @@ import ListaPresenca from '@/app/lista-presenca'
 import ListaTreinamentos from '@/app/lista-treinamentos'
 import Login from '@/app/login'
 import QRCode from '@/app/qrcode'
-import Sincronizar from '@/app/sincronizar'
+import Sincronizar from '@/app/sincronizar-grupos'
+import SincronizarParticipantes from '@/app/sincronizar-participantes'
 import { useUserStore } from '@/store/user-store'
 
 const Stack = createStackNavigator()
@@ -45,6 +46,11 @@ export default function RootStack() {
           <Stack.Screen name='QRCode' component={QRCode} />
 
           <Stack.Screen name='Sincronizar' component={Sincronizar} />
+
+          <Stack.Screen
+            name='SincronizarParticipantes'
+            component={SincronizarParticipantes}
+          />
         </>
       ) : (
         <>

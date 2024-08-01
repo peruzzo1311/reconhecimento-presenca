@@ -1,8 +1,7 @@
 import { useToastController } from '@tamagui/toast'
 import * as Network from 'expo-network'
-import { useEffect } from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
-import { Button, View, Text } from 'tamagui'
+import { Button, Separator, Text, View } from 'tamagui'
 
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
@@ -17,14 +16,6 @@ interface ListaPresencaProps {
 export default function ListaPresenca({ navigation }: ListaPresencaProps) {
   const { selectedTraining, setSelectedParticipant } = useTrainingStore()
   const toast = useToastController()
-
-  useEffect(() => {
-    const participants = selectedTraining?.participantes || []
-
-    participants.forEach((participant) => {
-      console.log(participant.nomFun, participant.numCad)
-    })
-  }, [])
 
   const handleFaceRecognition = async (participant: Participant) => {
     const network = await Network.getNetworkStateAsync()
@@ -66,6 +57,7 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
           data={selectedTraining.participantes}
           keyExtractor={(item) => item.numCpf.toString()}
           showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <Separator />}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={

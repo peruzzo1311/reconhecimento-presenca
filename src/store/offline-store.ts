@@ -2,17 +2,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-interface Presence {
+export interface ParticipantOffline {
+  numEmp: number
+  tipCol: number
+  numCad: number
+  nomFun: string
+  datFre: string
+  horFre: string
+}
+
+export interface Presence {
   codCua: number
   tmaCua: number
-  participante: {
-    numEmp: number
-    tipCol: number
-    numCad: number
-    nomFun: string
-    datFre: string
-    horFre: string
-  }
+  participante: ParticipantOffline
 }
 
 interface ActiveEmployee {}
