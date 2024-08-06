@@ -24,10 +24,51 @@ export default function Foto({ route, navigation }: FotoProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { photo } = route.params
 
-  const { setParticipantPresence, selectedTraining, selectedParticipant } =
-    useTrainingStore()
+  const {
+    trainingList,
+    selectedTraining,
+    selectedParticipant,
+    setTrainingList,
+    setSelectedTraining,
+  } = useTrainingStore()
 
   const toast = useToastController()
+
+  const setPresence = () => {
+    if (!selectedTraining || !selectedParticipant) {
+      return
+    }
+
+    const trainingIndex = trainingList.findIndex(
+      (training) => training.codCua === selectedTraining.codCua
+    )
+
+    if (trainingIndex === -1) {
+      return
+    }
+
+    const newTrainingList = [
+      ...trainingList,
+      {
+        ...trainingList[trainingIndex],
+        participantes: trainingList[trainingIndex].participantes.map(
+          (participant) => {
+            if (participant.numCad === selectedParticipant.numCad) {
+              return {
+                ...participant,
+                staFre: 'Presente' as 'Presente',
+              }
+            }
+
+            return participant
+          }
+        ),
+      },
+    ]
+
+    setSelectedTraining(newTrainingList[trainingIndex])
+    setTrainingList(newTrainingList)
+  }
 
   const handleValidate = async () => {
     try {
@@ -64,11 +105,7 @@ export default function Foto({ route, navigation }: FotoProps) {
         return
       }
 
-      setParticipantPresence(
-        selectedTraining!.codCua,
-        selectedTraining!.tmaCua,
-        selectedParticipant.numCad
-      )
+      setPresence()
       navigation.navigate('ListaPresenca')
     } catch (error) {
       console.error(error)

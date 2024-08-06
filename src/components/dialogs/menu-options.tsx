@@ -27,6 +27,8 @@ export default function MenuOptionsDialog() {
   const navigation = useNavigation() as any
   const isModalOpen = isOpen && type === 'menu-options'
 
+  const { presences } = useOfflineStore()
+
   const handleDownloadColaboradores = async () => {
     try {
       setIsLoading(true)
@@ -82,7 +84,7 @@ export default function MenuOptionsDialog() {
           exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
           gap='$4'
           width='100%'
-          maxWidth={350}
+          maxWidth={300}
           backgroundColor='white'
         >
           <Dialog.Title fontSize='$7' fontWeight='400'>
@@ -135,11 +137,13 @@ export default function MenuOptionsDialog() {
                   onClose()
                   navigation.navigate('Sincronizar')
                 }}
+                disabled={presences.length === 0}
               >
                 <ListItem
                   icon={<MaterialIcons name='sync' size={24} color='black' />}
                   fontSize='$5'
                   fontWeight={400}
+                  opacity={presences.length === 0 ? 0.5 : 1}
                 >
                   Sincronizar
                 </ListItem>

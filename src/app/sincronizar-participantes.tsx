@@ -1,4 +1,5 @@
 import { EvilIcons } from '@expo/vector-icons'
+import { useEffect, useState } from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import { Button, Separator, Text, View } from 'tamagui'
 
@@ -21,16 +22,21 @@ export default function SincronizarParticipantes({
   route,
   navigation,
 }: SincronizarParticipantesProps) {
+  const [participantsList, setParticipantsList] = useState<
+    ParticipantOffline[]
+  >([])
   const { item: curso } = route.params
-
   const { removePresence } = useOfflineStore()
 
-  const handleDelete = (item: ParticipantOffline) => {
-    const index = curso.participante.findIndex(
-      (participant) => participant.numCad === item.numCad
-    )
+  useEffect(() => {
+    setParticipantsList(curso.participante)
+  }, [curso])
 
-    removePresence(index)
+  const handleDelete = (item: ParticipantOffline) => {
+    removePresence(item)
+    setParticipantsList((prev) =>
+      prev.filter((participant) => participant !== item)
+    )
   }
 
   const renderItem = ({ item }: { item: ParticipantOffline }) => (
@@ -63,7 +69,7 @@ export default function SincronizarParticipantes({
 
       <View flex={1} paddingHorizontal={24}>
         <FlatList
-          data={curso.participante}
+          data={participantsList}
           keyExtractor={(item) => item.numCad.toString()}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator />}

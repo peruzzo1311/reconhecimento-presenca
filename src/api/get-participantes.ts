@@ -4,15 +4,23 @@ import { Training } from '@/types'
 
 interface Response {
   msgRet: string
-  treinamento: Training[]
+  treinamento: Training
 }
 
-export default async function getTreinamentos() {
+export default async function getParticipantes({
+  tmaCua,
+  codCua,
+}: {
+  tmaCua: number
+  codCua: number
+}) {
   const res = await axios.post(
     'https://dc.prismainformatica.com.br:8188/SXI-API/G5Rest?server=https://dc.prismainformatica.com.br:8188&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
     {
       LisTod: 'S',
       LisPar: 'N',
+      tmaCua,
+      codCua,
     },
     {
       headers: {
@@ -26,10 +34,6 @@ export default async function getTreinamentos() {
   )
 
   const data = res.data as Response
-
-  if (!Array.isArray(data.treinamento)) {
-    return [data.treinamento]
-  }
 
   return data.treinamento
 }

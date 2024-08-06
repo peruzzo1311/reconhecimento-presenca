@@ -46,6 +46,7 @@ export default function Camera({ navigation }: CameraProps) {
         justifyContent='center'
         alignContent='center'
         gap={12}
+        padding={24}
       >
         <Text textAlign='center'>
           Conceda a permissão para poder realizar captura de fotos

@@ -5,7 +5,7 @@ export interface Participant {
   nomFun: string
   numCpf: string | number
   fotCol: string
-  staFre: 'Ausente' | 'Presente'
+  staFre: 'Ausente' | 'Presente' | 'Sincronizar'
 }
 
 export interface Training {
@@ -14,7 +14,7 @@ export interface Training {
   tmaCua: number
   datIni: string
   datFim: string
-  participantes: Participant[]
+  participantes?: Participant[]
 }
 
 export interface ResponseDefault {

@@ -24,7 +24,7 @@ interface OfflineStoreProps {
   activeEmployees: ActiveEmployee[]
   setActiveEmployees: (employees: ActiveEmployee[]) => void
   addPresence: (presence: Presence) => void
-  removePresence: (index: number) => void
+  removePresence: (item: ParticipantOffline) => void
   clearPresences: () => void
 }
 
@@ -36,13 +36,12 @@ export const useOfflineStore = create(
       setActiveEmployees: (employees) => set({ activeEmployees: employees }),
       addPresence: (presence) =>
         set((state) => ({ presences: [...state.presences, presence] })),
-      removePresence: (index) =>
-        set((state) => {
-          const newPresences = [...state.presences]
-          newPresences.splice(index, 1)
-
-          return { presences: newPresences }
-        }),
+      removePresence: (item) =>
+        set((state) => ({
+          presences: state.presences.filter(
+            (participant) => participant.participante !== item
+          ),
+        })),
       clearPresences: () => set({ presences: [] }),
     }),
     {

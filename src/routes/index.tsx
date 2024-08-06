@@ -33,7 +33,11 @@ export default function RootStack() {
             component={ListaTreinamentos}
           />
 
-          <Stack.Screen name='ListaPresenca' component={ListaPresenca} />
+          <Stack.Screen
+            name='ListaPresenca'
+            // @ts-ignore
+            component={ListaPresenca}
+          />
 
           <Stack.Screen name='Camera' component={Camera} />
 
@@ -49,6 +53,7 @@ export default function RootStack() {
 
           <Stack.Screen
             name='SincronizarParticipantes'
+            // @ts-ignore
             component={SincronizarParticipantes}
           />
         </>

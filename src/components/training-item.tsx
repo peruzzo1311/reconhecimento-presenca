@@ -15,12 +15,8 @@ function TrainingItem({ navigation, item }: TrainingItemProps) {
   const { setSelectedTraining } = useTrainingStore()
 
   const handleSelectTraining = () => {
-    if (!Array.isArray(item.participantes)) {
-      item.participantes = [item.participantes]
-    }
-
     setSelectedTraining(item)
-    navigation.navigate('ListaPresenca')
+    navigation.navigate('ListaPresenca', { training: item })
   }
 
   return (

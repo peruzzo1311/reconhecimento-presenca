@@ -11,11 +11,7 @@ interface TrainingStoreProps {
   setSelectedTraining: (training: Training | null) => void
   selectedParticipant: Participant | null
   setSelectedParticipant: (participant: Participant | null) => void
-  setParticipantPresence: (
-    trainingId: number,
-    classId: number,
-    participantId: number
-  ) => void
+  setPresence: (participant: Participant) => void
 }
 
 export const useTrainingStore = create(
@@ -28,31 +24,27 @@ export const useTrainingStore = create(
       setSelectedTraining: (selectedTraining) => set({ selectedTraining }),
       setSelectedParticipant: (selectedParticipant) =>
         set({ selectedParticipant }),
-      setParticipantPresence: (trainingId, classId, participantId) => {
+      setPresence: (participant) => {
         set((state) => {
-          const trainingIndex = state.trainingList.findIndex(
-            (training) =>
-              training.codCua === trainingId && training.tmaCua === classId
-          )
+          const training = state.selectedTraining
 
-          const participantIndex = state.trainingList[
-            trainingIndex
-          ].participantes.findIndex(
-            (participant) => participant.numCad === participantId
-          )
-
-          state.trainingList[trainingIndex].participantes[
-            participantIndex
-          ].staFre = 'Presente'
-
-          if (state.selectedTraining) {
-            state.selectedTraining.participantes[participantIndex].staFre =
-              'Presente'
+          if (!training) {
+            return state
           }
 
+          const updatedParticipants = training.participantes.map((p) => {
+            if (p.numCad === participant.numCad) {
+              return participant
+            }
+
+            return p
+          })
+
           return {
-            trainingList: state.trainingList,
-            selectedTraining: state.selectedTraining,
+            selectedTraining: {
+              ...training,
+              participantes: updatedParticipants,
+            },
           }
         })
       },

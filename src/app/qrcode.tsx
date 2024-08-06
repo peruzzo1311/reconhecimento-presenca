@@ -21,69 +21,109 @@ interface QRCodeProps {
 }
 
 export default function QRCode({ navigation }: QRCodeProps) {
-  const [QrCodeScanned, setQrCodeScanned] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [QrCodeScanned, setQrCodeScanned] = useState(false)
   const [permission, requestPermission] = useCameraPermissions()
 
-  const { setParticipantPresence, selectedTraining } = useTrainingStore()
-  const { presences, addPresence } = useOfflineStore()
+  const { selectedTraining, setPresence, setSelectedTraining } =
+    useTrainingStore()
+
+  const { addPresence } = useOfflineStore()
 
   const handleQrCodeScanned = async ({ data }: BarcodeScanningResult) => {
-    try {
-      setQrCodeScanned(true)
-      setIsLoading(true)
+    if (QrCodeScanned) {
+      return
+    }
 
-      if (!selectedTraining) {
-        return
-      }
+    setQrCodeScanned(true)
+    setIsLoading(true)
 
-      const user = selectedTraining.participantes.find(
-        (participante) => participante.numCad === Number(data)
-      )
-
-      if (!user) {
-        errorAlert('Participante não encontrado.')
-
-        return
-      }
-
-      if (
-        user.staFre === 'Presente' ||
-        presences.some((p) => p.participante.numCad === user.numCad)
-      ) {
-        errorAlert(`Presença de ${user.nomFun} já registrada.`)
-
-        return
-      }
-
-      const network = await Network.getNetworkStateAsync()
-
-      if (!network.isConnected) {
-        console.log('Offline presence')
-        await handleOfflinePresence(user)
-
-        return
-      }
-
-      await handleOnlinePresence(user)
-    } catch (error) {
-      console.log(error)
-
-      errorAlert('Ocorreu um erro ao registrar a presença.')
-    } finally {
+    if (!selectedTraining) {
+      Alert.alert('Erro', 'Treinamento não encontrado')
+      setQrCodeScanned(false)
       setIsLoading(false)
+
+      return
+    }
+
+    const participant = selectedTraining.participantes.find(
+      (p) => p.numCad === Number(data)
+    )
+
+    if (!participant) {
+      Alert.alert('Erro', 'Participante não encontrado')
+      setQrCodeScanned(false)
+      setIsLoading(false)
+
+      return
+    }
+
+    if (
+      participant.staFre === 'Presente' ||
+      participant.staFre === 'Sincronizar'
+    ) {
+      Alert.alert('Erro', 'Participante já está presente', [
+        {
+          text: 'OK',
+          onPress: () => {
+            setQrCodeScanned(false)
+            setIsLoading(false)
+          },
+        },
+      ])
+
+      return
+    }
+
+    const network = await Network.getNetworkStateAsync()
+
+    if (!network.isConnected) {
+      handleOfflinePresence(participant)
+    } else {
+      await handleOnlinePresence(participant)
     }
   }
 
-  const handleOnlinePresence = async (user: Participant) => {
+  const handleSetPresence = (participant: Participant) => {
+    if (!selectedTraining) {
+      return
+    }
+
+    setPresence({
+      ...participant,
+      staFre: 'Presente',
+    })
+
+    setSelectedTraining({
+      ...selectedTraining,
+      participantes: selectedTraining.participantes.map((p) => {
+        if (p.numCad === participant.numCad) {
+          return {
+            ...p,
+            staFre: 'Presente',
+          }
+        }
+
+        return p
+      }),
+    })
+
+    console.log(selectedTraining)
+  }
+
+  const handleOnlinePresence = async (participant: Participant) => {
+    if (!selectedTraining) {
+      return
+    }
+
     const res = await QrCodeValidate({
-      codCua: selectedTraining!.codCua,
-      tmaCua: selectedTraining!.tmaCua,
+      codCua: selectedTraining.codCua,
+      tmaCua: selectedTraining.tmaCua,
       participantes: [
         {
-          numEmp: user.numEmp,
-          tipCol: user.tipCol,
-          numCad: user.numCad,
+          numEmp: participant.numEmp,
+          tipCol: participant.tipCol,
+          numCad: participant.numCad,
           datFre: format(new Date(), 'dd/MM/yyyy'),
           horFre: format(new Date(), 'HH:mm:ss'),
         },
@@ -96,85 +136,88 @@ export default function QRCode({ navigation }: QRCodeProps) {
       return
     }
 
-    setParticipantPresence(
-      selectedTraining!.codCua,
-      selectedTraining!.tmaCua,
-      user.numCad
-    )
+    handleSetPresence(participant)
 
     Alert.alert(
       'Sucesso',
-      `Presença de ${user.nomFun} registrada com sucesso!`,
+      `Presença de ${participant.nomFun} registrada com sucesso!`,
       [
         {
           text: 'OK',
-          onPress: () => setQrCodeScanned(false),
+          onPress: () => {
+            setQrCodeScanned(false)
+            setIsLoading(false)
+          },
         },
       ]
     )
   }
 
-  const handleOfflinePresence = async (user: Participant) => {
+  const handleOfflinePresence = (participant: Participant) => {
+    if (!selectedTraining) {
+      return
+    }
+
     addPresence({
-      codCua: selectedTraining!.codCua,
-      tmaCua: selectedTraining!.tmaCua,
+      codCua: selectedTraining.codCua,
+      tmaCua: selectedTraining.tmaCua,
       participante: {
-        numEmp: user.numEmp,
-        tipCol: user.tipCol,
-        numCad: user.numCad,
-        nomFun: user.nomFun,
+        numEmp: participant.numEmp,
+        tipCol: participant.tipCol,
+        numCad: participant.numCad,
+        nomFun: participant.nomFun,
         datFre: format(new Date(), 'dd/MM/yyyy'),
         horFre: format(new Date(), 'HH:mm:ss'),
       },
     })
 
-    setParticipantPresence(
-      selectedTraining!.codCua,
-      selectedTraining!.tmaCua,
-      user.numCad
-    )
+    handleSetPresence(participant)
 
     Alert.alert(
       'Sucesso',
-      `Presença de ${user.nomFun} registrada com sucesso!`,
+      `Presença de ${participant.nomFun} registrada com sucesso!`,
       [
         {
           text: 'OK',
-          onPress: () => setQrCodeScanned(false),
+          onPress: () => {
+            setQrCodeScanned(false)
+            setIsLoading(false)
+          },
         },
       ]
     )
   }
 
   const errorAlert = (title: string) => {
-    Alert.alert('Erro', title ?? 'Ocorreu um erro ao registrar a presença.', [
-      {
-        text: 'OK',
-        onPress: () => setQrCodeScanned(false),
-      },
-    ])
+    Alert.alert('Erro', title ?? 'Ocorreu um erro ao registrar a presença.')
   }
 
-  if (!permission) {
+  if (!permission || !permission.granted) {
     return (
       <View
         flex={1}
-        justifyContent='center'
-        alignItems='center'
         backgroundColor='white'
+        justifyContent='center'
+        alignContent='center'
+        gap={12}
+        padding={24}
       >
-        <Text fontSize='$4' fontWeight='700' textAlign='center'>
-          Precisamos de permissão para acessar a câmera do seu dispositivo.
+        <Text textAlign='center'>
+          Conceda a permissão para poder realizar captura de fotos
         </Text>
 
-        <Button
-          onPress={requestPermission}
-          marginTop={16}
-          backgroundColor='$primary600'
-          color='white'
-        >
-          Permitir acesso à câmera
-        </Button>
+        <TouchableOpacity onPress={requestPermission}>
+          <Button
+            backgroundColor='$primary600'
+            color='white'
+            width='100%'
+            maxWidth={300}
+            marginHorizontal='auto'
+            pointerEvents='none'
+          >
+            Conceder permissão
+          </Button>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -192,7 +235,10 @@ export default function QRCode({ navigation }: QRCodeProps) {
         paddingVertical={8}
       >
         <TouchableOpacity
-          style={{ padding: 8, paddingLeft: 0 }}
+          style={{
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+          }}
           onPress={() => navigation.navigate('ListaPresenca')}
         >
           <FontAwesome5 name='chevron-left' size={24} color='#0171BB' />

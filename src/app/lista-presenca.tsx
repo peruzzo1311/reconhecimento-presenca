@@ -1,21 +1,52 @@
 import { useToastController } from '@tamagui/toast'
 import * as Network from 'expo-network'
+import { useEffect, useState } from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import { Button, Separator, Text, View } from 'tamagui'
 
+import getParticipantes from '@/api/get-participantes'
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import PresenceItem from '@/components/presence-item'
 import { useTrainingStore } from '@/store/treinamento-store'
-import { Participant } from '@/types'
+import { Participant, Training } from '@/types'
 
 interface ListaPresencaProps {
   navigation: any
+  route: {
+    params: {
+      training: Training
+    }
+  }
 }
 
-export default function ListaPresenca({ navigation }: ListaPresencaProps) {
-  const { selectedTraining, setSelectedParticipant } = useTrainingStore()
+export default function ListaPresenca({
+  navigation,
+  route,
+}: ListaPresencaProps) {
+  const { training } = route.params
+  const [participantes, setParticipantes] = useState<Participant[]>([])
+  const { setSelectedParticipant } = useTrainingStore()
   const toast = useToastController()
+
+  useEffect(() => {
+    const fetchParticipantes = async () => {
+      const participantes = await getParticipantes({
+        tmaCua: training.tmaCua,
+        codCua: training.codCua,
+      })
+
+      if (participantes && participantes.participantes) {
+        if (!Array.isArray(participantes.participantes)) {
+          setParticipantes([participantes.participantes])
+        }
+
+        setParticipantes(participantes.participantes)
+      }
+    }
+
+    fetchParticipantes()
+  }, [])
 
   const handleFaceRecognition = async (participant: Participant) => {
     const network = await Network.getNetworkStateAsync()
@@ -39,7 +70,7 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
     navigation.navigate('Camera')
   }
 
-  if (!selectedTraining) {
+  if (!training || !participantes) {
     return null
   }
 
@@ -47,21 +78,18 @@ export default function ListaPresenca({ navigation }: ListaPresencaProps) {
     <View flex={1} backgroundColor='white'>
       <Header />
 
-      <HeaderNavigation
-        navigation={navigation}
-        title={selectedTraining.nomCua}
-      />
+      <HeaderNavigation navigation={navigation} title={training.nomCua} />
 
       <View flex={1} paddingHorizontal={24}>
         <FlatList
-          data={selectedTraining.participantes}
+          data={participantes}
           keyExtractor={(item) => item.numCpf.toString()}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator />}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={
-                item.staFre === 'Presente'
+                item.staFre === 'Presente' || item.staFre === 'Sincronizar'
                   ? undefined
                   : () => handleFaceRecognition(item)
               }
