@@ -1,7 +1,7 @@
 import { useToastController } from '@tamagui/toast'
 import * as Network from 'expo-network'
 import { useEffect, useState } from 'react'
-import { FlatList, TouchableOpacity } from 'react-native'
+import { FlatList, RefreshControl, TouchableOpacity } from 'react-native'
 import { Button, Separator, Text, View } from 'tamagui'
 
 import getParticipantes from '@/api/get-participantes'
@@ -24,17 +24,24 @@ export default function ListaPresenca({
   route,
 }: ListaPresencaProps) {
   const [participantes, setParticipantes] = useState<Participant[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const { training } = route.params
   const toast = useToastController()
 
-  useEffect(() => {
-    const fetchParticipantes = async () => {
+  const fetchParticipantes = async () => {
+    try {
+      setIsLoading(true)
+
+      if (!training) {
+        navigation.navigate('ListaTreinamentos')
+
+        return
+      }
+
       const participantes = await getParticipantes({
         tmaCua: training.tmaCua,
         codCua: training.codCua,
       })
-
-      console.log(participantes)
 
       if (participantes && participantes.participantes) {
         if (!Array.isArray(participantes.participantes)) {
@@ -43,10 +50,21 @@ export default function ListaPresenca({
 
         setParticipantes(participantes.participantes)
       }
+    } catch (error) {
+      setIsLoading(false)
+      console.error(error)
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    fetchParticipantes()
-  }, [])
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchParticipantes()
+    })
+
+    return unsubscribe
+  }, [training, navigation])
 
   const handleFaceRecognition = async (participant: Participant) => {
     const network = await Network.getNetworkStateAsync()
@@ -68,11 +86,6 @@ export default function ListaPresenca({
 
     navigation.navigate('Camera', {
       participant,
-    })
-  }
-
-  const handleQrCode = () => {
-    navigation.navigate('QRCode', {
       training,
     })
   }
@@ -93,6 +106,12 @@ export default function ListaPresenca({
           keyExtractor={(item) => item.numCpf.toString()}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator />}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={fetchParticipantes}
+            />
+          }
           renderItem={({ item: participant }) => (
             <TouchableOpacity
               onPress={
@@ -108,7 +127,14 @@ export default function ListaPresenca({
         />
       </View>
 
-      <TouchableOpacity onPress={handleQrCode}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('QRCode', {
+            training,
+            participants: participantes,
+          })
+        }
+      >
         <Button
           backgroundColor='$primary600'
           color='white'

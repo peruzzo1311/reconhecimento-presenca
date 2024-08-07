@@ -17,18 +17,18 @@ export default async function getParticipantes({
   const res = await axios.post(
     'https://dc.prismainformatica.com.br:8188/SXI-API/G5Rest?server=https://dc.prismainformatica.com.br:8188&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
     {
-      LisTod: 'N',
-      LisPar: 'S',
+      lisTod: 'N',
+      lisPar: 'S',
       tmaCua,
       codCua,
     },
     {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: '',
-        encryptionType: 0,
         user: 'prisma.integracao',
         pass: '@98fm',
+        encryptionType: '0',
+        Authorization: '',
+        'Content-Type': 'application/json',
       },
     }
   )

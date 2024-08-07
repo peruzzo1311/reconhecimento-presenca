@@ -19,43 +19,37 @@ interface QRCodeProps {
   route: {
     params: {
       training: Training
+      participants: Participant[]
     }
   }
 }
 
 export default function QRCode({ navigation, route }: QRCodeProps) {
-  const { training } = route.params
-  const [selectedTraining, setSelectedTraining] = useState<Training | null>(
-    training ?? null
-  )
+  const [presences, setPresences] = useState<Participant[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [QrCodeScanned, setQrCodeScanned] = useState(false)
+  const [scanned, setScanned] = useState(false)
+
   const [permission, requestPermission] = useCameraPermissions()
+  const { training, participants } = route.params
 
   const handleQrCodeScanned = async ({ data }: BarcodeScanningResult) => {
-    if (QrCodeScanned) {
+    if (scanned) {
       return
     }
 
-    setQrCodeScanned(true)
+    setScanned(true)
     setIsLoading(true)
 
-    if (!selectedTraining || !selectedTraining.participantes) {
-      Alert.alert('Erro', 'Treinamento não encontrado')
-      setQrCodeScanned(false)
-      setIsLoading(false)
+    if (!training || !participants) {
+      asyncAlert('Erro', 'Treinamento não encontrado')
 
       return
     }
 
-    const participant = selectedTraining.participantes.find(
-      (p) => p.numCad === Number(data)
-    )
+    const participant = participants.find((p) => p.numCad === Number(data))
 
     if (!participant) {
-      Alert.alert('Erro', 'Participante não encontrado')
-      setQrCodeScanned(false)
-      setIsLoading(false)
+      asyncAlert('Erro', 'Participante não encontrado')
 
       return
     }
@@ -64,15 +58,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       participant.staFre === 'Presente' ||
       participant.staFre === 'Sincronizar'
     ) {
-      Alert.alert('Erro', 'Participante já está presente', [
-        {
-          text: 'OK',
-          onPress: () => {
-            setQrCodeScanned(false)
-            setIsLoading(false)
-          },
-        },
-      ])
+      asyncAlert('Erro', 'Participante já está presente')
 
       return
     }
@@ -86,36 +72,26 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
     }
   }
 
-  const handleSetPresence = (participant: Participant) => {
-    if (!selectedTraining || !selectedTraining.participantes) {
+  const handleOnlinePresence = async (participant: Participant) => {
+    if (!training) {
+      asyncAlert('Erro', 'Treinamento não encontrado')
+
       return
     }
 
-    setSelectedTraining({
-      ...selectedTraining,
-      participantes: selectedTraining.participantes.map((p) => {
-        if (p.numCad === participant.numCad) {
-          return {
-            ...p,
-            staFre: 'Presente',
-          }
-        }
+    const participantExists = presences.find(
+      (p) => p.numCad === participant.numCad
+    )
 
-        return p
-      }),
-    })
+    if (participantExists) {
+      asyncAlert('Erro', 'Participante já está presente')
 
-    console.log(selectedTraining)
-  }
-
-  const handleOnlinePresence = async (participant: Participant) => {
-    if (!selectedTraining) {
       return
     }
 
     const res = await QrCodeValidate({
-      codCua: selectedTraining.codCua,
-      tmaCua: selectedTraining.tmaCua,
+      codCua: training.codCua,
+      tmaCua: training.tmaCua,
       participantes: [
         {
           numEmp: participant.numEmp,
@@ -128,52 +104,46 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
     })
 
     if (res.msgRet !== 'ok') {
-      errorAlert(res.msgRet)
+      asyncAlert('Erro', res.msgRet)
 
       return
     }
 
-    handleSetPresence(participant)
-
-    Alert.alert(
+    setPresences([...presences, participant])
+    asyncAlert(
       'Sucesso',
-      `Presença de ${participant.nomFun} registrada com sucesso!`,
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            setQrCodeScanned(false)
-            setIsLoading(false)
-          },
-        },
-      ]
+      `Presença de ${participant.nomFun} registrada com sucesso!`
     )
   }
 
   const handleOfflinePresence = (participant: Participant) => {
-    if (!selectedTraining) {
+    if (!training) {
       return
     }
 
-    handleSetPresence(participant)
+    asyncAlert('Sucesso', `Verificação offline em desenvolvimento`)
+  }
 
+  const asyncAlert = (title: string, subtitle: string) => {
     Alert.alert(
-      'Sucesso',
-      `Presença de ${participant.nomFun} registrada com sucesso!`,
+      title,
+      subtitle ?? 'Ocorreu um erro ao registrar a presença.',
       [
         {
           text: 'OK',
           onPress: () => {
-            setQrCodeScanned(false)
             setIsLoading(false)
+            setScanned(false)
           },
         },
-      ]
+      ],
+      {
+        onDismiss: () => {
+          setIsLoading(false)
+          setScanned(false)
+        },
+      }
     )
-  }
-
-  const errorAlert = (title: string) => {
-    Alert.alert('Erro', title ?? 'Ocorreu um erro ao registrar a presença.')
   }
 
   if (!permission || !permission.granted) {
@@ -223,7 +193,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
             paddingVertical: 8,
             paddingHorizontal: 12,
           }}
-          onPress={() => navigation.navigate('ListaPresenca')}
+          onPress={() => navigation.navigate('ListaPresenca', { training })}
         >
           <FontAwesome5 name='chevron-left' size={24} color='#0171BB' />
         </TouchableOpacity>
@@ -247,7 +217,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
         barcodeScannerSettings={{
           barcodeTypes: ['qr'],
         }}
-        onBarcodeScanned={QrCodeScanned ? undefined : handleQrCodeScanned}
+        onBarcodeScanned={handleQrCodeScanned}
       />
 
       {isLoading && (

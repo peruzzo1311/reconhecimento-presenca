@@ -1,12 +1,13 @@
 import { Entypo } from '@expo/vector-icons'
 import { useToastController } from '@tamagui/toast'
+import { format } from 'date-fns'
 import Constants from 'expo-constants'
 import { useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Button, Image, Text, View } from 'tamagui'
 
-import { RecognitionValidate } from '@/api/validate-presence'
-import { Participant } from '@/types'
+import { QrCodeValidate, RecognitionValidate } from '@/api/validate-presence'
+import { Participant, Training } from '@/types'
 
 interface FotoProps {
   route: {
@@ -16,6 +17,7 @@ interface FotoProps {
         uri: string
       }
       participant: Participant
+      training: Training
     }
   }
   navigation: any
@@ -23,7 +25,7 @@ interface FotoProps {
 
 export default function Foto({ route, navigation }: FotoProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { photo, participant } = route.params
+  const { photo, participant, training } = route.params
 
   const toast = useToastController()
 
@@ -39,7 +41,7 @@ export default function Foto({ route, navigation }: FotoProps) {
             preset: 'error',
           },
         })
-        navigation.navigate('ListaPresenca')
+        navigation.navigate('ListaPresenca', { training })
 
         return
       }
@@ -57,12 +59,39 @@ export default function Foto({ route, navigation }: FotoProps) {
             preset: 'error',
           },
         })
-        navigation.navigate('ListaPresenca')
+        navigation.navigate('ListaPresenca', { training })
 
         return
       }
 
-      navigation.navigate('ListaPresenca')
+      const res = await QrCodeValidate({
+        codCua: training.codCua,
+        tmaCua: training.tmaCua,
+        participantes: [
+          {
+            numEmp: participant.numEmp,
+            tipCol: participant.tipCol,
+            numCad: participant.numCad,
+            datFre: format(new Date(), 'dd/MM/yyyy'),
+            horFre: format(new Date(), 'HH:mm:ss'),
+          },
+        ],
+      })
+
+      if (res.msgRet !== 'ok') {
+        toast.show(res.msgRet ?? 'Erro ao verificar presença', {
+          native: true,
+          burntOptions: {
+            haptic: 'error',
+            preset: 'error',
+          },
+        })
+        navigation.navigate('ListaPresenca', { training })
+
+        return
+      }
+
+      navigation.navigate('ListaPresenca', { training })
     } catch (error) {
       console.error(error)
 
@@ -73,7 +102,7 @@ export default function Foto({ route, navigation }: FotoProps) {
           preset: 'error',
         },
       })
-      navigation.navigate('ListaPresenca')
+      navigation.navigate('ListaPresenca', { training })
     } finally {
       setIsLoading(false)
     }
@@ -97,7 +126,11 @@ export default function Foto({ route, navigation }: FotoProps) {
             backgroundColor: '#0171bb',
           }}
           disabled={isLoading}
-          onPress={() => navigation.navigate('Camera')}
+          onPress={() =>
+            navigation.navigate('Camera', {
+              training,
+            })
+          }
         >
           <Entypo name='chevron-left' size={28} color='white' />
         </TouchableOpacity>
