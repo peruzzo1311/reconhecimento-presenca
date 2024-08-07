@@ -1,9 +1,8 @@
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Avatar, Text, View } from 'tamagui'
 
 import { useDialogStore } from '@/store/dialog'
-import { useOfflineStore } from '@/store/offline-store'
 import { Participant } from '@/types'
 
 interface PresenceItemProps {
@@ -11,16 +10,7 @@ interface PresenceItemProps {
 }
 
 function PresenceItem({ participant }: PresenceItemProps) {
-  const { presences } = useOfflineStore()
   const { onOpen } = useDialogStore()
-
-  useEffect(() => {
-    presences.map((presence) => {
-      if (presence.participante.numCad === participant.numCad) {
-        participant.staFre = 'Sincronizar'
-      }
-    })
-  }, [])
 
   const handleAvatarPress = () => {
     onOpen('avatar', { participant })

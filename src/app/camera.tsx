@@ -5,14 +5,21 @@ import { useRef, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
+import { Participant } from '@/types'
+
 interface CameraProps {
   navigation: any
+  route: {
+    params: {
+      participant: Participant
+    }
+  }
 }
 
-export default function Camera({ navigation }: CameraProps) {
+export default function Camera({ navigation, route }: CameraProps) {
   const [facing, setFacing] = useState<CameraType>('front')
   const [permission, requestPermission] = useCameraPermissions()
-
+  const { participant } = route.params
   const cameraRef = useRef<CameraView>(null)
 
   const handleTakePicture = async () => {
@@ -35,6 +42,7 @@ export default function Camera({ navigation }: CameraProps) {
         base64: photo.base64,
         uri: photo.uri,
       },
+      participant,
     })
   }
 

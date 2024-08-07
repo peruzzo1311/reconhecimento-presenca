@@ -8,7 +8,6 @@ import getParticipantes from '@/api/get-participantes'
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import PresenceItem from '@/components/presence-item'
-import { useTrainingStore } from '@/store/treinamento-store'
 import { Participant, Training } from '@/types'
 
 interface ListaPresencaProps {
@@ -24,9 +23,8 @@ export default function ListaPresenca({
   navigation,
   route,
 }: ListaPresencaProps) {
-  const { training } = route.params
   const [participantes, setParticipantes] = useState<Participant[]>([])
-  const { setSelectedParticipant } = useTrainingStore()
+  const { training } = route.params
   const toast = useToastController()
 
   useEffect(() => {
@@ -35,6 +33,8 @@ export default function ListaPresenca({
         tmaCua: training.tmaCua,
         codCua: training.codCua,
       })
+
+      console.log(participantes)
 
       if (participantes && participantes.participantes) {
         if (!Array.isArray(participantes.participantes)) {
@@ -66,8 +66,15 @@ export default function ListaPresenca({
       return
     }
 
-    setSelectedParticipant(participant)
-    navigation.navigate('Camera')
+    navigation.navigate('Camera', {
+      participant,
+    })
+  }
+
+  const handleQrCode = () => {
+    navigation.navigate('QRCode', {
+      training,
+    })
   }
 
   if (!training || !participantes) {
@@ -86,21 +93,22 @@ export default function ListaPresenca({
           keyExtractor={(item) => item.numCpf.toString()}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator />}
-          renderItem={({ item }) => (
+          renderItem={({ item: participant }) => (
             <TouchableOpacity
               onPress={
-                item.staFre === 'Presente' || item.staFre === 'Sincronizar'
+                participant.staFre === 'Presente' ||
+                participant.staFre === 'Sincronizar'
                   ? undefined
-                  : () => handleFaceRecognition(item)
+                  : () => handleFaceRecognition(participant)
               }
             >
-              <PresenceItem participant={item} />
+              <PresenceItem participant={participant} />
             </TouchableOpacity>
           )}
         />
       </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate('QRCode')}>
+      <TouchableOpacity onPress={handleQrCode}>
         <Button
           backgroundColor='$primary600'
           color='white'

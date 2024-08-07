@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Button, Image, Text, View } from 'tamagui'
 
 import { RecognitionValidate } from '@/api/validate-presence'
-import { useTrainingStore } from '@/store/treinamento-store'
+import { Participant } from '@/types'
 
 interface FotoProps {
   route: {
@@ -15,6 +15,7 @@ interface FotoProps {
         base64: string
         uri: string
       }
+      participant: Participant
     }
   }
   navigation: any
@@ -22,59 +23,15 @@ interface FotoProps {
 
 export default function Foto({ route, navigation }: FotoProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { photo } = route.params
-
-  const {
-    trainingList,
-    selectedTraining,
-    selectedParticipant,
-    setTrainingList,
-    setSelectedTraining,
-  } = useTrainingStore()
+  const { photo, participant } = route.params
 
   const toast = useToastController()
-
-  const setPresence = () => {
-    if (!selectedTraining || !selectedParticipant) {
-      return
-    }
-
-    const trainingIndex = trainingList.findIndex(
-      (training) => training.codCua === selectedTraining.codCua
-    )
-
-    if (trainingIndex === -1) {
-      return
-    }
-
-    const newTrainingList = [
-      ...trainingList,
-      {
-        ...trainingList[trainingIndex],
-        participantes: trainingList[trainingIndex].participantes.map(
-          (participant) => {
-            if (participant.numCad === selectedParticipant.numCad) {
-              return {
-                ...participant,
-                staFre: 'Presente' as 'Presente',
-              }
-            }
-
-            return participant
-          }
-        ),
-      },
-    ]
-
-    setSelectedTraining(newTrainingList[trainingIndex])
-    setTrainingList(newTrainingList)
-  }
 
   const handleValidate = async () => {
     try {
       setIsLoading(true)
 
-      if (!selectedParticipant) {
+      if (!participant) {
         toast.show('Participante não selecionado', {
           native: true,
           burntOptions: {
@@ -88,7 +45,7 @@ export default function Foto({ route, navigation }: FotoProps) {
       }
 
       const { codRet, msgRet } = await RecognitionValidate({
-        participants: selectedParticipant.fotCol ?? '',
+        participants: participant.fotCol ?? '',
         base64: photo.base64,
       })
 
@@ -105,7 +62,6 @@ export default function Foto({ route, navigation }: FotoProps) {
         return
       }
 
-      setPresence()
       navigation.navigate('ListaPresenca')
     } catch (error) {
       console.error(error)

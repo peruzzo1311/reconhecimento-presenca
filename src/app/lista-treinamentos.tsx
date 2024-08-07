@@ -10,9 +10,11 @@ import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import TrainingItem from '@/components/training-item'
 import { useTrainingStore } from '@/store/treinamento-store'
+import { Training } from '@/types'
 
 export default function ListaTreinamentos({ navigation }: any) {
-  const { trainingList, setTrainingList } = useTrainingStore()
+  const [trainings, setTrainings] = useState<Training[]>([])
+  const { setTrainingList } = useTrainingStore()
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
 
@@ -24,8 +26,10 @@ export default function ListaTreinamentos({ navigation }: any) {
 
       if (!Array.isArray(treinamentos)) {
         setTrainingList([treinamentos])
+        setTrainings([treinamentos])
       }
 
+      setTrainings(treinamentos)
       setTrainingList(treinamentos)
     } catch (error) {
       console.error(error)
@@ -41,9 +45,9 @@ export default function ListaTreinamentos({ navigation }: any) {
       const network = await Network.getNetworkStateAsync()
 
       if (!network.isConnected) {
-        if (!trainingList || trainingList.length === 0) {
-          return <ErrorListaTreinamentos navigation={navigation} />
-        }
+        // if (!trainingList || trainingList.length === 0) {
+        //   return <ErrorListaTreinamentos navigation={navigation} />
+        // }
 
         return
       }
@@ -67,7 +71,7 @@ export default function ListaTreinamentos({ navigation }: any) {
       <View flex={1} paddingHorizontal={24} paddingBottom={12}>
         {!isLoading && (
           <FlatList
-            data={trainingList}
+            data={trainings}
             renderItem={({ item }) => (
               <TrainingItem item={item} navigation={navigation} />
             )}

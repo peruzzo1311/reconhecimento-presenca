@@ -9,13 +9,11 @@ import {
   ListItem,
   Separator,
   Spinner,
-  View,
   Text,
+  View,
 } from 'tamagui'
 
-import getColaboradores from '@/api/get-colaboradores'
 import { useDialogStore } from '@/store/dialog'
-import { useOfflineStore } from '@/store/offline-store'
 import { useUserStore } from '@/store/user-store'
 
 export default function MenuOptionsDialog() {
@@ -23,26 +21,24 @@ export default function MenuOptionsDialog() {
 
   const { isOpen, onClose, type } = useDialogStore()
   const { clearUser } = useUserStore()
-  const { setActiveEmployees } = useOfflineStore()
+  // const { setActiveEmployees } = useOfflineStore()
   const navigation = useNavigation() as any
   const isModalOpen = isOpen && type === 'menu-options'
 
-  const { presences } = useOfflineStore()
+  // const { presences } = useOfflineStore()
 
   const handleDownloadColaboradores = async () => {
     try {
-      setIsLoading(true)
-      const res = await getColaboradores()
-
-      if (!res.colaboradores) {
-        return
-      }
-
-      setActiveEmployees(
-        Array.isArray(res.colaboradores)
-          ? res.colaboradores
-          : [res.colaboradores]
-      )
+      // setIsLoading(true)
+      // const res = await getColaboradores()
+      // if (!res.colaboradores) {
+      //   return
+      // }
+      // setActiveEmployees(
+      //   Array.isArray(res.colaboradores)
+      //     ? res.colaboradores
+      //     : [res.colaboradores]
+      // )
     } catch (error) {
       console.error(error)
     } finally {
@@ -137,13 +133,13 @@ export default function MenuOptionsDialog() {
                   onClose()
                   navigation.navigate('Sincronizar')
                 }}
-                disabled={presences.length === 0}
+                // disabled={presences.length === 0}
               >
                 <ListItem
                   icon={<MaterialIcons name='sync' size={24} color='black' />}
                   fontSize='$5'
                   fontWeight={400}
-                  opacity={presences.length === 0 ? 0.5 : 1}
+                  // opacity={presences.length === 0 ? 0.5 : 1}
                 >
                   Sincronizar
                 </ListItem>

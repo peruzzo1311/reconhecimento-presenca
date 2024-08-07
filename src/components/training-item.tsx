@@ -1,9 +1,8 @@
 import { FontAwesome5 } from '@expo/vector-icons'
 import { memo } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { View, Text } from 'tamagui'
+import { Text, View } from 'tamagui'
 
-import { useTrainingStore } from '@/store/treinamento-store'
 import { Training } from '@/types'
 
 interface TrainingItemProps {
@@ -12,10 +11,7 @@ interface TrainingItemProps {
 }
 
 function TrainingItem({ navigation, item }: TrainingItemProps) {
-  const { setSelectedTraining } = useTrainingStore()
-
   const handleSelectTraining = () => {
-    setSelectedTraining(item)
     navigation.navigate('ListaPresenca', { training: item })
   }
 

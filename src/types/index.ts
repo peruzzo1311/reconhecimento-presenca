@@ -6,6 +6,7 @@ export interface Participant {
   numCpf: string | number
   fotCol: string
   staFre: 'Ausente' | 'Presente' | 'Sincronizar'
+  isSelected?: boolean
 }
 
 export interface Training {
@@ -14,6 +15,7 @@ export interface Training {
   tmaCua: number
   datIni: string
   datFim: string
+  isSelected?: boolean
   participantes?: Participant[]
 }
 

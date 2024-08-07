@@ -12,23 +12,25 @@ import { ActivityIndicator, Alert, TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
 import { QrCodeValidate } from '@/api/validate-presence'
-import { useOfflineStore } from '@/store/offline-store'
-import { useTrainingStore } from '@/store/treinamento-store'
-import { Participant } from '@/types'
+import { Participant, Training } from '@/types'
 
 interface QRCodeProps {
   navigation: any
+  route: {
+    params: {
+      training: Training
+    }
+  }
 }
 
-export default function QRCode({ navigation }: QRCodeProps) {
+export default function QRCode({ navigation, route }: QRCodeProps) {
+  const { training } = route.params
+  const [selectedTraining, setSelectedTraining] = useState<Training | null>(
+    training ?? null
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [QrCodeScanned, setQrCodeScanned] = useState(false)
   const [permission, requestPermission] = useCameraPermissions()
-
-  const { selectedTraining, setPresence, setSelectedTraining } =
-    useTrainingStore()
-
-  const { addPresence } = useOfflineStore()
 
   const handleQrCodeScanned = async ({ data }: BarcodeScanningResult) => {
     if (QrCodeScanned) {
@@ -38,7 +40,7 @@ export default function QRCode({ navigation }: QRCodeProps) {
     setQrCodeScanned(true)
     setIsLoading(true)
 
-    if (!selectedTraining) {
+    if (!selectedTraining || !selectedTraining.participantes) {
       Alert.alert('Erro', 'Treinamento não encontrado')
       setQrCodeScanned(false)
       setIsLoading(false)
@@ -85,14 +87,9 @@ export default function QRCode({ navigation }: QRCodeProps) {
   }
 
   const handleSetPresence = (participant: Participant) => {
-    if (!selectedTraining) {
+    if (!selectedTraining || !selectedTraining.participantes) {
       return
     }
-
-    setPresence({
-      ...participant,
-      staFre: 'Presente',
-    })
 
     setSelectedTraining({
       ...selectedTraining,
@@ -157,19 +154,6 @@ export default function QRCode({ navigation }: QRCodeProps) {
     if (!selectedTraining) {
       return
     }
-
-    addPresence({
-      codCua: selectedTraining.codCua,
-      tmaCua: selectedTraining.tmaCua,
-      participante: {
-        numEmp: participant.numEmp,
-        tipCol: participant.tipCol,
-        numCad: participant.numCad,
-        nomFun: participant.nomFun,
-        datFre: format(new Date(), 'dd/MM/yyyy'),
-        horFre: format(new Date(), 'HH:mm:ss'),
-      },
-    })
 
     handleSetPresence(participant)
 

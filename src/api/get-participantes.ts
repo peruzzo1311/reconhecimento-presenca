@@ -17,8 +17,8 @@ export default async function getParticipantes({
   const res = await axios.post(
     'https://dc.prismainformatica.com.br:8188/SXI-API/G5Rest?server=https://dc.prismainformatica.com.br:8188&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
     {
-      LisTod: 'S',
-      LisPar: 'N',
+      LisTod: 'N',
+      LisPar: 'S',
       tmaCua,
       codCua,
     },
