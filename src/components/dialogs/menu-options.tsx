@@ -3,52 +3,66 @@ import { useNavigation } from '@react-navigation/native'
 import { X } from 'lucide-react-native'
 import { useState } from 'react'
 import { TouchableOpacity } from 'react-native'
-import {
-  Button,
-  Dialog,
-  ListItem,
-  Separator,
-  Spinner,
-  Text,
-  View,
-} from 'tamagui'
+import { Button, Dialog, ListItem, Progress, Separator, View } from 'tamagui'
 
+import getParticipantes from '@/api/get-participantes'
+import getTreinamentos from '@/api/get-treinamentos'
 import { useDialogStore } from '@/store/dialog'
+import { useOfflineStore } from '@/store/offline-store'
 import { useUserStore } from '@/store/user-store'
+import { Training } from '@/types'
+import { useTrainingStore } from '@/store/treinamento-store'
 
 export default function MenuOptionsDialog() {
   const [isLoading, setIsLoading] = useState(false)
+  const [progress, setProgress] = useState(0)
 
   const { isOpen, onClose, type } = useDialogStore()
-  const { clearUser } = useUserStore()
-  // const { setActiveEmployees } = useOfflineStore()
-  const navigation = useNavigation() as any
   const isModalOpen = isOpen && type === 'menu-options'
+  const navigation = useNavigation() as any
 
-  // const { presences } = useOfflineStore()
-
-  const handleDownloadColaboradores = async () => {
-    try {
-      // setIsLoading(true)
-      // const res = await getColaboradores()
-      // if (!res.colaboradores) {
-      //   return
-      // }
-      // setActiveEmployees(
-      //   Array.isArray(res.colaboradores)
-      //     ? res.colaboradores
-      //     : [res.colaboradores]
-      // )
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setIsLoading(false)
-      onClose()
-    }
-  }
+  const { clearUser } = useUserStore()
+  const { isOffline } = useOfflineStore()
+  const { setTrainingList } = useTrainingStore()
 
   if (!isModalOpen) {
     return null
+  }
+
+  const downloadTreinamentos = async () => {
+    setIsLoading(true)
+
+    try {
+      const treinamentosOffline = [] as Training[]
+      const treinamentos = await getTreinamentos()
+
+      if (!treinamentos) {
+        return
+      }
+
+      for (const treinamento of treinamentos) {
+        const participantes = await getParticipantes({
+          codCua: treinamento.codCua,
+          tmaCua: treinamento.tmaCua,
+        })
+
+        if (!participantes) {
+          return
+        }
+
+        treinamentosOffline.push(participantes)
+
+        setProgress(
+          Math.round((treinamentosOffline.length / treinamentos.length) * 100)
+        )
+      }
+
+      setTrainingList(treinamentosOffline)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -84,10 +98,14 @@ export default function MenuOptionsDialog() {
           backgroundColor='white'
         >
           <Dialog.Title fontSize='$7' fontWeight='400'>
-            Opções
+            {isLoading ? 'Baixando...' : 'Opções'}
           </Dialog.Title>
 
-          <Dialog.Close asChild>
+          <Dialog.Close
+            opacity={isLoading ? 0.2 : 1}
+            disabled={isLoading}
+            asChild
+          >
             <Button
               position='absolute'
               top='$3'
@@ -100,29 +118,33 @@ export default function MenuOptionsDialog() {
           </Dialog.Close>
 
           {isLoading ? (
-            <View
-              alignItems='center'
-              justifyContent='center'
-              flexDirection='row'
-              gap={8}
-            >
-              <Spinner color='$primary600' />
-
-              <Text fontSize='$5'>Carregando...</Text>
+            <View alignItems='center' justifyContent='center'>
+              <Progress value={progress}>
+                <Progress.Indicator
+                  backgroundColor='#0171BB'
+                  animation='lazy'
+                />
+              </Progress>
             </View>
           ) : (
             <View gap={4}>
               <Separator />
 
-              <TouchableOpacity onPress={handleDownloadColaboradores}>
+              <TouchableOpacity
+                disabled={isOffline}
+                onPress={downloadTreinamentos}
+              >
                 <ListItem
                   icon={
                     <MaterialIcons name='download' size={24} color='black' />
                   }
                   fontSize='$5'
                   fontWeight={400}
+                  opacity={isOffline ? 0.5 : 1}
+                  backgroundColor='white'
+                  disabled
                 >
-                  Lista de colaboradores
+                  Baixar treinamentos
                 </ListItem>
               </TouchableOpacity>
 
@@ -133,13 +155,14 @@ export default function MenuOptionsDialog() {
                   onClose()
                   navigation.navigate('Sincronizar')
                 }}
-                // disabled={presences.length === 0}
+                disabled={isOffline}
               >
                 <ListItem
                   icon={<MaterialIcons name='sync' size={24} color='black' />}
                   fontSize='$5'
                   fontWeight={400}
-                  // opacity={presences.length === 0 ? 0.5 : 1}
+                  opacity={isOffline ? 0.5 : 1}
+                  backgroundColor='white'
                 >
                   Sincronizar
                 </ListItem>
@@ -157,6 +180,7 @@ export default function MenuOptionsDialog() {
                   icon={<MaterialIcons name='logout' size={24} color='black' />}
                   fontSize='$5'
                   fontWeight={400}
+                  backgroundColor='white'
                 >
                   Sair
                 </ListItem>

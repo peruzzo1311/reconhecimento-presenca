@@ -20,9 +20,9 @@ function TrainingItem({ navigation, item }: TrainingItemProps) {
       style={{ overflow: 'hidden', borderRadius: 15 }}
       onPress={handleSelectTraining}
     >
-      <View borderWidth={2} borderColor='$primary600' borderRadius={15}>
+      <View borderWidth={2} borderColor='#0171BB' borderRadius={15}>
         <View
-          backgroundColor='$primary600'
+          backgroundColor='#0171BB'
           alignItems='center'
           paddingVertical={4}
           gap={8}

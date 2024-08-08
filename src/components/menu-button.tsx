@@ -21,7 +21,7 @@ export function MenuButton({ label, icon, route }: MenuButtonProps) {
         alignItems='center'
         width={125}
         height={125}
-        backgroundColor='$primary600'
+        backgroundColor='#0171BB'
         borderRadius={15}
         borderWidth={2}
         borderColor='white'

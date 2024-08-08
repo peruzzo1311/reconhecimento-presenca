@@ -1,14 +1,26 @@
 import { Feather } from '@expo/vector-icons'
 import Constants from 'expo-constants'
+import * as Network from 'expo-network'
 import { TouchableOpacity } from 'react-native'
 import { Image, View } from 'tamagui'
 
 import { useDialogStore } from '@/store/dialog'
+import { useOfflineStore } from '@/store/offline-store'
 
 export function Header() {
   const { onOpen } = useDialogStore()
+  const { setIsOffline } = useOfflineStore()
 
-  const handleOpenMenuOptions = () => {
+  const handleOpenMenuOptions = async () => {
+    const networkState = await Network.getNetworkStateAsync()
+    const isConnected = networkState.isConnected
+
+    if (!isConnected) {
+      setIsOffline(true)
+    } else {
+      setIsOffline(false)
+    }
+
     onOpen('menu-options', {})
   }
 

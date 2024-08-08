@@ -148,7 +148,7 @@ export default function Login({ navigation }: { navigation: any }) {
               onSubmitEditing={() => passwordInputRef.current?.focus()}
               backgroundColor={isLoading ? '$gray2' : 'white'}
               pointerEvents={isLoading ? 'none' : 'auto'}
-              focusStyle={{ borderColor: '$primary600', borderWidth: 1 }}
+              focusStyle={{ borderColor: '#0171BB', borderWidth: 1 }}
             />
           </View>
 
@@ -167,7 +167,7 @@ export default function Login({ navigation }: { navigation: any }) {
               onSubmitEditing={handleSubmit}
               backgroundColor={isLoading ? '$gray2' : 'white'}
               pointerEvents={isLoading ? 'none' : 'auto'}
-              focusStyle={{ borderColor: '$primary600', borderWidth: 1 }}
+              focusStyle={{ borderColor: '#0171BB', borderWidth: 1 }}
             />
           </View>
 
@@ -185,8 +185,8 @@ export default function Login({ navigation }: { navigation: any }) {
               size='$5'
               borderWidth={2}
               checked={showPassword}
-              backgroundColor={showPassword ? '$primary600' : '#fff'}
-              borderColor={showPassword ? '$primary600' : '#ddd'}
+              backgroundColor={showPassword ? '#0171BB' : '#fff'}
+              borderColor={showPassword ? '#0171BB' : '#ddd'}
               disabled={isLoading}
               pointerEvents='none'
             >
@@ -201,7 +201,7 @@ export default function Login({ navigation }: { navigation: any }) {
           <TouchableOpacity onPress={isLoading ? undefined : handleSubmit}>
             <Button
               pointerEvents='none'
-              backgroundColor='$primary600'
+              backgroundColor='#0171BB'
               opacity={isLoading ? 0.5 : 1}
             >
               <Text color='white' fontWeight='700'>

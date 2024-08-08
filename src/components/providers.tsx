@@ -1,16 +1,19 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { ToastProvider } from '@tamagui/toast'
-import { TamaguiProvider } from 'tamagui'
-import config from 'tamagui.config'
+import { createTamagui, TamaguiProvider } from 'tamagui'
+import { config } from '@tamagui/config/v3'
 
-interface ProviderProps {
-  children: React.ReactNode
+export const tamaguiConfig = createTamagui(config)
+
+type Conf = typeof tamaguiConfig
+declare module '@tamagui/core' {
+  interface TamaguiCustomConfig extends Conf {}
 }
 
-export function Providers({ children }: ProviderProps) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NavigationContainer>
-      <TamaguiProvider config={config} defaultTheme='light'>
+      <TamaguiProvider config={tamaguiConfig}>
         <ToastProvider
           burntOptions={{ from: 'bottom', shouldDismissByDrag: true }}
         >

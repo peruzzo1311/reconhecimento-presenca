@@ -110,7 +110,7 @@ export default function Foto({ route, navigation }: FotoProps) {
 
   return (
     <View flex={1} backgroundColor='white'>
-      <View height={Constants.statusBarHeight} backgroundColor='$primary600' />
+      <View height={Constants.statusBarHeight} backgroundColor='#0171BB' />
 
       <View
         position='absolute'
@@ -146,7 +146,7 @@ export default function Foto({ route, navigation }: FotoProps) {
       <View position='absolute' bottom={20} right={20} left={20}>
         <TouchableOpacity onPress={handleValidate}>
           <Button
-            backgroundColor='$primary600'
+            backgroundColor='#0171BB'
             pointerEvents='none'
             disabled={isLoading}
             opacity={isLoading ? 0.5 : 1}

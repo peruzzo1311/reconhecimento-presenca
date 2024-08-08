@@ -162,7 +162,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
 
         <TouchableOpacity onPress={requestPermission}>
           <Button
-            backgroundColor='$primary600'
+            backgroundColor='#0171BB'
             color='white'
             width='100%'
             maxWidth={300}
@@ -178,7 +178,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
 
   return (
     <View flex={1} backgroundColor='white'>
-      <View height={Constants.statusBarHeight} backgroundColor='$primary600' />
+      <View height={Constants.statusBarHeight} backgroundColor='#0171BB' />
 
       <View
         flexDirection='row'

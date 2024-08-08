@@ -29,6 +29,14 @@ export default function ListaPresenca({
   const toast = useToastController()
 
   const fetchParticipantes = async () => {
+    const isConnected = await Network.getNetworkStateAsync()
+
+    if (!isConnected.isConnected) {
+      // fetchParticipantsOffline()
+
+      return
+    }
+
     try {
       setIsLoading(true)
 
@@ -136,7 +144,7 @@ export default function ListaPresenca({
         }
       >
         <Button
-          backgroundColor='$primary600'
+          backgroundColor='#0171BB'
           color='white'
           margin={20}
           width='100%'
