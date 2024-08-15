@@ -18,7 +18,7 @@ export async function RecognitionValidate({
   base64,
 }: validatePresenceProps): Promise<validatePresenceResponse> {
   const res = await axios.post(
-    'https://api-presenca-iqqsmwkmla-rj.a.run.app/verifica-presenca',
+    'https://prismaappfr.azurewebsites.net/verifica-presenca',
     {
       fotPar: base64,
       participantes: participants,

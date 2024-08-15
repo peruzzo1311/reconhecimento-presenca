@@ -2,10 +2,10 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { memo } from 'react'
 import { Text, View } from 'tamagui'
 
-import { TransformedPresence } from '@/app/sincronizar-grupos'
 import { useTrainingStore } from '@/store/treinamento-store'
+import { Presence } from '@/types'
 
-function ItemSync(item: TransformedPresence) {
+function ItemSync(item: Presence) {
   const { trainingList } = useTrainingStore()
 
   const training = trainingList.find(
@@ -28,6 +28,7 @@ function ItemSync(item: TransformedPresence) {
         <Text color='white' fontWeight='700'>
           {training.nomCua}
         </Text>
+
         <Text color='white'>Turma: {training.tmaCua}</Text>
       </View>
 

@@ -1,5 +1,5 @@
+import { AntDesign } from '@expo/vector-icons'
 import { useToastController } from '@tamagui/toast'
-import { Check } from 'lucide-react-native'
 import { useRef, useState } from 'react'
 import {
   Keyboard,
@@ -191,7 +191,7 @@ export default function Login({ navigation }: { navigation: any }) {
               pointerEvents='none'
             >
               <Checkbox.Indicator>
-                <Check color='#fff' />
+                <AntDesign name='check' size={24} color='white' />
               </Checkbox.Indicator>
             </Checkbox>
 

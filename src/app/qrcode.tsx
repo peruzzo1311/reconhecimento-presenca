@@ -12,6 +12,7 @@ import { ActivityIndicator, Alert, TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
 import { QrCodeValidate } from '@/api/validate-presence'
+import { useOfflineStore } from '@/store/offline-store'
 import { Participant, Training } from '@/types'
 
 interface QRCodeProps {
@@ -31,6 +32,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
 
   const [permission, requestPermission] = useCameraPermissions()
   const { training, participants } = route.params
+  const { presenceOffline, setPresenceOffline } = useOfflineStore()
 
   const handleQrCodeScanned = async ({ data }: BarcodeScanningResult) => {
     if (scanned) {
@@ -68,7 +70,8 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
     if (!network.isConnected) {
       handleOfflinePresence(participant)
     } else {
-      await handleOnlinePresence(participant)
+      handleOfflinePresence(participant)
+      // await handleOnlinePresence(participant)
     }
   }
 
@@ -121,7 +124,35 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
-    asyncAlert('Sucesso', `Verificação offline em desenvolvimento`)
+    const participantExists = presences.find(
+      (p) => p.numCad === participant.numCad
+    )
+
+    if (participantExists) {
+      asyncAlert('Erro', 'Participante já está presente')
+
+      return
+    }
+
+    setPresenceOffline([
+      ...presenceOffline,
+      {
+        codCua: training.codCua,
+        tmaCua: training.tmaCua,
+        participantes: [
+          {
+            numEmp: participant.numEmp,
+            tipCol: participant.tipCol,
+            numCad: participant.numCad,
+            nomFun: participant.nomFun,
+            datFre: format(new Date(), 'dd/MM/yyyy'),
+            horFre: format(new Date(), 'HH:mm:ss'),
+          },
+        ],
+      },
+    ])
+
+    asyncAlert('Sucesso', `Presença de ${participant.nomFun} registrada!`)
   }
 
   const asyncAlert = (title: string, subtitle: string) => {

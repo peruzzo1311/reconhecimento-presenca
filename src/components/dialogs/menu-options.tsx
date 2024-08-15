@@ -9,9 +9,9 @@ import getParticipantes from '@/api/get-participantes'
 import getTreinamentos from '@/api/get-treinamentos'
 import { useDialogStore } from '@/store/dialog'
 import { useOfflineStore } from '@/store/offline-store'
+import { useTrainingStore } from '@/store/treinamento-store'
 import { useUserStore } from '@/store/user-store'
 import { Training } from '@/types'
-import { useTrainingStore } from '@/store/treinamento-store'
 
 export default function MenuOptionsDialog() {
   const [isLoading, setIsLoading] = useState(false)

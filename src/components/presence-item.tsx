@@ -12,6 +12,57 @@ interface PresenceItemProps {
 function PresenceItem({ participant }: PresenceItemProps) {
   const { onOpen } = useDialogStore()
 
+  const handleStatus = () => {
+    if (participant.staFre === 'Presente') {
+      return (
+        <View
+          borderWidth={1}
+          borderColor='$green6'
+          backgroundColor='$green3'
+          borderRadius='$radius.9'
+          paddingHorizontal={8}
+          paddingVertical={4}
+        >
+          <Text color='$green11' fontWeight='700' fontSize='$2'>
+            Presente
+          </Text>
+        </View>
+      )
+    }
+
+    if (participant.staFre === 'Sincronizar') {
+      return (
+        <View
+          borderWidth={1}
+          borderColor='$yellow6'
+          backgroundColor='$yellow3'
+          borderRadius='$radius.9'
+          paddingHorizontal={8}
+          paddingVertical={4}
+        >
+          <Text color='$yellow11' fontWeight='700' fontSize='$2'>
+            Sincronizar
+          </Text>
+        </View>
+      )
+    }
+
+    return (
+      <View
+        borderWidth={1}
+        borderColor='$red6'
+        backgroundColor='$red3'
+        borderRadius='$radius.9'
+        paddingHorizontal={8}
+        paddingVertical={4}
+      >
+        <Text color='$red11' fontWeight='700' fontSize='$2'>
+          Não confirmado
+        </Text>
+      </View>
+    )
+  }
+
   const handleAvatarPress = () => {
     onOpen('avatar', { participant })
   }
@@ -43,52 +94,7 @@ function PresenceItem({ participant }: PresenceItemProps) {
         </Text>
       </View>
 
-      <View alignItems='center'>
-        {participant.staFre === 'Presente' && (
-          <View
-            borderWidth={1}
-            borderColor='$green6'
-            backgroundColor='$green3'
-            borderRadius='$radius.9'
-            paddingHorizontal={8}
-            paddingVertical={4}
-          >
-            <Text color='$green11' fontWeight='700' fontSize='$2'>
-              Presente
-            </Text>
-          </View>
-        )}
-
-        {participant.staFre === 'Ausente' && (
-          <View
-            borderWidth={1}
-            borderColor='$red6'
-            backgroundColor='$red3'
-            borderRadius='$radius.9'
-            paddingHorizontal={8}
-            paddingVertical={4}
-          >
-            <Text color='$red11' fontWeight='700' fontSize='$2'>
-              Não confirmado
-            </Text>
-          </View>
-        )}
-
-        {participant.staFre === 'Sincronizar' && (
-          <View
-            borderWidth={1}
-            borderColor='$yellow6'
-            backgroundColor='$yellow3'
-            borderRadius='$radius.9'
-            paddingHorizontal={8}
-            paddingVertical={4}
-          >
-            <Text color='$yellow11' fontWeight='700' fontSize='$2'>
-              Sincronizar
-            </Text>
-          </View>
-        )}
-      </View>
+      <View alignItems='center'>{handleStatus()}</View>
     </View>
   )
 }

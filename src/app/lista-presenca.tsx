@@ -8,6 +8,8 @@ import getParticipantes from '@/api/get-participantes'
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import PresenceItem from '@/components/presence-item'
+import { useOfflineStore } from '@/store/offline-store'
+import { useTrainingStore } from '@/store/treinamento-store'
 import { Participant, Training } from '@/types'
 
 interface ListaPresencaProps {
@@ -26,17 +28,11 @@ export default function ListaPresenca({
   const [participantes, setParticipantes] = useState<Participant[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const { training } = route.params
+  const { trainingList } = useTrainingStore()
+  const { isOffline, setIsOffline, presenceOffline } = useOfflineStore()
   const toast = useToastController()
 
   const fetchParticipantes = async () => {
-    const isConnected = await Network.getNetworkStateAsync()
-
-    if (!isConnected.isConnected) {
-      // fetchParticipantsOffline()
-
-      return
-    }
-
     try {
       setIsLoading(true)
 
@@ -51,13 +47,34 @@ export default function ListaPresenca({
         codCua: training.codCua,
       })
 
-      if (participantes && participantes.participantes) {
-        if (!Array.isArray(participantes.participantes)) {
-          setParticipantes([participantes.participantes])
+      if (!participantes || !participantes.participantes) {
+        return
+      }
+
+      if (!Array.isArray(participantes.participantes)) {
+        setParticipantes([participantes.participantes])
+
+        return
+      }
+
+      participantes.participantes.map((participant) => {
+        const isPresent = presenceOffline.find(
+          (item) =>
+            item.codCua === training.codCua &&
+            item.tmaCua === training.tmaCua &&
+            item.participantes.find(
+              (participante) => participante.numCad === participant.numCad
+            )
+        )
+
+        if (isPresent) {
+          participant.staFre = 'Sincronizar'
         }
 
-        setParticipantes(participantes.participantes)
-      }
+        return participant
+      })
+
+      setParticipantes(participantes.participantes)
     } catch (error) {
       setIsLoading(false)
       console.error(error)
@@ -66,18 +83,56 @@ export default function ListaPresenca({
     }
   }
 
+  const fetchParticipantsOffline = () => {
+    const trainingOffline = trainingList.find(
+      (item) =>
+        item.codCua === training.codCua && item.tmaCua === training.tmaCua
+    )
+
+    if (!trainingOffline || !trainingOffline.participantes) {
+      return
+    }
+
+    trainingOffline.participantes.map((participant) => {
+      const isPresent = presenceOffline.find(
+        (item) =>
+          item.codCua === training.codCua &&
+          item.tmaCua === training.tmaCua &&
+          item.participantes.find(
+            (participante) => participante.numCad === participant.numCad
+          )
+      )
+
+      if (isPresent) {
+        participant.staFre = 'Sincronizar'
+      }
+
+      return participant
+    })
+
+    setParticipantes(trainingOffline.participantes)
+  }
+
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      const network = await Network.getNetworkStateAsync()
+
+      if (!network.isConnected) {
+        setIsOffline(true)
+        fetchParticipantsOffline()
+
+        return
+      }
+
+      setIsOffline(false)
       fetchParticipantes()
     })
 
     return unsubscribe
-  }, [training, navigation])
+  }, [training, navigation, presenceOffline, participantes])
 
   const handleFaceRecognition = async (participant: Participant) => {
-    const network = await Network.getNetworkStateAsync()
-
-    if (!network.isConnected) {
+    if (isOffline) {
       toast.show(
         'Você está offline, não é possível realizar a leitura facial',
         {
@@ -117,7 +172,9 @@ export default function ListaPresenca({
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
-              onRefresh={fetchParticipantes}
+              onRefresh={
+                isOffline ? fetchParticipantsOffline : fetchParticipantes
+              }
             />
           }
           renderItem={({ item: participant }) => (

@@ -1,74 +1,82 @@
-// import { FlatList, TouchableOpacity } from 'react-native'
-// import { View } from 'tamagui'
+import { FlatList, TouchableOpacity } from 'react-native'
+import { Button, Text, View } from 'tamagui'
 
-// import { Header } from '@/components/header'
-// import { HeaderNavigation } from '@/components/header-navigation'
-// import ItemSync from '@/components/sync-item'
-// import {
-//   ParticipantOffline,
-//   Presence,
-//   useOfflineStore,
-// } from '@/store/offline-store'
+import { Header } from '@/components/header'
+import { HeaderNavigation } from '@/components/header-navigation'
+import ItemSync from '@/components/sync-item'
+import { useOfflineStore } from '@/store/offline-store'
+import { Presence } from '@/types'
 
-// export interface TransformedPresence {
-//   codCua: number
-//   tmaCua: number
-//   participante: ParticipantOffline[]
-// }
+export default function SincronizarGrupos({ navigation }: any) {
+  const { presenceOffline } = useOfflineStore()
 
-// export default function Sincronizar({ navigation }: any) {
-//   const { presences } = useOfflineStore()
+  const agruparPresencas = (presences: Presence[]) => {
+    const grupos: { [key: string]: Presence } = {}
 
-//   const agruparParticipantes = (presences: Presence[]) => {
-//     const groupedPresences: TransformedPresence[] = []
+    presences.forEach((presenca) => {
+      const chave = `${presenca.codCua}-${presenca.tmaCua}`
 
-//     presences.forEach((presence) => {
-//       const existingPresence = groupedPresences.find(
-//         (item) =>
-//           item.codCua === presence.codCua && item.tmaCua === presence.tmaCua
-//       )
+      if (!grupos[chave]) {
+        grupos[chave] = {
+          codCua: presenca.codCua,
+          tmaCua: presenca.tmaCua,
+          participantes: [],
+        }
+      }
 
-//       if (existingPresence) {
-//         existingPresence.participante.push(presence.participante)
-//       } else {
-//         groupedPresences.push({
-//           codCua: presence.codCua,
-//           tmaCua: presence.tmaCua,
-//           participante: [presence.participante],
-//         })
-//       }
-//     })
+      grupos[chave].participantes.push(...presenca.participantes)
+    })
 
-//     return groupedPresences
-//   }
+    return Object.values(grupos)
+  }
 
-//   const renderItem = ({ item }: { item: TransformedPresence }) => (
-//     <TouchableOpacity
-//       onPress={() => navigation.navigate('SincronizarParticipantes', { item })}
-//       style={{ overflow: 'hidden', borderRadius: 12 }}
-//     >
-//       <ItemSync {...item} />
-//     </TouchableOpacity>
-//   )
+  const renderItem = ({ item }: { item: Presence }) => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('SincronizarParticipantes', { item })}
+      style={{ overflow: 'hidden', borderRadius: 12 }}
+    >
+      <ItemSync {...item} />
+    </TouchableOpacity>
+  )
 
-//   if (!presences) {
-//     return
-//   }
+  if (!presenceOffline || presenceOffline.length === 0) {
+    return (
+      <View flex={1} backgroundColor='white'>
+        <Header />
 
-//   return (
-//     <View flex={1} backgroundColor='white'>
-//       <Header />
+        <View flex={1} justifyContent='center' alignItems='center' gap={24}>
+          <Text fontSize='$5'>
+            Você não possui presenças para sincronizar...
+          </Text>
 
-//       <HeaderNavigation navigation={navigation} title='Sincronizar presenças' />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Button
+              backgroundColor='#0171BB'
+              color='white'
+              pointerEvents='none'
+            >
+              Voltar
+            </Button>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
 
-//       <View flex={1} paddingHorizontal={24} paddingBottom={12}>
-//         <FlatList
-//           data={agruparParticipantes(presences)}
-//           keyExtractor={(item) => `${item.codCua}-${item.tmaCua}`}
-//           renderItem={renderItem}
-//           showsVerticalScrollIndicator={false}
-//         />
-//       </View>
-//     </View>
-//   )
-// }
+  return (
+    <View flex={1} backgroundColor='white'>
+      <Header />
+
+      <HeaderNavigation navigation={navigation} title='Sincronizar presenças' />
+
+      <View flex={1} paddingHorizontal={24} paddingBottom={12}>
+        <FlatList
+          data={agruparPresencas(presenceOffline)}
+          keyExtractor={(item) => `${item.codCua}-${item.tmaCua}`}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+    </View>
+  )
+}

@@ -9,14 +9,16 @@ import ErrorListaTreinamentos from '@/components/error-lista-treinamentos'
 import { Header } from '@/components/header'
 import { HeaderNavigation } from '@/components/header-navigation'
 import TrainingItem from '@/components/training-item'
+import { useOfflineStore } from '@/store/offline-store'
 import { useTrainingStore } from '@/store/treinamento-store'
 import { Training } from '@/types'
 
 export default function ListaTreinamentos({ navigation }: any) {
   const [trainings, setTrainings] = useState<Training[]>([])
-  const { setTrainingList } = useTrainingStore()
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
+  const { trainingList } = useTrainingStore()
+  const { setIsOffline } = useOfflineStore()
 
   const getTreinamentosList = async () => {
     try {
@@ -25,12 +27,12 @@ export default function ListaTreinamentos({ navigation }: any) {
       const treinamentos = await getTreinamentos()
 
       if (!Array.isArray(treinamentos)) {
-        setTrainingList([treinamentos])
         setTrainings([treinamentos])
+
+        return
       }
 
       setTrainings(treinamentos)
-      setTrainingList(treinamentos)
     } catch (error) {
       console.error(error)
 
@@ -40,18 +42,27 @@ export default function ListaTreinamentos({ navigation }: any) {
     }
   }
 
+  const getOfflineTreinamentos = async () => {
+    if (!trainingList || trainingList.length === 0) {
+      return <ErrorListaTreinamentos navigation={navigation} />
+    }
+
+    setTrainings(trainingList)
+  }
+
   useEffect(() => {
     const getNetwork = async () => {
       const network = await Network.getNetworkStateAsync()
 
       if (!network.isConnected) {
-        // if (!trainingList || trainingList.length === 0) {
-        //   return <ErrorListaTreinamentos navigation={navigation} />
-        // }
+        setIsOffline(true)
+
+        getOfflineTreinamentos()
 
         return
       }
 
+      setIsOffline(false)
       getTreinamentosList()
     }
 

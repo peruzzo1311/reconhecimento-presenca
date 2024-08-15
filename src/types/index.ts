@@ -23,3 +23,19 @@ export interface ResponseDefault {
   codRet: number
   msgRet: string
 }
+
+export interface ParticipantePresence {
+  numEmp: number
+  tipCol: number
+  numCad: number
+  datFre: string
+  horFre: string
+  nomFun: string
+  fotCol?: string
+}
+
+export interface Presence {
+  codCua: number
+  tmaCua: number
+  participantes: ParticipantePresence[]
+}

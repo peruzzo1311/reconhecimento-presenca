@@ -16,8 +16,11 @@ export default async function getTreinamentos() {
     },
     {
       headers: {
+        user: 'prisma.integracao',
+        pass: '@98fm',
+        encryptionType: '0',
+        Authorization: '',
         'Content-Type': 'application/json',
-        Authorization: 'Bearer sN6Zm7Ly7KJn4RuruaoiWqR1H0zudsEa',
       },
     }
   )
