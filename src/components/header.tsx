@@ -40,7 +40,7 @@ export function Header() {
             source={require('@/assets/images/logo.png')}
             width='100%'
             height='100%'
-            resizeMode='contain'
+            objectFit='contain'
           />
         </View>
 

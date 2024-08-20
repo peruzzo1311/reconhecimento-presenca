@@ -11,7 +11,6 @@ import { useDialogStore } from '@/store/dialog'
 import { useOfflineStore } from '@/store/offline-store'
 import { useTrainingStore } from '@/store/treinamento-store'
 import { useUserStore } from '@/store/user-store'
-import { Training } from '@/types'
 
 export default function MenuOptionsDialog() {
   const [isLoading, setIsLoading] = useState(false)
@@ -29,18 +28,19 @@ export default function MenuOptionsDialog() {
     return null
   }
 
-  const downloadTreinamentos = async () => {
+  const fetchTreinamentos = async () => {
     setIsLoading(true)
 
     try {
-      const treinamentosOffline = [] as Training[]
+      const treinamentosOffline = []
       const treinamentos = await getTreinamentos()
 
       if (!treinamentos) {
         return
       }
 
-      for (const treinamento of treinamentos) {
+      for (let i = 0; i < treinamentos.length; i++) {
+        const treinamento = treinamentos[i]
         const participantes = await getParticipantes({
           codCua: treinamento.codCua,
           tmaCua: treinamento.tmaCua,
@@ -52,9 +52,12 @@ export default function MenuOptionsDialog() {
 
         treinamentosOffline.push(participantes)
 
-        setProgress(
-          Math.round((treinamentosOffline.length / treinamentos.length) * 100)
-        )
+        if (treinamentos.length === i + 1) {
+          setProgress(100)
+        } else {
+          const progressValue = ((i + 1) / treinamentos.length) * 100
+          setProgress(progressValue)
+        }
       }
 
       setTrainingList(treinamentosOffline)
@@ -132,7 +135,7 @@ export default function MenuOptionsDialog() {
 
               <TouchableOpacity
                 disabled={isOffline}
-                onPress={downloadTreinamentos}
+                onPress={fetchTreinamentos}
               >
                 <ListItem
                   icon={

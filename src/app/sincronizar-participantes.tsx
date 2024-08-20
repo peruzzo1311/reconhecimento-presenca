@@ -44,11 +44,21 @@ export default function SincronizarParticipantes({
     setParticipantsList(curso.participantes)
   }, [curso])
 
+  const renderItem = ({ item }: { item: ParticipantePresence }) => (
+    <ItemParticipantSync
+      item={item}
+      codCua={curso.codCua}
+      tmaCua={curso.tmaCua}
+      participantsList={participantsList}
+      setParticipantsList={setParticipantsList}
+    />
+  )
+
   return (
     <View flex={1} backgroundColor='white'>
       <Header />
 
-      <HeaderNavigation navigation={navigation} title={getTitle()} />
+      <HeaderNavigation title={getTitle()} navigation={navigation} />
 
       <View flex={1} paddingHorizontal={24}>
         <FlatList
@@ -56,7 +66,7 @@ export default function SincronizarParticipantes({
           keyExtractor={(item) => item.numCad.toString()}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator />}
-          renderItem={ItemParticipantSync}
+          renderItem={renderItem}
         />
       </View>
     </View>

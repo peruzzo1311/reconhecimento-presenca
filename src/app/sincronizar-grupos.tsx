@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
@@ -38,6 +39,10 @@ export default function SincronizarGrupos({ navigation }: any) {
       <ItemSync {...item} />
     </TouchableOpacity>
   )
+
+  useEffect(() => {
+    console.log(presenceOffline)
+  }, [])
 
   if (!presenceOffline || presenceOffline.length === 0) {
     return (
