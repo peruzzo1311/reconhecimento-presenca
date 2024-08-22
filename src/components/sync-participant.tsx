@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Alert, TouchableOpacity } from 'react-native'
 import { Avatar, Text, View } from 'tamagui'
 
@@ -11,16 +12,18 @@ interface ItemParticipantSyncProps {
   tmaCua: number
   participantsList: ParticipantePresence[]
   setParticipantsList: (participants: ParticipantePresence[]) => void
+  setIsLoading: (loading: boolean) => void
 }
 
-export default function ItemParticipantSync({
+function ItemParticipantSync({
   item,
   codCua,
   tmaCua,
   participantsList,
   setParticipantsList,
+  setIsLoading,
 }: ItemParticipantSyncProps) {
-  const { presenceOffline, setPresenceOffline } = useOfflineStore()
+  const { removeParticipantOffline } = useOfflineStore()
 
   const handlePress = () => {
     Alert.alert(
@@ -40,6 +43,7 @@ export default function ItemParticipantSync({
 
   const handleConfirmPresence = async () => {
     try {
+      setIsLoading(true)
       const response = await QrCodeValidate({
         codCua,
         tmaCua,
@@ -63,48 +67,19 @@ export default function ItemParticipantSync({
         return
       }
 
-      removePresenceOffline()
-
       const updatedParticipants = participantsList.filter(
         (participant) => participant.numCad !== item.numCad
       )
 
+      removeParticipantOffline(codCua, tmaCua, item.numCad)
       setParticipantsList(updatedParticipants)
       Alert.alert('Sucesso', 'Presença confirmada com sucesso')
     } catch (error) {
       console.log(error)
       Alert.alert('Erro', 'Ocorreu um erro ao confirmar a presença')
+    } finally {
+      setIsLoading(false)
     }
-  }
-
-  const removePresenceOffline = () => {
-    const training = presenceOffline.find(
-      (training) => training.codCua === codCua && training.tmaCua === tmaCua
-    )
-
-    if (!training) {
-      return
-    }
-
-    const updatedTraining = {
-      ...training,
-      participantes: training.participantes.filter(
-        (participant) => participant.numCad !== item.numCad
-      ),
-    }
-
-    const updatedPresenceOffline = presenceOffline.map((training) => {
-      const isUpdatedTraining =
-        training.codCua === codCua && training.tmaCua === tmaCua
-
-      if (isUpdatedTraining) {
-        return updatedTraining
-      }
-
-      return training
-    })
-
-    setPresenceOffline(updatedPresenceOffline)
   }
 
   return (
@@ -159,3 +134,5 @@ export default function ItemParticipantSync({
     </TouchableOpacity>
   )
 }
+
+export default memo(ItemParticipantSync)

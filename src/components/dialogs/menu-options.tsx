@@ -2,8 +2,8 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 import { X } from 'lucide-react-native'
 import { useState } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { Button, Dialog, ListItem, Progress, Separator, View } from 'tamagui'
+import { ActivityIndicator, TouchableOpacity } from 'react-native'
+import { Button, Dialog, ListItem, Separator, View } from 'tamagui'
 
 import getParticipantes from '@/api/get-participantes'
 import getTreinamentos from '@/api/get-treinamentos'
@@ -14,7 +14,6 @@ import { useUserStore } from '@/store/user-store'
 
 export default function MenuOptionsDialog() {
   const [isLoading, setIsLoading] = useState(false)
-  const [progress, setProgress] = useState(0)
 
   const { isOpen, onClose, type } = useDialogStore()
   const isModalOpen = isOpen && type === 'menu-options'
@@ -51,13 +50,6 @@ export default function MenuOptionsDialog() {
         }
 
         treinamentosOffline.push(participantes)
-
-        if (treinamentos.length === i + 1) {
-          setProgress(100)
-        } else {
-          const progressValue = ((i + 1) / treinamentos.length) * 100
-          setProgress(progressValue)
-        }
       }
 
       setTrainingList(treinamentosOffline)
@@ -122,12 +114,7 @@ export default function MenuOptionsDialog() {
 
           {isLoading ? (
             <View alignItems='center' justifyContent='center'>
-              <Progress value={progress}>
-                <Progress.Indicator
-                  backgroundColor='#0171BB'
-                  animation='lazy'
-                />
-              </Progress>
+              <ActivityIndicator />
             </View>
           ) : (
             <View gap={4}>

@@ -8,10 +8,11 @@ import {
 import Constants from 'expo-constants'
 import * as Network from 'expo-network'
 import { useState } from 'react'
-import { ActivityIndicator, Alert, TouchableOpacity } from 'react-native'
+import { Alert, TouchableOpacity } from 'react-native'
 import { Button, Text, View } from 'tamagui'
 
 import { QrCodeValidate } from '@/api/validate-presence'
+import Spinner from '@/components/spinner'
 import { useOfflineStore } from '@/store/offline-store'
 import { Participant, Training } from '@/types'
 
@@ -32,7 +33,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
 
   const [permission, requestPermission] = useCameraPermissions()
   const { training, participants } = route.params
-  const { presenceOffline, setPresenceOffline } = useOfflineStore()
+  const { presenceOffline, addPresenceOffline } = useOfflineStore()
 
   const handleQrCodeScanned = async ({ data }: BarcodeScanningResult) => {
     if (scanned) {
@@ -60,6 +61,21 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       participant.staFre === 'Presente' ||
       participant.staFre === 'Sincronizar'
     ) {
+      asyncAlert('Erro', 'Participante já está presente')
+
+      return
+    }
+
+    const presenceOfflineExists = presenceOffline.find(
+      (presence) =>
+        presence.codCua === training.codCua &&
+        presence.tmaCua === training.tmaCua &&
+        presence.participantes.find(
+          (participante) => participante.numCad === participant.numCad
+        )
+    )
+
+    if (presenceOfflineExists) {
       asyncAlert('Erro', 'Participante já está presente')
 
       return
@@ -119,7 +135,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
     )
   }
 
-  const handleOfflinePresence = (participant: Participant) => {
+  const handleOfflinePresence = async (participant: Participant) => {
     if (!training) {
       return
     }
@@ -134,24 +150,18 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
-    setPresenceOffline([
-      ...presenceOffline,
-      {
-        codCua: training.codCua,
-        tmaCua: training.tmaCua,
-        participantes: [
-          {
-            numEmp: participant.numEmp,
-            tipCol: participant.tipCol,
-            numCad: participant.numCad,
-            nomFun: participant.nomFun,
-            datFre: format(new Date(), 'dd/MM/yyyy'),
-            horFre: format(new Date(), 'HH:mm:ss'),
-          },
-        ],
-      },
-    ])
+    const participante = {
+      numEmp: participant.numEmp,
+      tipCol: participant.tipCol,
+      numCad: participant.numCad,
+      fotCol: participant.fotCol,
+      nomFun: participant.nomFun,
+      datFre: format(new Date(), 'dd/MM/yyyy'),
+      horFre: format(new Date(), 'HH:mm:ss'),
+    }
 
+    addPresenceOffline(training.codCua, training.tmaCua, participante)
+    await useOfflineStore.persist.rehydrate()
     asyncAlert('Sucesso', `Presença de ${participant.nomFun} registrada!`)
   }
 
@@ -251,20 +261,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
         onBarcodeScanned={handleQrCodeScanned}
       />
 
-      {isLoading && (
-        <View
-          position='absolute'
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          backgroundColor='rgba(0, 0, 0, 0.5)'
-          justifyContent='center'
-          alignItems='center'
-        >
-          <ActivityIndicator />
-        </View>
-      )}
+      {isLoading && <Spinner />}
     </View>
   )
 }

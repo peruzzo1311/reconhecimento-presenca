@@ -29,8 +29,24 @@ export default function ListaPresenca({
   const [isLoading, setIsLoading] = useState(false)
   const { training } = route.params
   const { trainingList } = useTrainingStore()
-  const { isOffline, setIsOffline, presenceOffline } = useOfflineStore()
+  const { isOffline, setIsOffline } = useOfflineStore()
+  const presenceOffline = useOfflineStore((state) => state.presenceOffline)
   const toast = useToastController()
+
+  const onRefresh = async () => {
+    const network = await Network.getNetworkStateAsync()
+
+    if (!network.isConnected) {
+      setIsOffline(true)
+      fetchParticipantsOffline()
+
+      return
+    }
+
+    setIsOffline(false)
+    fetchParticipantsOffline()
+    // fetchParticipantes()
+  }
 
   const fetchParticipantes = async () => {
     try {
@@ -67,7 +83,7 @@ export default function ListaPresenca({
             )
         )
 
-        if (isPresent) {
+        if (isPresent && participant.staFre !== 'Presente') {
           participant.staFre = 'Sincronizar'
         }
 
@@ -83,34 +99,51 @@ export default function ListaPresenca({
     }
   }
 
-  const fetchParticipantsOffline = () => {
-    const trainingOffline = trainingList.find(
-      (item) =>
-        item.codCua === training.codCua && item.tmaCua === training.tmaCua
-    )
+  const fetchParticipantsOffline = async () => {
+    try {
+      setIsLoading(true)
 
-    if (!trainingOffline || !trainingOffline.participantes) {
-      return
-    }
+      if (!training) {
+        navigation.navigate('ListaTreinamentos')
 
-    trainingOffline.participantes.map((participant) => {
-      const isPresent = presenceOffline.find(
-        (item) =>
-          item.codCua === training.codCua &&
-          item.tmaCua === training.tmaCua &&
-          item.participantes.find(
-            (participante) => participante.numCad === participant.numCad
-          )
-      )
-
-      if (isPresent) {
-        participant.staFre = 'Sincronizar'
+        return
       }
 
-      return participant
-    })
+      const trainingOffline = trainingList.find(
+        (item) =>
+          item.codCua === training.codCua && item.tmaCua === training.tmaCua
+      )
 
-    setParticipantes(trainingOffline.participantes)
+      if (!trainingOffline || !trainingOffline.participantes) {
+        return
+      }
+
+      const participants = trainingOffline.participantes.map((participant) => {
+        const isPresent = presenceOffline.find(
+          (item) =>
+            item.codCua === training.codCua &&
+            item.tmaCua === training.tmaCua &&
+            item.participantes.find(
+              (participante) => participante.numCad === participant.numCad
+            )
+        )
+
+        if (isPresent && participant.staFre !== 'Presente') {
+          participant.staFre = 'Sincronizar'
+        }
+
+        return participant
+      })
+
+      console.log(participants)
+      console.log(trainingOffline.participantes)
+
+      setParticipantes(participants)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -125,11 +158,12 @@ export default function ListaPresenca({
       }
 
       setIsOffline(false)
-      fetchParticipantes()
+      fetchParticipantsOffline()
+      // fetchParticipantes()
     })
 
     return unsubscribe
-  }, [training, navigation, presenceOffline, participantes])
+  }, [navigation])
 
   const handleFaceRecognition = async (participant: Participant) => {
     if (isOffline) {
@@ -170,12 +204,7 @@ export default function ListaPresenca({
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator />}
           refreshControl={
-            <RefreshControl
-              refreshing={isLoading}
-              onRefresh={
-                isOffline ? fetchParticipantsOffline : fetchParticipantes
-              }
-            />
+            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
           }
           renderItem={({ item: participant }) => (
             <TouchableOpacity
@@ -191,6 +220,8 @@ export default function ListaPresenca({
           )}
         />
       </View>
+
+      <Separator />
 
       <TouchableOpacity
         onPress={() =>

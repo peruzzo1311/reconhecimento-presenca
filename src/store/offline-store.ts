@@ -2,13 +2,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-import { Presence } from '@/types'
+import { ParticipantePresence, Presence } from '@/types'
 
 interface OfflineStoreProps {
   isOffline: boolean
   presenceOffline: Presence[]
   setIsOffline: (offline: boolean) => void
-  setPresenceOffline: (presence: Presence[]) => void
+  addPresenceOffline: (
+    codCua: number,
+    tmaCua: number,
+    participantes: ParticipantePresence
+  ) => void
+  removeParticipantOffline: (
+    codCua: number,
+    tmaCua: number,
+    numCad: number
+  ) => void
+  removeAllParticipantsOffline: (codCua: number, tmaCua: number) => void
+  clearPresenceOffline: () => void
 }
 
 export const useOfflineStore = create(
@@ -17,7 +28,77 @@ export const useOfflineStore = create(
       isOffline: false,
       presenceOffline: [],
       setIsOffline: (offline) => set({ isOffline: offline }),
-      setPresenceOffline: (presence) => set({ presenceOffline: presence }),
+      addPresenceOffline: (codCua, tmaCua, participantes) => {
+        set((state) => {
+          const training = state.presenceOffline.find(
+            (p) => p.codCua === codCua && p.tmaCua === tmaCua
+          )
+
+          if (training) {
+            const newParticipantes = [...training.participantes, participantes]
+
+            const newPresenceList = state.presenceOffline.map((p) => {
+              if (p.codCua === codCua && p.tmaCua === tmaCua) {
+                return { ...training, participantes: newParticipantes }
+              }
+
+              return p
+            })
+
+            return { presenceOffline: newPresenceList }
+          }
+
+          return {
+            presenceOffline: [
+              ...state.presenceOffline,
+              { codCua, tmaCua, participantes: [participantes] },
+            ],
+          }
+        })
+      },
+      removeParticipantOffline: (codCua, tmaCua, numCad) => {
+        set((state) => {
+          const training = state.presenceOffline.find(
+            (p) => p.codCua === codCua && p.tmaCua === tmaCua
+          )
+
+          if (training) {
+            const newParticipantes = training.participantes.filter(
+              (p) => p.numCad !== numCad
+            )
+
+            if (newParticipantes.length === 0) {
+              const newPresenceList = state.presenceOffline.filter(
+                (p) => p.codCua !== codCua && p.tmaCua !== tmaCua
+              )
+
+              return { presenceOffline: newPresenceList }
+            }
+
+            const newPresenceList = state.presenceOffline.map((p) => {
+              if (p.codCua === codCua && p.tmaCua === tmaCua) {
+                return { ...training, participantes: newParticipantes }
+              }
+
+              return p
+            })
+
+            return { presenceOffline: newPresenceList }
+          }
+
+          return state
+        })
+      },
+      removeAllParticipantsOffline: (codCua, tmaCua) => {
+        set((state) => {
+          const newPresenceList = state.presenceOffline.filter(
+            (p) => p.codCua !== codCua && p.tmaCua !== tmaCua
+          )
+
+          return { presenceOffline: newPresenceList }
+        })
+      },
+      clearPresenceOffline: () => set({ presenceOffline: [] }),
     }),
     {
       name: 'reconhecimento-presenca-offline-store',
