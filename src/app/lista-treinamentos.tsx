@@ -17,6 +17,7 @@ export default function ListaTreinamentos({ navigation }: any) {
   const [trainings, setTrainings] = useState<Training[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
+
   const { trainingList } = useTrainingStore()
   const { setIsOffline } = useOfflineStore()
 
@@ -56,7 +57,6 @@ export default function ListaTreinamentos({ navigation }: any) {
 
       if (!network.isConnected) {
         setIsOffline(true)
-
         getOfflineTreinamentos()
 
         return

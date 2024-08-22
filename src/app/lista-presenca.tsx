@@ -30,7 +30,7 @@ export default function ListaPresenca({
   const { training } = route.params
   const { trainingList } = useTrainingStore()
   const { isOffline, setIsOffline } = useOfflineStore()
-  const presenceOffline = useOfflineStore((state) => state.presenceOffline)
+  const { presenceOffline } = useOfflineStore()
   const toast = useToastController()
 
   const onRefresh = async () => {
@@ -44,8 +44,7 @@ export default function ListaPresenca({
     }
 
     setIsOffline(false)
-    fetchParticipantsOffline()
-    // fetchParticipantes()
+    fetchParticipantes()
   }
 
   const fetchParticipantes = async () => {
@@ -109,36 +108,16 @@ export default function ListaPresenca({
         return
       }
 
-      const trainingOffline = trainingList.find(
+      const selectedTraining = trainingList.find(
         (item) =>
           item.codCua === training.codCua && item.tmaCua === training.tmaCua
       )
 
-      if (!trainingOffline || !trainingOffline.participantes) {
+      if (!selectedTraining || !selectedTraining.participantes) {
         return
       }
 
-      const participants = trainingOffline.participantes.map((participant) => {
-        const isPresent = presenceOffline.find(
-          (item) =>
-            item.codCua === training.codCua &&
-            item.tmaCua === training.tmaCua &&
-            item.participantes.find(
-              (participante) => participante.numCad === participant.numCad
-            )
-        )
-
-        if (isPresent && participant.staFre !== 'Presente') {
-          participant.staFre = 'Sincronizar'
-        }
-
-        return participant
-      })
-
-      console.log(participants)
-      console.log(trainingOffline.participantes)
-
-      setParticipantes(participants)
+      setParticipantes(selectedTraining.participantes)
     } catch (error) {
       console.error(error)
     } finally {
@@ -158,12 +137,11 @@ export default function ListaPresenca({
       }
 
       setIsOffline(false)
-      fetchParticipantsOffline()
-      // fetchParticipantes()
+      fetchParticipantes()
     })
 
     return unsubscribe
-  }, [navigation])
+  }, [navigation, trainingList])
 
   const handleFaceRecognition = async (participant: Participant) => {
     if (isOffline) {
@@ -226,8 +204,14 @@ export default function ListaPresenca({
       <TouchableOpacity
         onPress={() =>
           navigation.navigate('QRCode', {
-            training,
-            participants: participantes,
+            training: {
+              codCua: training.codCua,
+              nomCua: training.nomCua,
+              tmaCua: training.tmaCua,
+              datIni: training.datIni,
+              datFim: training.datFim,
+              participantes,
+            },
           })
         }
       >

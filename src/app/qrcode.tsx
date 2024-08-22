@@ -14,6 +14,7 @@ import { Button, Text, View } from 'tamagui'
 import { QrCodeValidate } from '@/api/validate-presence'
 import Spinner from '@/components/spinner'
 import { useOfflineStore } from '@/store/offline-store'
+import { useTrainingStore } from '@/store/treinamento-store'
 import { Participant, Training } from '@/types'
 
 interface QRCodeProps {
@@ -21,7 +22,6 @@ interface QRCodeProps {
   route: {
     params: {
       training: Training
-      participants: Participant[]
     }
   }
 }
@@ -32,7 +32,8 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
   const [scanned, setScanned] = useState(false)
 
   const [permission, requestPermission] = useCameraPermissions()
-  const { training, participants } = route.params
+  const { training } = route.params
+  const { trainingList, setTrainingList } = useTrainingStore()
   const { presenceOffline, addPresenceOffline } = useOfflineStore()
 
   const handleQrCodeScanned = async ({ data }: BarcodeScanningResult) => {
@@ -43,13 +44,17 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
     setScanned(true)
     setIsLoading(true)
 
-    if (!training || !participants) {
+    if (!training) {
       asyncAlert('Erro', 'Treinamento não encontrado')
 
       return
     }
 
-    const participant = participants.find((p) => p.numCad === Number(data))
+    console.log('QR Code scanned:', training)
+
+    const participant = training.participantes.find(
+      (p) => p.numCad === Number(data)
+    )
 
     if (!participant) {
       asyncAlert('Erro', 'Participante não encontrado')
@@ -66,11 +71,25 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
+    console.log('Participant:', participant)
+
+    const participantExists = presences.find(
+      (p) => p.numCad === participant.numCad
+    )
+
+    if (participantExists) {
+      asyncAlert('Erro', 'Participante já está presente')
+
+      return
+    }
+
+    console.log('Presence:', presences)
+
     const presenceOfflineExists = presenceOffline.find(
-      (presence) =>
-        presence.codCua === training.codCua &&
-        presence.tmaCua === training.tmaCua &&
-        presence.participantes.find(
+      (item) =>
+        item.codCua === training.codCua &&
+        item.tmaCua === training.tmaCua &&
+        item.participantes.find(
           (participante) => participante.numCad === participant.numCad
         )
     )
@@ -86,24 +105,13 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
     if (!network.isConnected) {
       handleOfflinePresence(participant)
     } else {
-      handleOfflinePresence(participant)
-      // await handleOnlinePresence(participant)
+      await handleOnlinePresence(participant)
     }
   }
 
   const handleOnlinePresence = async (participant: Participant) => {
     if (!training) {
       asyncAlert('Erro', 'Treinamento não encontrado')
-
-      return
-    }
-
-    const participantExists = presences.find(
-      (p) => p.numCad === participant.numCad
-    )
-
-    if (participantExists) {
-      asyncAlert('Erro', 'Participante já está presente')
 
       return
     }
@@ -137,15 +145,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
 
   const handleOfflinePresence = async (participant: Participant) => {
     if (!training) {
-      return
-    }
-
-    const participantExists = presences.find(
-      (p) => p.numCad === participant.numCad
-    )
-
-    if (participantExists) {
-      asyncAlert('Erro', 'Participante já está presente')
+      asyncAlert('Erro', 'Treinamento não encontrado')
 
       return
     }
@@ -161,7 +161,27 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
     }
 
     addPresenceOffline(training.codCua, training.tmaCua, participante)
-    await useOfflineStore.persist.rehydrate()
+    setPresences([...presences, participant])
+
+    setTrainingList(
+      trainingList.map((t) => {
+        if (t.codCua === training.codCua && t.tmaCua === training.tmaCua) {
+          return {
+            ...t,
+            participantes: t.participantes.map((p) => {
+              if (p.numCad === participant.numCad) {
+                return { ...p, staFre: 'Sincronizar' }
+              }
+
+              return p
+            }),
+          }
+        }
+
+        return t
+      })
+    )
+
     asyncAlert('Sucesso', `Presença de ${participant.nomFun} registrada!`)
   }
 
