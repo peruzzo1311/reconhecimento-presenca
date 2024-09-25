@@ -21,15 +21,11 @@ function TrainingItem({ navigation, item }: TrainingItemProps) {
       onPress={handleSelectTraining}
     >
       <View borderWidth={2} borderColor='#0171BB' borderRadius={15}>
-        <View
-          backgroundColor='#0171BB'
-          alignItems='center'
-          paddingVertical={4}
-          gap={8}
-        >
-          <Text color='white' fontWeight='700'>
+        <View backgroundColor='#0171BB' alignItems='center' padding={4} gap={8}>
+          <Text textAlign='center' color='white' fontWeight='700'>
             {item.nomCua}
           </Text>
+
           <Text color='white'>Turma: {item.tmaCua}</Text>
         </View>
 

@@ -13,15 +13,15 @@ interface Response {
 
 export default async function getColaboradores() {
   const res = await axios.post(
-    'https://dc.prismainformatica.com.br:8188/SXI-API/G5Rest?server=https://dc.prismainformatica.com.br:8188&module=tr&service=com_prisma_treinamentos&port=getColaboradores',
+    'https://senior.soororenner.com.br/SXI-API/G5Rest?server=https://senior.soororenner.com.br&module=tr&service=com_prisma_treinamentos&port=getColaboradores',
     {},
     {
       headers: {
         'Content-Type': 'application/json',
         Authorization: '',
         encryptionType: 0,
-        user: 'prisma.integracao',
-        pass: '@98fm',
+        user: 'app.treinamento',
+        pass: '@98fm12',
       },
     }
   )

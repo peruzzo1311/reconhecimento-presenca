@@ -1,4 +1,4 @@
-import axios from 'axios'
+import RNFetchBlob from 'rn-fetch-blob'
 
 import { Training } from '@/types'
 
@@ -8,28 +8,33 @@ interface Response {
 }
 
 export default async function getTreinamentos() {
-  const res = await axios.post(
-    'https://dc.prismainformatica.com.br:8188/SXI-API/G5Rest?server=https://dc.prismainformatica.com.br:8188&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
-    {
-      lisTod: 'S',
-      lisPar: 'N',
-    },
-    {
-      headers: {
-        user: 'prisma.integracao',
-        pass: '@98fm',
+  RNFetchBlob.config({
+    trusty: true,
+  })
+    .fetch(
+      'POST',
+      'https://senior.soororenner.com.br/SXI-API/G5Rest?server=https://senior.soororenner.com.br&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
+      {
+        user: 'app.treinamento',
+        pass: '@98fm12',
         encryptionType: '0',
         Authorization: '',
         'Content-Type': 'application/json',
       },
-    }
-  )
+      JSON.stringify({
+        lisTod: 'S',
+        lisPar: 'N',
+      })
+    )
+    .then((res) => {
+      const data = res.json()
 
-  const data = res.data as Response
+      console.log(data)
+    })
 
-  if (!Array.isArray(data.treinamento)) {
-    return [data.treinamento]
-  }
+  // if (!Array.isArray(data.treinamento)) {
+  //   return [data.treinamento]
+  // }
 
-  return data.treinamento
+  // return data.treinamento
 }

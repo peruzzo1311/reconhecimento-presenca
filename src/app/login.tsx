@@ -93,7 +93,7 @@ export default function Login({ navigation }: { navigation: any }) {
       }
 
       setUser(user)
-      navigation.navigate('Inicio')
+      navigation.navigate('ListaTreinamentos')
     } catch (error) {
       console.log(error)
 

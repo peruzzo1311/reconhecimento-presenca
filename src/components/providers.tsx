@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native'
+import { config } from '@tamagui/config/v3'
 import { ToastProvider } from '@tamagui/toast'
 import { createTamagui, TamaguiProvider } from 'tamagui'
-import { config } from '@tamagui/config/v3'
 
 export const tamaguiConfig = createTamagui(config)
 

@@ -50,8 +50,6 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
-    console.log('QR Code scanned:', training)
-
     const participant = training.participantes.find(
       (p) => p.numCad === Number(data)
     )

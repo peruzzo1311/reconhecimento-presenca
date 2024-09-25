@@ -26,7 +26,7 @@ export function HeaderNavigation({ navigation, title }: HeaderNavigationProps) {
         <FontAwesome5 name='chevron-left' size={24} color='#0171BB' />
       </TouchableOpacity>
 
-      <Text fontWeight='700' fontSize='$5'>
+      <Text fontWeight='700' fontSize='$5' flex={1}>
         {title}
       </Text>
     </View>

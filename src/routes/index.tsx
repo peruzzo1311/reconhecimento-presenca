@@ -2,7 +2,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import Camera from '@/app/camera'
 import Foto from '@/app/foto'
-import Inicio from '@/app/inicio'
 import ListaPresenca from '@/app/lista-presenca'
 import ListaTreinamentos from '@/app/lista-treinamentos'
 import Login from '@/app/login'
@@ -26,7 +25,7 @@ export default function RootStack() {
     >
       {user ? (
         <>
-          <Stack.Screen name='Inicio' component={Inicio} />
+          {/* <Stack.Screen name='Inicio' component={Inicio} /> */}
 
           <Stack.Screen
             name='ListaTreinamentos'
