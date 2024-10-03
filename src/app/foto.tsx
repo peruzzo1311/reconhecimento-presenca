@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import Constants from 'expo-constants'
 import { useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Button, Image, Text, View } from 'tamagui'
+import { Image, Text, View, Button } from 'tamagui'
 
 import { QrCodeValidate, RecognitionValidate } from '@/api/validate-presence'
 import { Participant, Training } from '@/types'
@@ -35,11 +35,7 @@ export default function Foto({ route, navigation }: FotoProps) {
 
       if (!participant) {
         toast.show('Participante não selecionado', {
-          native: true,
-          burntOptions: {
-            haptic: 'error',
-            preset: 'error',
-          },
+          type: 'error',
         })
         navigation.navigate('ListaPresenca', { training })
 
@@ -53,11 +49,7 @@ export default function Foto({ route, navigation }: FotoProps) {
 
       if (codRet !== 0) {
         toast.show(msgRet ?? 'Erro ao verificar presença', {
-          native: true,
-          burntOptions: {
-            haptic: 'error',
-            preset: 'error',
-          },
+          type: 'error',
         })
         navigation.navigate('ListaPresenca', { training })
 
@@ -80,11 +72,7 @@ export default function Foto({ route, navigation }: FotoProps) {
 
       if (res.msgRet !== 'ok') {
         toast.show(res.msgRet ?? 'Erro ao verificar presença', {
-          native: true,
-          burntOptions: {
-            haptic: 'error',
-            preset: 'error',
-          },
+          type: 'error',
         })
         navigation.navigate('ListaPresenca', { training })
 
@@ -96,11 +84,7 @@ export default function Foto({ route, navigation }: FotoProps) {
       console.error(error)
 
       toast.show('Não foi possível verificar presença', {
-        native: true,
-        burntOptions: {
-          haptic: 'error',
-          preset: 'error',
-        },
+        type: 'error',
       })
       navigation.navigate('ListaPresenca', { training })
     } finally {

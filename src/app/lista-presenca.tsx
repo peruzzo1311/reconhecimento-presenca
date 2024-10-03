@@ -148,11 +148,7 @@ export default function ListaPresenca({
       toast.show(
         'Você está offline, não é possível realizar a leitura facial',
         {
-          native: true,
-          burntOptions: {
-            haptic: 'error',
-            preset: 'error',
-          },
+          type: 'error',
         }
       )
 

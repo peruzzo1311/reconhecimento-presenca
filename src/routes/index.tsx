@@ -8,6 +8,7 @@ import Login from '@/app/login'
 import QRCode from '@/app/qrcode'
 import SincronizarGrupos from '@/app/sincronizar-grupos'
 import SincronizarParticipantes from '@/app/sincronizar-participantes'
+import TenantScreen from '@/app/tenant'
 import { useUserStore } from '@/store/user-store'
 
 const Stack = createStackNavigator()
@@ -15,9 +16,11 @@ const Stack = createStackNavigator()
 export default function RootStack() {
   const { user } = useUserStore()
 
+  const initialRoute = user ? 'ListaTreinamentos' : 'Login'
+
   return (
     <Stack.Navigator
-      initialRouteName={user ? 'Inicio' : 'Login'}
+      initialRouteName={initialRoute}
       screenOptions={{
         headerShown: false,
         gestureEnabled: false,
@@ -67,6 +70,14 @@ export default function RootStack() {
       ) : (
         <>
           <Stack.Screen name='Login' component={Login} />
+
+          <Stack.Screen
+            name='TenantScreen'
+            component={TenantScreen}
+            options={{
+              presentation: 'modal',
+            }}
+          />
         </>
       )}
     </Stack.Navigator>

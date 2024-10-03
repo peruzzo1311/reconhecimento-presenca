@@ -21,7 +21,7 @@ export default function Login({ navigation }: { navigation: any }) {
   const [showPassword, setShowPassword] = useState(false)
 
   const toast = useToastController()
-  const { setUser } = useUserStore()
+  const { setUser, tenant } = useUserStore()
 
   const usernameInputRef = useRef<TextInput>(null)
   const passwordInputRef = useRef<TextInput>(null)
@@ -30,13 +30,17 @@ export default function Login({ navigation }: { navigation: any }) {
     try {
       setIsLoading(true)
 
+      if (!tenant) {
+        toast.show('Informe o Tenant para continuar', {
+          type: 'error',
+        })
+
+        return
+      }
+
       if (!username || !password) {
         toast.show('Preencha corretamente todos os campos', {
-          native: true,
-          burntOptions: {
-            haptic: 'error',
-            preset: 'error',
-          },
+          type: 'error',
         })
 
         return
@@ -46,11 +50,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
       if (responseGetToken.status === 401) {
         toast.show('Usuário ou senha inválidos', {
-          native: true,
-          burntOptions: {
-            haptic: 'error',
-            preset: 'error',
-          },
+          type: 'error',
         })
 
         return
@@ -60,22 +60,14 @@ export default function Login({ navigation }: { navigation: any }) {
         const data = await responseGetToken.json()
 
         toast.show(data.message, {
-          native: true,
-          burntOptions: {
-            haptic: 'error',
-            preset: 'error',
-          },
+          type: 'error',
         })
         return
       }
 
       if (responseGetToken.status !== 200) {
         toast.show('Erro ao tentar fazer o login', {
-          native: true,
-          burntOptions: {
-            haptic: 'error',
-            preset: 'error',
-          },
+          type: 'error',
         })
       }
 
@@ -86,7 +78,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
       if (!user) {
         toast.show('Usuário ou senha inválidos', {
-          native: true,
+          type: 'error',
         })
 
         return
@@ -98,11 +90,7 @@ export default function Login({ navigation }: { navigation: any }) {
       console.log(error)
 
       toast.show('Erro ao tentar fazer o login, verifique sua conexão', {
-        native: true,
-        burntOptions: {
-          haptic: 'error',
-          preset: 'error',
-        },
+        type: 'error',
       })
     } finally {
       setIsLoading(false)
@@ -115,12 +103,13 @@ export default function Login({ navigation }: { navigation: any }) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1, backgroundColor: '#0171BB' }}
       >
-        <View height='30%' paddingHorizontal={20}>
+        <View alignItems='center' height='30%' paddingHorizontal={20}>
           <Image
             source={require('@/assets/images/logo.png')}
             width='100%'
             height='100%'
-            resizeMode='contain'
+            maxWidth={300}
+            objectFit='contain'
           />
         </View>
 
@@ -133,6 +122,23 @@ export default function Login({ navigation }: { navigation: any }) {
           paddingTop={40}
           gap={20}
         >
+          <View gap={8}>
+            <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
+              Tenant
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('TenantScreen')}
+            >
+              <Input
+                placeholder='@tenant.com.br'
+                value={tenant || ''}
+                backgroundColor='$gray3'
+                readOnly
+              />
+            </TouchableOpacity>
+          </View>
+
           <View gap={8}>
             <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
               Usuário
