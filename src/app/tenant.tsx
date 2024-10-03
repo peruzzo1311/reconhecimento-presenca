@@ -1,5 +1,5 @@
 import { useToastController } from '@tamagui/toast'
-import { ArrowLeft } from 'lucide-react-native'
+import { ArrowLeft, AtSign } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import {
   Keyboard,
@@ -8,13 +8,14 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native'
-import { Button, Image, Input, Text, View } from 'tamagui'
+import { Button, Image, Text, View } from 'tamagui'
 
+import CustomInput from '@/components/input'
+import InputContainer from '@/components/input-container'
 import { useUserStore } from '@/store/user-store'
 
 export default function Login({ navigation }: { navigation: any }) {
   const [newTenant, setNewTenant] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
 
   const { tenant, setTenant } = useUserStore()
   const toast = useToastController()
@@ -27,8 +28,6 @@ export default function Login({ navigation }: { navigation: any }) {
 
   const handleChangeTenant = async () => {
     try {
-      setIsLoading(true)
-
       if (!newTenant) {
         toast.show('Informe o tenant', {
           type: 'error',
@@ -45,8 +44,6 @@ export default function Login({ navigation }: { navigation: any }) {
       toast.show('Ocorreu um erro ao alterar o tenant', {
         type: 'error',
       })
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -87,35 +84,32 @@ export default function Login({ navigation }: { navigation: any }) {
           paddingTop={40}
           gap={20}
         >
-          <View>
-            <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
-              Tenant
-            </Text>
+          <InputContainer label='Tenant'>
+            <AtSign
+              size={22}
+              color='#aaa'
+              style={{
+                marginLeft: 10,
+              }}
+            />
 
-            <Input
+            <CustomInput
               placeholder='@tenant.com.br'
               autoCapitalize='none'
-              returnKeyType='next'
               value={newTenant}
               onChangeText={setNewTenant}
               onSubmitEditing={handleChangeTenant}
-              backgroundColor={isLoading ? '$gray2' : 'white'}
-              pointerEvents={isLoading ? 'none' : 'auto'}
-              focusStyle={{ borderColor: '#0171BB', borderWidth: 1 }}
             />
-          </View>
+          </InputContainer>
 
-          <TouchableOpacity
-            onPress={isLoading ? undefined : handleChangeTenant}
-          >
+          <TouchableOpacity onPress={handleChangeTenant}>
             <Button
               pointerEvents='none'
               backgroundColor='#0171BB'
-              opacity={isLoading ? 0.5 : 1}
               marginTop={20}
             >
               <Text color='white' fontWeight='700'>
-                {isLoading ? 'Carregando...' : 'Entrar'}
+                Alterar
               </Text>
             </Button>
           </TouchableOpacity>

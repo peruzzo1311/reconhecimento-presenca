@@ -1,5 +1,6 @@
 import { AntDesign } from '@expo/vector-icons'
 import { useToastController } from '@tamagui/toast'
+import { AtSign, Lock, User } from 'lucide-react-native'
 import { useRef, useState } from 'react'
 import {
   Keyboard,
@@ -9,9 +10,11 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native'
-import { Button, Checkbox, Image, Input, Text, View } from 'tamagui'
+import { Button, Checkbox, Image, Text, View } from 'tamagui'
 
 import { getToken, getUser } from '@/api/login'
+import CustomInput from '@/components/input'
+import InputContainer from '@/components/input-container'
 import { useUserStore } from '@/store/user-store'
 
 export default function Login({ navigation }: { navigation: any }) {
@@ -120,31 +123,39 @@ export default function Login({ navigation }: { navigation: any }) {
           borderTopRightRadius={30}
           padding={20}
           paddingTop={40}
-          gap={20}
+          gap={15}
+          width='100%'
+          maxWidth={400}
         >
-          <View gap={8}>
-            <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
-              Tenant
-            </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('TenantScreen')}>
+            <InputContainer label='Tenant' backgroundColor='$gray3'>
+              <AtSign
+                size={22}
+                color='#aaa'
+                style={{
+                  marginLeft: 10,
+                }}
+              />
 
-            <TouchableOpacity
-              onPress={() => navigation.navigate('TenantScreen')}
-            >
-              <Input
+              <CustomInput
                 placeholder='@tenant.com.br'
                 value={tenant || ''}
-                backgroundColor='$gray3'
                 readOnly
+                pointerEvents='none'
               />
-            </TouchableOpacity>
-          </View>
+            </InputContainer>
+          </TouchableOpacity>
 
-          <View gap={8}>
-            <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
-              Usuário
-            </Text>
+          <InputContainer label='Usuário'>
+            <User
+              size={22}
+              color='#aaa'
+              style={{
+                marginLeft: 10,
+              }}
+            />
 
-            <Input
+            <CustomInput
               placeholder='nome.sobrenome'
               autoCapitalize='none'
               returnKeyType='next'
@@ -152,18 +163,21 @@ export default function Login({ navigation }: { navigation: any }) {
               onChangeText={setUsername}
               ref={usernameInputRef}
               onSubmitEditing={() => passwordInputRef.current?.focus()}
-              backgroundColor={isLoading ? '$gray2' : 'white'}
-              pointerEvents={isLoading ? 'none' : 'auto'}
-              focusStyle={{ borderColor: '#0171BB', borderWidth: 1 }}
+              backgroundColor={isLoading ? '$gray4' : 'white'}
+              disabled={isLoading}
             />
-          </View>
+          </InputContainer>
 
-          <View gap={8}>
-            <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
-              Senha
-            </Text>
+          <InputContainer label='Senha'>
+            <Lock
+              size={22}
+              color='#aaa'
+              style={{
+                marginLeft: 10,
+              }}
+            />
 
-            <Input
+            <CustomInput
               placeholder='Digite sua senha'
               enterKeyHint='send'
               secureTextEntry={!showPassword}
@@ -171,11 +185,10 @@ export default function Login({ navigation }: { navigation: any }) {
               value={password}
               onChangeText={setPassword}
               onSubmitEditing={handleSubmit}
-              backgroundColor={isLoading ? '$gray2' : 'white'}
-              pointerEvents={isLoading ? 'none' : 'auto'}
-              focusStyle={{ borderColor: '#0171BB', borderWidth: 1 }}
+              backgroundColor={isLoading ? '$gray4' : 'white'}
+              disabled={isLoading}
             />
-          </View>
+          </InputContainer>
 
           <TouchableOpacity
             style={{
