@@ -201,6 +201,8 @@ export default function Login({ navigation }: { navigation: any }) {
             onPress={() => setShowPassword(!showPassword)}
           >
             <Checkbox
+              justifyContent='center'
+              alignItems='center'
               size='$5'
               borderWidth={2}
               checked={showPassword}
@@ -210,7 +212,7 @@ export default function Login({ navigation }: { navigation: any }) {
               pointerEvents='none'
             >
               <Checkbox.Indicator>
-                <AntDesign name='check' size={24} color='white' />
+                <AntDesign name='check' size={16} color='white' />
               </Checkbox.Indicator>
             </Checkbox>
 
