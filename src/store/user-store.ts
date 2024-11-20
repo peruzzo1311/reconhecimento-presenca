@@ -20,8 +20,12 @@ export interface User {
 interface stateProps {
   user: User | null
   tenant: string
+  prodDomain: string
+  homDomain: string
   setUser: (user: User) => void
   setTenant: (tenant: string) => void
+  setProdDomain: (prodDomain: string) => void
+  setHomDomain: (homDomain: string) => void
   clearUser: () => void
 }
 
@@ -30,8 +34,12 @@ export const useUserStore = create(
     (set) => ({
       user: null,
       tenant: '',
+      prodDomain: '',
+      homDomain: '',
       setUser: (user: User) => set({ user }),
       setTenant: (tenant: string) => set({ tenant }),
+      setProdDomain: (prodDomain: string) => set({ prodDomain }),
+      setHomDomain: (homDomain: string) => set({ homDomain }),
       clearUser: () => set({ user: null }),
     }),
     {

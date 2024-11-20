@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { Button, Checkbox, Image, Text, View } from 'tamagui'
 
-import { getToken, getUser } from '@/api/login'
+import { getToken, getUser, validateTenant } from '@/api/login'
 import CustomInput from '@/components/input'
 import InputContainer from '@/components/input-container'
 import { useUserStore } from '@/store/user-store'
@@ -24,7 +24,7 @@ export default function Login({ navigation }: { navigation: any }) {
   const [showPassword, setShowPassword] = useState(false)
 
   const toast = useToastController()
-  const { setUser, tenant } = useUserStore()
+  const { setUser, tenant, setHomDomain, setProdDomain } = useUserStore()
 
   const usernameInputRef = useRef<TextInput>(null)
   const passwordInputRef = useRef<TextInput>(null)
@@ -87,7 +87,23 @@ export default function Login({ navigation }: { navigation: any }) {
         return
       }
 
+      const tenantResponse = await validateTenant({ code: 1, tenant })
+
+      if (
+        tenantResponse.retorno !== 'Cliente Válido' ||
+        !tenantResponse.dominioHom ||
+        !tenantResponse.dominioProd
+      ) {
+        toast.show('Tenant inválido', {
+          type: 'error',
+        })
+
+        return
+      }
+
       setUser(user)
+      setHomDomain(tenantResponse.dominioHom)
+      setProdDomain(tenantResponse.dominioProd)
       navigation.navigate('ListaTreinamentos')
     } catch (error) {
       console.log(error)
