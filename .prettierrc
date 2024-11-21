@@ -1,9 +1,0 @@
-{
-  "singleQuote": true,
-  "trailingComma": "es5",
-  "semi": false,
-  "jsxSingleQuote": true,
-  "quoteProps": "as-needed",
-  "bracketSpacing": true,
-  "endOfLine": "crlf"
-}

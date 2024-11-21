@@ -89,11 +89,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
       const tenantResponse = await validateTenant({ code: 1, tenant })
 
-      if (
-        tenantResponse.retorno !== 'Cliente Válido' ||
-        !tenantResponse.dominioHom ||
-        !tenantResponse.dominioProd
-      ) {
+      if (tenantResponse.retorno !== 'Cliente Válido') {
         toast.show('Tenant inválido', {
           type: 'error',
         })
@@ -102,8 +98,8 @@ export default function Login({ navigation }: { navigation: any }) {
       }
 
       setUser(user)
-      setHomDomain(tenantResponse.dominioHom)
-      setProdDomain(tenantResponse.dominioProd)
+      setHomDomain(tenantResponse.dominioHom || '')
+      setProdDomain(tenantResponse.dominioProd || '')
       navigation.navigate('ListaTreinamentos')
     } catch (error) {
       console.log(error)
@@ -162,7 +158,7 @@ export default function Login({ navigation }: { navigation: any }) {
             </InputContainer>
           </TouchableOpacity>
 
-          <InputContainer label='Usuário'>
+          <InputContainer backgroundColor={isLoading ? '$gray4' : 'white'} label='Usuário'>
             <User
               size={22}
               color='#aaa'
@@ -184,7 +180,7 @@ export default function Login({ navigation }: { navigation: any }) {
             />
           </InputContainer>
 
-          <InputContainer label='Senha'>
+          <InputContainer backgroundColor={isLoading ? '$gray4' : 'white'} label='Senha'>
             <Lock
               size={22}
               color='#aaa'
@@ -236,11 +232,7 @@ export default function Login({ navigation }: { navigation: any }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={isLoading ? undefined : handleSubmit}>
-            <Button
-              pointerEvents='none'
-              backgroundColor='#0171BB'
-              opacity={isLoading ? 0.5 : 1}
-            >
+            <Button pointerEvents='none' backgroundColor='#0171BB' opacity={isLoading ? 0.5 : 1}>
               <Text color='white' fontWeight='700'>
                 {isLoading ? 'Carregando...' : 'Entrar'}
               </Text>

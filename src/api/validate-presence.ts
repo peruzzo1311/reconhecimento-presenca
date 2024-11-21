@@ -17,14 +17,11 @@ export async function RecognitionValidate({
   participants,
   base64,
 }: validatePresenceProps): Promise<validatePresenceResponse> {
-  const res = await axios.post(
-    'https://prismaappfr.azurewebsites.net/verifica-presenca',
-    {
-      fotPar: base64,
-      participantes: participants,
-      platform: Platform.OS,
-    }
-  )
+  const res = await axios.post('https://prismaappfr.azurewebsites.net/verifica-presenca', {
+    fotPar: base64,
+    participantes: participants,
+    platform: Platform.OS,
+  })
 
   const data = await res.data
 
@@ -43,13 +40,9 @@ interface QrCodeProps {
   }[]
 }
 
-export async function QrCodeValidate({
-  codCua,
-  tmaCua,
-  participantes,
-}: QrCodeProps) {
+export async function QrCodeValidate({ codCua, tmaCua, participantes }: QrCodeProps) {
   const res = await axios.post(
-    'https://senior.soororenner.com.br/SXI-API/G5Rest?server=https://senior.soororenner.com.br&module=tr&service=com_prisma_treinamentos&port=postFrequencia',
+    'https://senior.plumaagro.com.br:8181/API/G5Rest?server=https://senior.plumaagro.com.br:8181/&module=tr&service=com_prisma_treinamentos&port=postFrequencia',
     {
       codCua,
       tmaCua,
@@ -60,8 +53,8 @@ export async function QrCodeValidate({
         'Content-Type': 'application/json',
         Authorization: '',
         encryptionType: 0,
-        user: 'app.treinamento',
-        pass: '@98fm12',
+        user: 'integracao.app',
+        pass: 'D3v@98fm',
       },
     }
   )

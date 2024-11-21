@@ -9,15 +9,15 @@ interface Response {
 
 export default async function getTreinamentos() {
   const res = await axios.post(
-    'https://senior.soororenner.com.br/SXI-API/G5Rest?server=https://senior.soororenner.com.br&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
+    'https://senior.plumaagro.com.br:8181/API/G5Rest?server=https://senior.plumaagro.com.br:8181/&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
     {
       lisTod: 'S',
       lisPar: 'N',
     },
     {
       headers: {
-        user: 'app.treinamento',
-        pass: '@98fm12',
+        user: 'integracao.app',
+        pass: 'D3v@98fm',
         encryptionType: '0',
         Authorization: '',
         'Content-Type': 'application/json',

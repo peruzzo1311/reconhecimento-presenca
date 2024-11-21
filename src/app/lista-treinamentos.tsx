@@ -77,25 +77,18 @@ export default function ListaTreinamentos({ navigation }: any) {
     <View flex={1} backgroundColor='white'>
       <Header />
 
-      <HeaderNavigation navigation={navigation} title='Lista de Treinamentos' />
+      <HeaderNavigation navigation={navigation} title='Lista de Treinamentos' canGoBack={false} />
 
       <View flex={1} paddingHorizontal={24} paddingBottom={12}>
         {!isLoading && (
           <FlatList
             data={trainings}
-            renderItem={({ item }) => (
-              <TrainingItem item={item} navigation={navigation} />
-            )}
+            renderItem={({ item }) => <TrainingItem item={item} navigation={navigation} />}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => <View marginVertical={12} />}
-            keyExtractor={(item) =>
-              item.codCua.toString() + item.tmaCua.toString()
-            }
+            keyExtractor={(item) => item.codCua.toString() + item.tmaCua.toString()}
             refreshControl={
-              <RefreshControl
-                refreshing={isLoading}
-                onRefresh={getTreinamentosList}
-              />
+              <RefreshControl refreshing={isLoading} onRefresh={getTreinamentosList} />
             }
             ListEmptyComponent={
               !isLoading &&

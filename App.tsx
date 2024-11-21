@@ -5,11 +5,7 @@ import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
-import {
-  useAnimatedKeyboard,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated'
+import { useAnimatedKeyboard, useAnimatedStyle, withSpring } from 'react-native-reanimated'
 
 import DialogProviders from '@/components/dialogs/provider'
 import { Providers } from '@/components/providers'
@@ -49,22 +45,13 @@ export default function App() {
 
   return (
     <Providers>
-      <StatusBar
-        barStyle='light-content'
-        backgroundColor='#0171BB'
-        translucent
-      />
+      <StatusBar barStyle='light-content' backgroundColor='#0171BB' translucent />
 
       <DialogProviders />
 
       <RootStack />
 
-      <ToastViewport
-        flexDirection='column-reverse'
-        top={40}
-        left={4}
-        right={4}
-      />
+      <ToastViewport flexDirection='column-reverse' top={40} left={4} right={4} />
 
       <Toast />
     </Providers>

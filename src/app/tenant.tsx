@@ -103,13 +103,9 @@ export default function Login({ navigation }: { navigation: any }) {
           </InputContainer>
 
           <TouchableOpacity onPress={handleChangeTenant}>
-            <Button
-              pointerEvents='none'
-              backgroundColor='#0171BB'
-              marginTop={20}
-            >
+            <Button pointerEvents='none' backgroundColor='#0171BB' marginTop={20}>
               <Text color='white' fontWeight='700'>
-                Alterar
+                Confirmar
               </Text>
             </Button>
           </TouchableOpacity>
