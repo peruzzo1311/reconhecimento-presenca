@@ -2,6 +2,7 @@ import axios from 'axios'
 
 interface getTokenParams {
   username: string
+  tenant: string
   password: string
 }
 
@@ -21,9 +22,9 @@ interface validateTenantResponse {
   dominioProd?: string
 }
 
-export async function getToken({ username, password }: getTokenParams) {
+export async function getToken({ username, tenant, password }: getTokenParams) {
   const body = {
-    username: `${username.trim()}@prisma-demo.com.br.seniorx`,
+    username: `${username.trim()}@${tenant.trim()}`,
     password,
   }
 

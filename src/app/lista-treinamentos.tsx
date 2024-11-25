@@ -12,6 +12,7 @@ import TrainingItem from '@/components/training-item'
 import { useOfflineStore } from '@/store/offline-store'
 import { useTrainingStore } from '@/store/treinamento-store'
 import { Training } from '@/types'
+import { useUserStore } from '@/store/user-store'
 
 export default function ListaTreinamentos({ navigation }: any) {
   const [trainings, setTrainings] = useState<Training[]>([])
@@ -20,12 +21,13 @@ export default function ListaTreinamentos({ navigation }: any) {
 
   const { trainingList } = useTrainingStore()
   const { setIsOffline } = useOfflineStore()
+  const { prodDomain } = useUserStore()
 
   const getTreinamentosList = async () => {
     try {
       setIsLoading(true)
 
-      const treinamentos = await getTreinamentos()
+      const treinamentos = await getTreinamentos({ tenant: prodDomain })
 
       if (!Array.isArray(treinamentos)) {
         setTrainings([treinamentos])

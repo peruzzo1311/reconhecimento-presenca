@@ -14,6 +14,7 @@ export interface User {
     value: string
   }[]
   username: string
+  password?: string
   tenant?: string
 }
 

@@ -2,20 +2,20 @@ import axios from 'axios'
 
 import { Training } from '@/types'
 
+interface props {
+  tmaCua: number
+  codCua: number
+  tenant: string
+}
+
 interface Response {
   msgRet: string
   treinamento: Training
 }
 
-export default async function getParticipantes({
-  tmaCua,
-  codCua,
-}: {
-  tmaCua: number
-  codCua: number
-}) {
+export default async function getParticipantes({ tmaCua, codCua, tenant }: props) {
   const res = await axios.post(
-    'https://senior.plumaagro.com.br:8181/API/G5Rest?server=https://senior.plumaagro.com.br:8181/&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
+    `${tenant}/API/G5Rest?server=${tenant}/&module=tr&service=com_prisma_treinamentos&port=getTreinamentos`,
     {
       lisTod: 'N',
       lisPar: 'S',

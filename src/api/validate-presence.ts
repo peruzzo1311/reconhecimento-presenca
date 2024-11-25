@@ -38,11 +38,12 @@ interface QrCodeProps {
     datFre: string
     horFre: string
   }[]
+  tenant: string
 }
 
-export async function QrCodeValidate({ codCua, tmaCua, participantes }: QrCodeProps) {
+export async function QrCodeValidate({ codCua, tmaCua, participantes, tenant }: QrCodeProps) {
   const res = await axios.post(
-    'https://senior.plumaagro.com.br:8181/API/G5Rest?server=https://senior.plumaagro.com.br:8181/&module=tr&service=com_prisma_treinamentos&port=postFrequencia',
+    `${tenant}/API/G5Rest?server=${tenant}/&module=tr&service=com_prisma_treinamentos&port=postFrequencia`,
     {
       codCua,
       tmaCua,

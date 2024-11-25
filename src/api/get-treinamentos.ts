@@ -2,14 +2,18 @@ import axios from 'axios'
 
 import { Training } from '@/types'
 
+interface props {
+  tenant: string
+}
+
 interface Response {
   msgRet: string
   treinamento: Training[]
 }
 
-export default async function getTreinamentos() {
+export default async function getTreinamentos({ tenant }: props) {
   const res = await axios.post(
-    'https://senior.plumaagro.com.br:8181/API/G5Rest?server=https://senior.plumaagro.com.br:8181/&module=tr&service=com_prisma_treinamentos&port=getTreinamentos',
+    `${tenant}/API/G5Rest?server=${tenant}/&module=tr&service=com_prisma_treinamentos&port=getTreinamentos`,
     {
       lisTod: 'S',
       lisPar: 'N',

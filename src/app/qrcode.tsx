@@ -1,10 +1,6 @@
 import { FontAwesome5 } from '@expo/vector-icons'
 import { format } from 'date-fns'
-import {
-  BarcodeScanningResult,
-  CameraView,
-  useCameraPermissions,
-} from 'expo-camera'
+import { BarcodeScanningResult, CameraView, useCameraPermissions } from 'expo-camera'
 import Constants from 'expo-constants'
 import * as Network from 'expo-network'
 import { useState } from 'react'
@@ -16,6 +12,7 @@ import Spinner from '@/components/spinner'
 import { useOfflineStore } from '@/store/offline-store'
 import { useTrainingStore } from '@/store/treinamento-store'
 import { Participant, Training } from '@/types'
+import { useUserStore } from '@/store/user-store'
 
 interface QRCodeProps {
   navigation: any
@@ -30,11 +27,13 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
   const [presences, setPresences] = useState<Participant[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [scanned, setScanned] = useState(false)
-
   const [permission, requestPermission] = useCameraPermissions()
+
   const { training } = route.params
+
   const { trainingList, setTrainingList } = useTrainingStore()
   const { presenceOffline, addPresenceOffline } = useOfflineStore()
+  const { prodDomain } = useUserStore()
 
   const handleQrCodeScanned = async ({ data }: BarcodeScanningResult) => {
     if (scanned) {
@@ -50,9 +49,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
-    const participant = training.participantes.find(
-      (p) => p.numCad === Number(data)
-    )
+    const participant = training.participantes.find((p) => p.numCad === Number(data))
 
     if (!participant) {
       asyncAlert('Erro', 'Participante não encontrado')
@@ -60,10 +57,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
-    if (
-      participant.staFre === 'Presente' ||
-      participant.staFre === 'Sincronizar'
-    ) {
+    if (participant.staFre === 'Presente' || participant.staFre === 'Sincronizar') {
       asyncAlert('Erro', 'Participante já está presente')
 
       return
@@ -71,9 +65,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
 
     console.log('Participant:', participant)
 
-    const participantExists = presences.find(
-      (p) => p.numCad === participant.numCad
-    )
+    const participantExists = presences.find((p) => p.numCad === participant.numCad)
 
     if (participantExists) {
       asyncAlert('Erro', 'Participante já está presente')
@@ -87,9 +79,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       (item) =>
         item.codCua === training.codCua &&
         item.tmaCua === training.tmaCua &&
-        item.participantes.find(
-          (participante) => participante.numCad === participant.numCad
-        )
+        item.participantes.find((participante) => participante.numCad === participant.numCad)
     )
 
     if (presenceOfflineExists) {
@@ -126,6 +116,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
           horFre: format(new Date(), 'HH:mm:ss'),
         },
       ],
+      tenant: prodDomain,
     })
 
     if (res.msgRet !== 'ok') {
@@ -135,10 +126,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
     }
 
     setPresences([...presences, participant])
-    asyncAlert(
-      'Sucesso',
-      `Presença de ${participant.nomFun} registrada com sucesso!`
-    )
+    asyncAlert('Sucesso', `Presença de ${participant.nomFun} registrada com sucesso!`)
   }
 
   const handleOfflinePresence = async (participant: Participant) => {
@@ -215,9 +203,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
         gap={12}
         padding={24}
       >
-        <Text textAlign='center'>
-          Conceda a permissão para poder realizar captura de fotos
-        </Text>
+        <Text textAlign='center'>Conceda a permissão para poder realizar captura de fotos</Text>
 
         <TouchableOpacity onPress={requestPermission}>
           <Button
@@ -258,12 +244,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
         </TouchableOpacity>
 
         <View flex={1}>
-          <Text
-            marginLeft={-16}
-            fontWeight='700'
-            fontSize='$5'
-            textAlign='center'
-          >
+          <Text marginLeft={-16} fontWeight='700' fontSize='$5' textAlign='center'>
             Escaneie um QR Code
           </Text>
         </View>

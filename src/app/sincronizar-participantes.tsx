@@ -10,6 +10,7 @@ import ItemParticipantSync from '@/components/sync-participant'
 import { useOfflineStore } from '@/store/offline-store'
 import { useTrainingStore } from '@/store/treinamento-store'
 import { ParticipantePresence, Presence } from '@/types'
+import { useUserStore } from '@/store/user-store'
 
 interface SincronizarParticipantesProps {
   route: {
@@ -24,18 +25,18 @@ export default function SincronizarParticipantes({
   route,
   navigation,
 }: SincronizarParticipantesProps) {
-  const [participantsList, setParticipantsList] = useState<
-    ParticipantePresence[]
-  >([])
+  const [participantsList, setParticipantsList] = useState<ParticipantePresence[]>([])
   const [isLoading, setIsLoading] = useState(false)
+
   const { item: curso } = route.params
+
   const { trainingList } = useTrainingStore()
   const { removeAllParticipantsOffline } = useOfflineStore()
+  const { prodDomain } = useUserStore()
 
   const getTitle = () => {
     const training = trainingList.find(
-      (training) =>
-        training.codCua === curso.codCua && training.tmaCua === curso.tmaCua
+      (training) => training.codCua === curso.codCua && training.tmaCua === curso.tmaCua
     )
 
     if (!training) {
@@ -53,13 +54,11 @@ export default function SincronizarParticipantes({
         codCua: curso.codCua,
         tmaCua: curso.tmaCua,
         participantes: participantsList,
+        tenant: prodDomain,
       })
 
       if (response.msgRet !== 'ok') {
-        Alert.alert(
-          'Erro',
-          response.msgRet ?? 'Ocorreu um erro ao confirmar a presença'
-        )
+        Alert.alert('Erro', response.msgRet ?? 'Ocorreu um erro ao confirmar a presença')
 
         return
       }

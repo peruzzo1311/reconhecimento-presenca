@@ -11,6 +11,7 @@ import PresenceItem from '@/components/presence-item'
 import { useOfflineStore } from '@/store/offline-store'
 import { useTrainingStore } from '@/store/treinamento-store'
 import { Participant, Training } from '@/types'
+import { useUserStore } from '@/store/user-store'
 
 interface ListaPresencaProps {
   navigation: any
@@ -21,17 +22,17 @@ interface ListaPresencaProps {
   }
 }
 
-export default function ListaPresenca({
-  navigation,
-  route,
-}: ListaPresencaProps) {
+export default function ListaPresenca({ navigation, route }: ListaPresencaProps) {
   const [participantes, setParticipantes] = useState<Participant[]>([])
   const [isLoading, setIsLoading] = useState(false)
+
   const { training } = route.params
+  const toast = useToastController()
+
   const { trainingList } = useTrainingStore()
   const { isOffline, setIsOffline } = useOfflineStore()
   const { presenceOffline } = useOfflineStore()
-  const toast = useToastController()
+  const { prodDomain } = useUserStore()
 
   const onRefresh = async () => {
     const network = await Network.getNetworkStateAsync()
@@ -60,6 +61,7 @@ export default function ListaPresenca({
       const participantes = await getParticipantes({
         tmaCua: training.tmaCua,
         codCua: training.codCua,
+        tenant: prodDomain,
       })
 
       if (!participantes || !participantes.participantes) {
@@ -77,9 +79,7 @@ export default function ListaPresenca({
           (item) =>
             item.codCua === training.codCua &&
             item.tmaCua === training.tmaCua &&
-            item.participantes.find(
-              (participante) => participante.numCad === participant.numCad
-            )
+            item.participantes.find((participante) => participante.numCad === participant.numCad)
         )
 
         if (isPresent && participant.staFre !== 'Presente') {
@@ -109,8 +109,7 @@ export default function ListaPresenca({
       }
 
       const selectedTraining = trainingList.find(
-        (item) =>
-          item.codCua === training.codCua && item.tmaCua === training.tmaCua
+        (item) => item.codCua === training.codCua && item.tmaCua === training.tmaCua
       )
 
       if (!selectedTraining || !selectedTraining.participantes) {
@@ -145,12 +144,9 @@ export default function ListaPresenca({
 
   const handleFaceRecognition = async (participant: Participant) => {
     if (isOffline) {
-      toast.show(
-        'Você está offline, não é possível realizar a leitura facial',
-        {
-          type: 'error',
-        }
-      )
+      toast.show('Você está offline, não é possível realizar a leitura facial', {
+        type: 'error',
+      })
 
       return
     }
@@ -177,14 +173,11 @@ export default function ListaPresenca({
           keyExtractor={(item) => item.numCpf.toString()}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator />}
-          refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
-          }
+          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh} />}
           renderItem={({ item: participant }) => (
             <TouchableOpacity
               onPress={
-                participant.staFre === 'Presente' ||
-                participant.staFre === 'Sincronizar'
+                participant.staFre === 'Presente' || participant.staFre === 'Sincronizar'
                   ? undefined
                   : () => handleFaceRecognition(participant)
               }

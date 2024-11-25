@@ -8,6 +8,7 @@ import { Image, Text, View, Button } from 'tamagui'
 
 import { QrCodeValidate, RecognitionValidate } from '@/api/validate-presence'
 import { Participant, Training } from '@/types'
+import { useUserStore } from '@/store/user-store'
 
 interface FotoProps {
   route: {
@@ -28,6 +29,8 @@ export default function Foto({ route, navigation }: FotoProps) {
   const { photo, participant, training } = route.params
 
   const toast = useToastController()
+
+  const { prodDomain } = useUserStore()
 
   const handleValidate = async () => {
     try {
@@ -68,6 +71,7 @@ export default function Foto({ route, navigation }: FotoProps) {
             horFre: format(new Date(), 'HH:mm:ss'),
           },
         ],
+        tenant: prodDomain,
       })
 
       if (res.msgRet !== 'ok') {
@@ -96,13 +100,7 @@ export default function Foto({ route, navigation }: FotoProps) {
     <View flex={1} backgroundColor='white'>
       <View height={Constants.statusBarHeight} backgroundColor='#0171BB' />
 
-      <View
-        position='absolute'
-        top={40}
-        left={20}
-        zIndex={10}
-        opacity={isLoading ? 0.5 : 1}
-      >
+      <View position='absolute' top={40} left={20} zIndex={10} opacity={isLoading ? 0.5 : 1}>
         <TouchableOpacity
           style={{
             padding: 12,

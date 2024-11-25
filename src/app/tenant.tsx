@@ -13,11 +13,12 @@ import { Button, Image, Text, View } from 'tamagui'
 import CustomInput from '@/components/input'
 import InputContainer from '@/components/input-container'
 import { useUserStore } from '@/store/user-store'
+import { validateTenant } from '@/api/login'
 
 export default function Login({ navigation }: { navigation: any }) {
   const [newTenant, setNewTenant] = useState('')
 
-  const { tenant, setTenant } = useUserStore()
+  const { tenant, setTenant, setHomDomain, setProdDomain } = useUserStore()
   const toast = useToastController()
 
   useEffect(() => {
@@ -36,8 +37,21 @@ export default function Login({ navigation }: { navigation: any }) {
         return
       }
 
+      const tenantResponse = await validateTenant({ code: 1, tenant: newTenant })
+
+      if (tenantResponse.retorno !== 'Cliente Válido') {
+        toast.show('Tenant inválido', {
+          type: 'error',
+        })
+
+        return
+      }
+
+      setHomDomain(tenantResponse.dominioHom || '')
+      setProdDomain(tenantResponse.dominioProd || '')
+
       setTenant(newTenant)
-      navigation.replace('Login')
+      navigation.goBack()
     } catch (error) {
       console.log(error)
 

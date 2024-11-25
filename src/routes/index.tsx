@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack'
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
 
 import Camera from '@/app/camera'
 import Foto from '@/app/foto'
@@ -14,72 +14,65 @@ import { useUserStore } from '@/store/user-store'
 const Stack = createStackNavigator()
 
 export default function RootStack() {
-  const { user } = useUserStore()
-
-  const initialRoute = user ? 'ListaTreinamentos' : 'Login'
-
   return (
     <Stack.Navigator
-      initialRouteName={initialRoute}
+      initialRouteName={'Login'}
       screenOptions={{
         headerShown: false,
         gestureEnabled: false,
       }}
     >
-      {user ? (
-        <>
-          {/* <Stack.Screen name='Inicio' component={Inicio} /> */}
+      {/* <Stack.Screen name='Inicio' component={Inicio} /> */}
 
-          <Stack.Screen
-            name='ListaTreinamentos'
-            component={ListaTreinamentos}
-          />
+      <Stack.Group
+        screenOptions={{
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+        }}
+      >
+        <Stack.Screen name='Login' component={Login} />
 
-          <Stack.Screen
-            name='ListaPresenca'
-            // @ts-ignore
-            component={ListaPresenca}
-          />
+        <Stack.Screen
+          name='TenantScreen'
+          component={TenantScreen}
+          options={{
+            presentation: 'modal',
+          }}
+        />
+      </Stack.Group>
 
-          <Stack.Screen
-            name='Camera'
-            // @ts-ignore
-            component={Camera}
-          />
+      <Stack.Screen name='ListaTreinamentos' component={ListaTreinamentos} />
 
-          <Stack.Screen
-            name='Foto'
-            // @ts-ignore
-            component={Foto}
-          />
+      <Stack.Screen
+        name='ListaPresenca'
+        // @ts-ignore
+        component={ListaPresenca}
+      />
 
-          <Stack.Screen
-            name='QRCode'
-            // @ts-ignore
-            component={QRCode}
-          />
+      <Stack.Screen
+        name='Camera'
+        // @ts-ignore
+        component={Camera}
+      />
 
-          <Stack.Screen name='Sincronizar' component={SincronizarGrupos} />
+      <Stack.Screen
+        name='Foto'
+        // @ts-ignore
+        component={Foto}
+      />
 
-          <Stack.Screen
-            name='SincronizarParticipantes'
-            // @ts-ignore
-            component={SincronizarParticipantes}
-          />
-        </>
-      ) : (
-        <>
-          <Stack.Screen name='Login' component={Login} />
+      <Stack.Screen
+        name='QRCode'
+        // @ts-ignore
+        component={QRCode}
+      />
 
-          <Stack.Screen
-            name='TenantScreen'
-            component={TenantScreen}
-            options={{
-              presentation: 'modal',
-            }}
-          />
-        </>
-      )}
+      <Stack.Screen name='Sincronizar' component={SincronizarGrupos} />
+
+      <Stack.Screen
+        name='SincronizarParticipantes'
+        // @ts-ignore
+        component={SincronizarParticipantes}
+      />
     </Stack.Navigator>
   )
 }

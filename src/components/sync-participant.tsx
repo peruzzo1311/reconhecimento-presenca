@@ -5,6 +5,7 @@ import { Avatar, Text, View } from 'tamagui'
 import { QrCodeValidate } from '@/api/validate-presence'
 import { useOfflineStore } from '@/store/offline-store'
 import { ParticipantePresence } from '@/types'
+import { useUserStore } from '@/store/user-store'
 
 interface ItemParticipantSyncProps {
   item: ParticipantePresence
@@ -24,21 +25,18 @@ function ItemParticipantSync({
   setIsLoading,
 }: ItemParticipantSyncProps) {
   const { removeParticipantOffline } = useOfflineStore()
+  const { prodDomain } = useUserStore()
 
   const handlePress = () => {
-    Alert.alert(
-      'Confirmar Presença',
-      `Deseja confirmar a presença de ${item.nomFun}?`,
-      [
-        {
-          text: 'Cancelar',
-        },
-        {
-          text: 'Confirmar',
-          onPress: () => handleConfirmPresence(),
-        },
-      ]
-    )
+    Alert.alert('Confirmar Presença', `Deseja confirmar a presença de ${item.nomFun}?`, [
+      {
+        text: 'Cancelar',
+      },
+      {
+        text: 'Confirmar',
+        onPress: () => handleConfirmPresence(),
+      },
+    ])
   }
 
   const handleConfirmPresence = async () => {
@@ -56,13 +54,11 @@ function ItemParticipantSync({
             horFre: item.horFre,
           },
         ],
+        tenant: prodDomain,
       })
 
       if (response.msgRet !== 'ok') {
-        Alert.alert(
-          'Erro',
-          response.msgRet ?? 'Ocorreu um erro ao confirmar a presença'
-        )
+        Alert.alert('Erro', response.msgRet ?? 'Ocorreu um erro ao confirmar a presença')
 
         return
       }

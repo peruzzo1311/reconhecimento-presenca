@@ -1,5 +1,9 @@
 import axios from 'axios'
 
+interface props {
+  tenant: string
+}
+
 interface Response {
   msgRet: string
   colaboradores: {
@@ -11,9 +15,9 @@ interface Response {
   }[]
 }
 
-export default async function getColaboradores() {
+export default async function getColaboradores({ tenant }: props) {
   const res = await axios.post(
-    'https://senior.plumaagro.com.br:8181/API/G5Rest?server=https://senior.plumaagro.com.br:8181/&module=tr&service=com_prisma_treinamentos&port=getColaboradores',
+    `${tenant}/API/G5Rest?server=${tenant}/&module=tr&service=com_prisma_treinamentos&port=getColaboradores`,
     {},
     {
       headers: {

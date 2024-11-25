@@ -12,7 +12,7 @@ export default function InputContainer({
   backgroundColor = '$white',
 }: InputContainerProps) {
   return (
-    <View gap={4}>
+    <View gap={4} marginVertical={'$2'}>
       <Text fontWeight='700' fontSize='$3' textTransform='uppercase'>
         {label}
       </Text>

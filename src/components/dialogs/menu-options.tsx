@@ -19,7 +19,7 @@ export default function MenuOptionsDialog() {
   const isModalOpen = isOpen && type === 'menu-options'
   const navigation = useNavigation() as any
 
-  const { clearUser } = useUserStore()
+  const { clearUser, prodDomain } = useUserStore()
   const { isOffline } = useOfflineStore()
   const { setTrainingList } = useTrainingStore()
 
@@ -32,7 +32,7 @@ export default function MenuOptionsDialog() {
 
     try {
       const treinamentosOffline = []
-      const treinamentos = await getTreinamentos()
+      const treinamentos = await getTreinamentos({ tenant: prodDomain })
 
       if (!treinamentos) {
         return
@@ -43,6 +43,7 @@ export default function MenuOptionsDialog() {
         const participantes = await getParticipantes({
           codCua: treinamento.codCua,
           tmaCua: treinamento.tmaCua,
+          tenant: prodDomain,
         })
 
         if (!participantes) {
@@ -96,11 +97,7 @@ export default function MenuOptionsDialog() {
             {isLoading ? 'Baixando...' : 'Opções'}
           </Dialog.Title>
 
-          <Dialog.Close
-            opacity={isLoading ? 0.2 : 1}
-            disabled={isLoading}
-            asChild
-          >
+          <Dialog.Close opacity={isLoading ? 0.2 : 1} disabled={isLoading} asChild>
             <Button
               position='absolute'
               top='$3'
@@ -120,14 +117,9 @@ export default function MenuOptionsDialog() {
             <View gap={4}>
               <Separator />
 
-              <TouchableOpacity
-                disabled={isOffline}
-                onPress={fetchTreinamentos}
-              >
+              <TouchableOpacity disabled={isOffline} onPress={fetchTreinamentos}>
                 <ListItem
-                  icon={
-                    <MaterialIcons name='download' size={24} color='black' />
-                  }
+                  icon={<MaterialIcons name='download' size={24} color='black' />}
                   fontSize='$5'
                   fontWeight={400}
                   opacity={isOffline ? 0.5 : 1}
