@@ -15,7 +15,7 @@ export function HeaderNavigation({ navigation, title, canGoBack = true }: Header
       alignItems='center'
       gap={12}
       paddingHorizontal={24}
-      paddingVertical={canGoBack ? 12 : 16}
+      paddingVertical={canGoBack ? 16 : 20}
     >
       {canGoBack && (
         <TouchableOpacity onPress={() => navigation.goBack()}>

@@ -136,7 +136,7 @@ export default function Login({ navigation }: { navigation: any }) {
             source={require('@/assets/images/logo.png')}
             width='100%'
             height='100%'
-            maxWidth={300}
+            maxWidth={500}
             objectFit='contain'
           />
         </View>
@@ -148,7 +148,6 @@ export default function Login({ navigation }: { navigation: any }) {
           borderTopRightRadius={30}
           padding={20}
           width='100%'
-          maxWidth={400}
         >
           <ScrollView showsVerticalScrollIndicator={false} flex={1}>
             <TouchableOpacity onPress={() => navigation.navigate('TenantScreen')}>
