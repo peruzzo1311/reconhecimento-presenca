@@ -26,6 +26,7 @@ export interface ParticipantePresence {
   numEmp: number
   tipCol: number
   numCad: number
+  numCpf: string | number
   datFre: string
   horFre: string
   nomFun: string

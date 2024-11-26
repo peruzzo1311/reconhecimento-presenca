@@ -49,7 +49,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
-    const participant = training.participantes.find((p) => p.numCad === Number(data))
+    const participant = training.participantes.find((p) => p.numCpf === data)
 
     if (!participant) {
       asyncAlert('Erro', 'Participante não encontrado')
@@ -63,9 +63,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
-    console.log('Participant:', participant)
-
-    const participantExists = presences.find((p) => p.numCad === participant.numCad)
+    const participantExists = presences.find((p) => p.numCpf === participant.numCpf)
 
     if (participantExists) {
       asyncAlert('Erro', 'Participante já está presente')
@@ -73,13 +71,11 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       return
     }
 
-    console.log('Presence:', presences)
-
     const presenceOfflineExists = presenceOffline.find(
       (item) =>
         item.codCua === training.codCua &&
         item.tmaCua === training.tmaCua &&
-        item.participantes.find((participante) => participante.numCad === participant.numCad)
+        item.participantes.find((participante) => participante.numCpf === participant.numCpf)
     )
 
     if (presenceOfflineExists) {
@@ -112,6 +108,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
           numEmp: participant.numEmp,
           tipCol: participant.tipCol,
           numCad: participant.numCad,
+          numCpf: participant.numCpf,
           datFre: format(new Date(), 'dd/MM/yyyy'),
           horFre: format(new Date(), 'HH:mm:ss'),
         },
@@ -140,6 +137,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
       numEmp: participant.numEmp,
       tipCol: participant.tipCol,
       numCad: participant.numCad,
+      numCpf: participant.numCpf,
       fotCol: participant.fotCol,
       nomFun: participant.nomFun,
       datFre: format(new Date(), 'dd/MM/yyyy'),
@@ -155,7 +153,7 @@ export default function QRCode({ navigation, route }: QRCodeProps) {
           return {
             ...t,
             participantes: t.participantes.map((p) => {
-              if (p.numCad === participant.numCad) {
+              if (p.numCpf === participant.numCpf) {
                 return { ...p, staFre: 'Sincronizar' }
               }
 

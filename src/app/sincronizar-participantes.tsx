@@ -105,7 +105,7 @@ export default function SincronizarParticipantes({
         <View flex={1} paddingHorizontal={24}>
           <FlatList
             data={participantsList}
-            keyExtractor={(item) => item.numCad.toString()}
+            keyExtractor={(item) => item.numCpf.toString()}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => <Separator />}
             renderItem={renderItem}

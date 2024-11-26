@@ -79,7 +79,7 @@ export default function ListaPresenca({ navigation, route }: ListaPresencaProps)
           (item) =>
             item.codCua === training.codCua &&
             item.tmaCua === training.tmaCua &&
-            item.participantes.find((participante) => participante.numCad === participant.numCad)
+            item.participantes.find((participante) => participante.numCpf === participant.numCpf)
         )
 
         if (isPresent && participant.staFre !== 'Presente') {

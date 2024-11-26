@@ -8,16 +8,8 @@ interface OfflineStoreProps {
   isOffline: boolean
   presenceOffline: Presence[]
   setIsOffline: (offline: boolean) => void
-  addPresenceOffline: (
-    codCua: number,
-    tmaCua: number,
-    participantes: ParticipantePresence
-  ) => void
-  removeParticipantOffline: (
-    codCua: number,
-    tmaCua: number,
-    numCad: number
-  ) => void
+  addPresenceOffline: (codCua: number, tmaCua: number, participantes: ParticipantePresence) => void
+  removeParticipantOffline: (codCua: number, tmaCua: number, numCpf: string | number) => void
   removeAllParticipantsOffline: (codCua: number, tmaCua: number) => void
   clearPresenceOffline: () => void
 }
@@ -56,16 +48,14 @@ export const useOfflineStore = create(
           }
         })
       },
-      removeParticipantOffline: (codCua, tmaCua, numCad) => {
+      removeParticipantOffline: (codCua, tmaCua, numCpf) => {
         set((state) => {
           const training = state.presenceOffline.find(
             (p) => p.codCua === codCua && p.tmaCua === tmaCua
           )
 
           if (training) {
-            const newParticipantes = training.participantes.filter(
-              (p) => p.numCad !== numCad
-            )
+            const newParticipantes = training.participantes.filter((p) => p.numCpf !== numCpf)
 
             if (newParticipantes.length === 0) {
               const newPresenceList = state.presenceOffline.filter(

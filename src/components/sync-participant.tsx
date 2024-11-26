@@ -50,6 +50,7 @@ function ItemParticipantSync({
             numEmp: item.numEmp,
             tipCol: item.tipCol,
             numCad: item.numCad,
+            numCpf: item.numCpf,
             datFre: item.datFre,
             horFre: item.horFre,
           },
@@ -64,10 +65,10 @@ function ItemParticipantSync({
       }
 
       const updatedParticipants = participantsList.filter(
-        (participant) => participant.numCad !== item.numCad
+        (participant) => participant.numCpf !== item.numCpf
       )
 
-      removeParticipantOffline(codCua, tmaCua, item.numCad)
+      removeParticipantOffline(codCua, tmaCua, item.numCpf)
       setParticipantsList(updatedParticipants)
       Alert.alert('Sucesso', 'Presença confirmada com sucesso')
     } catch (error) {

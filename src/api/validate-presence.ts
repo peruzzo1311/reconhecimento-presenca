@@ -35,6 +35,7 @@ interface QrCodeProps {
     numEmp: number
     tipCol: number
     numCad: number
+    numCpf: string | number
     datFre: string
     horFre: string
   }[]
