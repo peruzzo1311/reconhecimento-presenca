@@ -67,6 +67,7 @@ export default function Foto({ route, navigation }: FotoProps) {
             numEmp: participant.numEmp,
             tipCol: participant.tipCol,
             numCad: participant.numCad,
+            numCpf: participant.numCpf,
             datFre: format(new Date(), 'dd/MM/yyyy'),
             horFre: format(new Date(), 'HH:mm:ss'),
           },
@@ -111,6 +112,7 @@ export default function Foto({ route, navigation }: FotoProps) {
           onPress={() =>
             navigation.navigate('Camera', {
               training,
+              participant,
             })
           }
         >
