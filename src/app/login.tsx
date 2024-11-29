@@ -43,6 +43,7 @@ export default function Login({ navigation }: { navigation: any }) {
         toast.show('Informe o Tenant para continuar', {
           type: 'error',
         })
+        setIsLoading(false)
 
         return
       }
@@ -51,6 +52,7 @@ export default function Login({ navigation }: { navigation: any }) {
         toast.show('Preencha corretamente todos os campos', {
           type: 'error',
         })
+        setIsLoading(false)
 
         return
       }
@@ -62,6 +64,8 @@ export default function Login({ navigation }: { navigation: any }) {
       toast.show('Erro ao tentar fazer o login, verifique sua conexão', {
         type: 'error',
       })
+
+      setIsLoading(false)
     } finally {
       setIsLoading(false)
     }
@@ -74,6 +78,8 @@ export default function Login({ navigation }: { navigation: any }) {
       toast.show('Usuário ou senha inválidos', {
         type: 'error',
       })
+      usernameInputRef.current?.focus()
+      setIsLoading(false)
 
       return
     }
@@ -84,6 +90,8 @@ export default function Login({ navigation }: { navigation: any }) {
       toast.show(data.message, {
         type: 'error',
       })
+      setIsLoading(false)
+
       return
     }
 
@@ -91,6 +99,9 @@ export default function Login({ navigation }: { navigation: any }) {
       toast.show('Erro ao tentar fazer o login', {
         type: 'error',
       })
+      setIsLoading(false)
+
+      return
     }
 
     const data = await responseGetToken.json()
@@ -102,6 +113,7 @@ export default function Login({ navigation }: { navigation: any }) {
       toast.show('Usuário ou senha inválidos', {
         type: 'error',
       })
+      setIsLoading(false)
 
       return
     }

@@ -20,7 +20,7 @@ export async function RecognitionValidate({
   const res = await axios.post('https://prismaappfr.azurewebsites.net/verifica-presenca', {
     fotPar: base64,
     participantes: participants,
-    platform: Platform.OS,
+    platform: 'android',
   })
 
   const data = await res.data

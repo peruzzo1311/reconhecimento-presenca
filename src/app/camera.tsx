@@ -46,7 +46,7 @@ export default function Camera({ navigation, route }: CameraProps) {
     const manipulatedImage = await ImageManipulator.manipulateAsync(
       photo.uri,
       [{ resize: { width: 200, height: 200 } }],
-      { compress: 0.2, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+      { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
     )
 
     setIsLoading(false)
@@ -54,7 +54,7 @@ export default function Camera({ navigation, route }: CameraProps) {
     navigation.navigate('Foto', {
       photo: {
         base64: manipulatedImage.base64,
-        uri: photo.uri,
+        uri: manipulatedImage.uri,
       },
       participant,
       training,
