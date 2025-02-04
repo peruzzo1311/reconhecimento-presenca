@@ -61,6 +61,13 @@ export default function MenuOptionsDialog() {
     }
   }
 
+  const handleLogout = () => {
+    clearUser()
+    onClose()
+
+    navigation.navigate('Login')
+  }
+
   return (
     <Dialog modal disableRemoveScroll open={isModalOpen} onOpenChange={onClose}>
       <Dialog.Portal>
@@ -152,12 +159,7 @@ export default function MenuOptionsDialog() {
 
               <Separator />
 
-              <TouchableOpacity
-                onPress={() => {
-                  onClose()
-                  clearUser()
-                }}
-              >
+              <TouchableOpacity onPress={handleLogout}>
                 <ListItem
                   icon={<MaterialIcons name='logout' size={24} color='black' />}
                   fontSize='$5'
